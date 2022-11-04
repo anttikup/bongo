@@ -12,6 +12,15 @@
   font-weight: 800;
   letter-spacing: -0.05rem;
   margin: 1rem 0;
+  text-align: center;
+}
+
+.superHeading {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.05rem;
+  color: #999;
+  text-align: center;
 }
 
 .headingLg {
@@ -49,4 +58,14 @@
 
 .lightText {
   color: #666;
+}
+
+.centered {
+    text-align: center;
+}
+
+.updatedDate {
+    text-align: right;
+    color: #777;
+    font-size: smaller;
 }
