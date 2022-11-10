@@ -1,0 +1,21 @@
+#exp-points {
+    font-size: 150%;
+    display: inline-block;
+}
+
+
+#exp-points.normal {
+    transition: 0.5s;
+}
+
+#exp-points.powerup {
+    transform: scale(1.5);
+}
+#exp-points.normal .icon {
+    transition: 0.5s;
+}
+
+#exp-points.powerup .icon {
+    transform: scale(1.1) rotate(360deg);
+    transition: 0.1s;
+}
