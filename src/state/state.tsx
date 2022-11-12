@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { User, UserProgress } from "../types";
+import { User, UserProgress, UIMessage } from "../types";
 
 import { Action } from "./reducer";
 
@@ -7,12 +7,14 @@ export type State = {
     user: User | null;
     experience: number;
     userProgress: UserProgress;
+    message: UIMessage | null;
 };
 
 const initialState: State = {
     user: null,
     experience: 0,
     userProgress: {},
+    message: null,
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

@@ -1,0 +1,17 @@
+.assignment {
+
+}
+
+.question {
+
+}
+
+.multimediaOptions {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+}
+
+.textOptions {
+
+}

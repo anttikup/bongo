@@ -1,0 +1,10 @@
+
+.task-area {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.task-content {
+    flex: 1 1 0;
+}

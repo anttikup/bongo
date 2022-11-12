@@ -1,30 +1,49 @@
 import axios from "axios";
 
-import { UserProgress, UserStats } from '../types';
+import { User, UserProgress, UserStats } from '../types';
 
-let token: string | null = null;
 
-const setToken = (newToken: string) => {
-    token = `bearer ${newToken}`;
-    console.log("token:", token);
+
+
+const getXP = async () => {
+    const { data: userXPFromApi } = await axios.get<User>(
+        '/api/user',
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof userXPFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+
+    console.log("getXP:", userXPFromApi);
+    return userXPFromApi.xp;
 };
 
+const updateXP = async (value: number) => {
+    const itemsToUpdate = {
+        xp: value
+    };
 
+    console.log("UPDATING:", itemsToUpdate);
 
-const makeAuthorizedConfig = (params: Record<string, unknown>) => (
-    typeof token === "string"
-    ? {
-        headers: { Authorization: token },
-        params: params ? params : {},
+    const { data: userXPFromApi } = await axios.patch<UserProgress>(
+        '/api/user',
+        itemsToUpdate
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof userXPFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
     }
-    : {});
+    console.log("updateXP:", userXPFromApi);
+    return userXPFromApi.xp;
+};
 
 
 
 const getProgress = async () => {
     const { data: userProgressFromApi } = await axios.get<UserProgress>(
         '/api/user/progress',
-        makeAuthorizedConfig({})
     );
 
     // Axios returns the json as string if it is not valid json.
@@ -46,9 +65,6 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
     const { data: userProgressFromApi } = await axios.patch<UserProgress>(
         '/api/user/progress',
         itemsToUpdate,
-        {
-            headers: { Authorization: token },
-        }
     );
 
     // Axios returns the json as string if it is not valid json.
@@ -65,13 +81,13 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
 const getStats = async () => {
     const { data: userStatsFromApi } = await axios.get<UserStats>(
         '/api/user/stats',
-        makeAuthorizedConfig({})
     );
 
     if ( typeof userStatsFromApi === "string" ) {
         throw new Error(`Malformed JSON`);
     }
 
+    console.log("userStatsFromApi:", userStatsFromApi);
     return userStatsFromApi;
 };
 
@@ -81,6 +97,7 @@ const getStats = async () => {
 export default {
     getProgress,
     getStats,
-    setToken,
-    updateProgress
+    getXP,
+    updateXP,
+    updateProgress,
 };

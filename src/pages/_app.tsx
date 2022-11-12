@@ -1,11 +1,12 @@
 import { SessionProvider } from "next-auth/react";
+import { Container } from "semantic-ui-react";
 
+import MessageDisplay from '../components/MessageDisplay';
 import SiteHeader from '../components/SiteHeader';
-import { setExperience, setUser, setUserProgress, useStateValue } from "../state";
+import { reducer, StateProvider } from "../state";
 
 import type { Session } from "next-auth";
-import { User, Message, isString, isUser } from '../types';
-//import userService from '../services/user';
+import type { User, Message, isString, isUser } from '../types';
 
 import 'semantic-ui-css/semantic.min.css';
 import '../styles/global.css';
@@ -16,11 +17,15 @@ import type { Session } from "next-auth";
 
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) {
-
     return (
         <SessionProvider session={session}>
-            <SiteHeader />
-            <Component {...pageProps} />;
+            <StateProvider reducer={reducer}>
+                <Container>
+                    <SiteHeader />
+                    <MessageDisplay />
+                    <Component {...pageProps} />
+                </Container>
+            </StateProvider>
         </SessionProvider>
     );
 };

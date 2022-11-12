@@ -1,7 +1,11 @@
 import { State } from "./state";
-import { ExerciseProgress, User, UserProgress } from "../types";
+import { ExerciseProgress, UIMessage, User, UserProgress } from "../types";
 
 export type Action =
+    | {
+        type: "SET_MESSAGE";
+        object: UIMessage | null;
+    }
     | {
         type: "SET_EXCERCISE_PROGRESS";
         object: {
@@ -21,6 +25,11 @@ export type Action =
         type: "SET_EXPERIENCE";
         object: number;
     };
+
+
+export const setMessage = (message: UIMessage | null): Action => {
+    return { type: "SET_MESSAGE", object: message };
+};
 
 
 export const setExerciseProgress = (id: string, progress: ExerciseProgress): Action => {
@@ -53,6 +62,12 @@ export const reducer = (state: State, action: Action): State => {
                 userProgress: newUserProgress
             };
         }
+
+        case "SET_MESSAGE":
+            return {
+                ...state,
+                message: action.object
+            };
 
         case "SET_USER":
             return {

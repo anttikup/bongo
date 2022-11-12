@@ -1,0 +1,17 @@
+
+.title {
+    text-align: center;
+}
+
+.supertitle {
+    font-size: 0.7em;
+    color: darkgray;
+}
+
+.exerciseTitle {
+    text-transform: capitalize;
+}
+
+.health {
+    float: right;
+}

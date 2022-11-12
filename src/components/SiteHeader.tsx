@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Header, Menu } from "semantic-ui-react";
@@ -5,6 +6,10 @@ import { Header, Menu } from "semantic-ui-react";
 import Username from '../components/Username';
 import MessageDisplay from '../components/MessageDisplay';
 import ExpPoints from '../components/ExpPoints';
+import { useErrorMessage } from '../hooks/errorMessage';
+import userService from '../services/user';
+import { setExperience, useStateValue } from '../state';
+
 
 import styles from './SiteHeader.module.css';
 
@@ -13,9 +18,30 @@ type SiteHeaderProps = {
 };
 
 const SiteHeader = (props: SiteHeaderProps) => {
+    const [loading, setLoading] = useState(true);
     const { data: session } = useSession();
+    const [{ experience }, dispatch] = useStateValue();
+    const [setError] = useErrorMessage();
+
+    useEffect(() => {
+        const fetchUserXP = async () => {
+            try {
+                const userXPFromApi = await userService.getXP();
+                dispatch(setExperience(userXPFromApi));
+            } catch (e) {
+                console.error(e);
+                setError('Error fetching user progress', (e as Error).message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        void fetchUserXP();
+    }, []);
+
+
     const user = session?.user;
-    const experience = 90;
+
     const handleSignin = (e) => {
         e.preventDefault()
         signIn()
@@ -46,6 +72,13 @@ const SiteHeader = (props: SiteHeaderProps) => {
                   && <Menu.Item>
                       <Link href="/overview">
                           Overview
+                      </Link>
+                  </Menu.Item>
+                }
+                { user
+                  && <Menu.Item>
+                      <Link href="/lectures">
+                          Lectures
                       </Link>
                   </Menu.Item>
                 }

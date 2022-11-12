@@ -55,9 +55,16 @@ export const authOptions: NextAuthOptions = {
         colorScheme: "light",
     },
     callbacks: {
-        async jwt({ token }) {
-            token.userRole = "admin"
+        async jwt({ token, account }) {
+            if ( account ) {
+                token.userRole = "admin";
+                token.accessToken = account.access_token;
+            }
             return token
+        },
+        async session({ session, token, user }) {
+            session.accessToken = token.accessToken
+            return session
         },
     },
 }

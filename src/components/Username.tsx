@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from './Username.module.css';
+import styles from '../styles/Username.module.css';
 
 type UsernameProps = {
     name: string | null;

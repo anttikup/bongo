@@ -1,0 +1,4 @@
+.button-bar {
+    display: flex;
+    justify-content: right;
+}

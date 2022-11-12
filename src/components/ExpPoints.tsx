@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Icon } from "semantic-ui-react";
 
-import styles from './ExpPoints.module.css';
+import styles from '../styles/ExpPoints.module.css';
 
 type ExpPointsProps = {
     points: number;

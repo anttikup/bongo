@@ -4,6 +4,8 @@ import Head from 'next/head';
 import Date from '../../components/date';
 import { GetStaticPaths, GetStaticProps } from 'next';
 
+import { siteTitle } from '../../config';
+
 import utilStyles from '../../styles/utils.module.css';
 import styles from '../../styles/lecture.module.css';
 
@@ -37,7 +39,7 @@ export default function Lecture({ lectureData }: {
     return (
         <Layout>
             <Head>
-                <title>{lectureData.title}</title>
+                <title>{lectureData.title} — {siteTitle}</title>
             </Head>
             <article>
                 <h1 className={utilStyles.headingXl}>

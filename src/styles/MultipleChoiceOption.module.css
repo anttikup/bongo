@@ -1,0 +1,22 @@
+.option {
+    display: flex;
+    flex-direction: column;
+    border: solid rgba(0, 0, 0, 0.1) 1px;
+
+}
+
+.playButton {
+    margin: auto;
+}
+
+.optionText {
+    text-align: center;
+}
+
+.indicator {
+    height: 1em;
+}
+
+.indicator.selected {
+    background-color: orange;
+}

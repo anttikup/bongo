@@ -1,0 +1,16 @@
+
+
+.statusCardLayout {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.statusCardLayout > img {
+    margin-right: 1ch;
+}
+
+.statusText {
+    flex-grow: 1;
+    font-size: 2em;
+}
