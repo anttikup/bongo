@@ -3,47 +3,57 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 
+import exerciseLib from '../backendServices/exercises';
 import { siteTitle } from '../config';
+import Date from '../components/date';
 import Layout from '../components/layout';
 import Tier from "../components/Tier";
-import Date from '../components/date';
-import exerciseService from '../services/exercise';
 import { useErrorMessage } from '../hooks/errorMessage';
+import userService from '../services/user';
+import { useStateValue, setUserProgress } from "../state";
 
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/lecture.module.css';
 
-import { TierDescr } from "../../types";
 
+export const getStaticProps: GetStaticProps = async () => {
+    const exercisesByTier = await exerciseLib.getOverview();
+    console.log("exercisesByTier:", exercisesByTier);
+    return {
+        props: {
+            exercisesByTier
+        },
+    };
+};
 
 
 type OverviewProps = {
+    exercisesByTier: TierDescr[]
 };
 
-export default function Overview(props: OverviewProps) {
-    const [exercisesByTier, setExercisesByTier] = useState<TierDescr[]>([]);
+export default function Overview({ exercisesByTier }: OverviewProps) {
     const [loading, setLoading] = useState(true);
     const [setError] = useErrorMessage();
-
+    const [{ userProgress }, dispatch] = useStateValue();
 
     useEffect(() => {
-        const fetchExercisesByTier = async () => {
+        const fetchUserProgress = async () => {
             try {
-                const overviewFromApi = await exerciseService.getOverview();
-                setExercisesByTier(overviewFromApi);
-                setError(null);
+                const userProgressFromApi = await userService.getProgress();
+                console.log("userProgressFromApi:", userProgressFromApi);
+                dispatch(setUserProgress(userProgressFromApi));
             } catch (e) {
                 console.error(e);
-                setExercisesByTier([]);
-                setError('Error fetching overview', (e as Error).message);
-                console.log((e as Error).message);
+                setError(e.message);
+                setUserProgress({});
             } finally {
                 setLoading(false);
             }
         };
 
-        void fetchExercisesByTier();
+        void fetchUserProgress();
     }, []);
+
 
     return (
         <Layout home>

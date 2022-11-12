@@ -5,10 +5,12 @@ import { Header, Loader, Rating } from "semantic-ui-react";
 
 import { siteTitle } from '../../config';
 import ExArea from '../../components/ExArea';
+import { useErrorMessage } from '../../hooks/errorMessage';
+import { getAllExerciseIds } from '../../lib/exercises';
 import exerciseService from '../../services/exercise';
 import userService from '../../services/user';
 import { setExerciseProgress, setExperience, useStateValue } from "../../state";
-import { getAllExerciseIds } from '../../lib/exercises';
+
 
 import style from  '../../styles/exercise.module.css';
 
@@ -42,17 +44,16 @@ const ExercisePage = (props: Props) => {
     const router = useRouter();
     const id = router.query.id;
     const [topic, level] = id && id.length > 1 ? id : [];
-    console.log("WQ", router.query, topic, level);
 
     const [health, setHealth] = useState(3);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
     const [loading, setLoading] = useState(true);
+    const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
 
 
     useEffect(() => {
         const fetchQuestionSet = async () => {
-            console.log("fetch");
             try {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level: parseInt(level, 10) });
                 console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
@@ -60,7 +61,7 @@ const ExercisePage = (props: Props) => {
             } catch (e) {
                 console.error(e);
                 setQuestionSet([]);
-                //setError('Error fetching questions', (e as Error).message);
+                setError('Error fetching questions', (e as Error).message);
             } finally {
                 setLoading(false);
             }

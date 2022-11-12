@@ -1,14 +1,14 @@
-import overviewData from '../../../mockbackend/api/overview.json';
+import overviewData from '../../../earo2/mockbackend/api/overview.json';
 import { Overview } from '../types';
 
 
 const overview: Overview = overviewData as unknown as Overview;
 
-const getEntries = (): Overview => {
+const getOverview = (): Overview => {
     return overview;
 };
 
 
 export default {
-    getEntries,
+    getOverview,
 };
