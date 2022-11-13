@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Router, { useRouter } from 'next/router'
-import { Header, Loader, Rating } from "semantic-ui-react";
+import { Header, Loader } from "semantic-ui-react";
 
-import { siteTitle } from '../../config';
+import { SITE_TITLE } from '../../config';
 import ExArea from '../../components/ExArea';
+import Health from '../../components/Health';
+import Layout from '../../components/layout';
 import { useErrorMessage } from '../../hooks/errorMessage';
 import { getAllExerciseIds } from '../../lib/exercises';
 import exerciseService from '../../services/exercise';
@@ -12,7 +14,7 @@ import userService from '../../services/user';
 import { setExerciseProgress, setExperience, useStateValue } from "../../state";
 
 
-import style from  '../../styles/exercise.module.css';
+import styles from  '../../styles/exercise.module.css';
 
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import type { QuestionSet } from "../../types";
@@ -99,24 +101,24 @@ const ExercisePage = (props: Props) => {
 
 
     return (
-        <main>
+        <Layout>
             <Head>
-                <title>{topic} {level} — {siteTitle}</title>
+                <title>{`${topic} ${level} | ${SITE_TITLE}`}</title>
             </Head>
             <Header as="header">
-                <h2 className={style.title}>
-                    <span className={style.supertitle}>Exercise</span>
+                <h2 className={styles.title}>
+                    <span className={styles.supertitle}>Exercise</span>
                     <br/>
-                    <span className={style.exerciseTitle}>{topic} {level}</span>
+                    <span className={styles.exerciseTitle}>{topic} {level}</span>
                 </h2>
-                <Rating className={style.Health} icon="heart" maxRating={3} rating={health} />
+                <Health max={3} value={health} />
             </Header>
 
             { loading
               ? <Loader active/>
               : <ExArea exit={onExit} health={health} decrementHealth={healthHit} questionSet={questionSet} />
             }
-        </main>
+        </Layout>
     );
 };
 
