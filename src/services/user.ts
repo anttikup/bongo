@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { User, UserProgress, UserStats } from '../types';
+import type { User, UserProgress, UserStats } from '../types';
 
 
 
