@@ -22,9 +22,9 @@ const ExpPoints = ({ points }: ExpPointsProps) => {
     }, [points]);
 
     return (
-        <span id="exp-points" title="Experience points" className={effectStarted ? styles.powerup : styles.normal}>
+        <span title="Experience points" className={`${styles.expPoints} ${effectStarted ? styles.powerup : styles.normal}`}>
             <Icon name="star" color="yellow"/> {points}
-        </span>
+            </span>
     );
 };
 

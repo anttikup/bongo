@@ -12,7 +12,6 @@ type Props = {
 
 const MessageDisplay = (props: Props) => {
     const [message, setMessage] = useMessage();
-    console.log("message:", message);
 
     useEffect(() => {
         setTimeout(() => {
@@ -28,7 +27,6 @@ const MessageDisplay = (props: Props) => {
 
     return (
         <MessageComponent negative={message.type === "error"} positive={message.type === "success"}>
-            MESSAGE:
             <MessageComponent.Header>{message.title}</MessageComponent.Header>
             <p>{message.text}</p>
         </MessageComponent>

@@ -89,6 +89,13 @@ const SiteHeader = (props: SiteHeaderProps) => {
                       </Link>
                   </Menu.Item>
                 }
+                { user
+                  && <Menu.Item>
+                      <Link href="/settings">
+                          Settings
+                      </Link>
+                  </Menu.Item>
+                }
                 <Menu.Menu position="right">
                     { user
                       && <Menu.Item>
