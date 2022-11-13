@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 
-import { siteTitle } from '../../config';
+import { SITE_TITLE } from '../../config';
 import Layout from '../../components/layout';
 import Date from '../../components/date';
 import { getLecturesDataByTier } from '../../lib/lectures';
@@ -36,17 +36,12 @@ type LecturesProps = {
 
 export default function Lectures({ lecturesByTier }: LecturesProps) {
     return (
-        <Layout home>
+        <Layout>
             <Head>
-                <title>Lectures — {siteTitle}</title>
+                <title>{`Lectures | ${SITE_TITLE}`}</title>
             </Head>
-            <section className={utilStyles.headingMd}>
-                <p>
-                    Lectures to memorize musical constants.
-                </p>
-            </section>
             <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-                <h2 className={utilStyles.headingLg}>Lectures</h2>
+                <h1 className={utilStyles.headingLg}>Lectures</h1>
                 <ul className={utilStyles.list}>
                     {lecturesByTier.map((tier, index) =>
                         (

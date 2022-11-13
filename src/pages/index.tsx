@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
 
-import { siteTitle } from '../config';
+import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
 import Date from '../components/date';
 import { getLecturesDataByTier } from '../lib/lectures';
@@ -38,7 +38,7 @@ function Home ({ lecturesByTier }: HomeProps) {
     return (
         <Layout home>
             <Head>
-                <title>Home — {siteTitle}</title>
+                <title>Home — {SITE_TITLE}</title>
             </Head>
             <h2>
                 Duo Bongo <i className="bang">!</i>

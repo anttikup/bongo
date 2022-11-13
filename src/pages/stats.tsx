@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import { Header, Loader, Table } from "semantic-ui-react";
 
-import Layout, { siteTitle } from '../components/layout';
+import Layout, { SITE_TITLE } from '../components/layout';
 import Date from '../components/date';
 import userService from '../services/user';
 import { useErrorMessage } from '../hooks/errorMessage';
@@ -60,7 +60,7 @@ export default function Stats(props: StatsProps) {
     return (
         <Layout home>
             <Head>
-                <title>Stats — {siteTitle}</title>
+                <title>Stats — {SITE_TITLE}</title>
             </Head>
             <main className="stats-page">
                 <Header as="header">
