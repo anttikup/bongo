@@ -81,6 +81,7 @@ const ExercisePage = (props: Props) => {
             const oldProgress = userProgress[id] || { val: 0 };
             try {
                 const newProgress = await userService.updateProgress(id, oldProgress.val + 1);
+                console.log("updated progress:", newProgress);
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));

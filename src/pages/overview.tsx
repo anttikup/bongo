@@ -34,7 +34,7 @@ type OverviewProps = {
 export default function Overview({ exercisesByTier }: OverviewProps) {
     const [loading, setLoading] = useState(true);
     const [setError] = useErrorMessage();
-    const [{ userProgress }, dispatch] = useStateValue();
+    const [{ }, dispatch] = useStateValue();
 
     useEffect(() => {
         const fetchUserProgress = async () => {
