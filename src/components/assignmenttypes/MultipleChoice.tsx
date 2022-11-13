@@ -25,7 +25,7 @@ const MultipleChoiceAssignmentCard = ({ assignment, selectAnswer, selectedAnswer
     return (
         <div className={style.assignment}>
             <Question question={assignment.question} />
-            <div className={isTextOnly ? style.textOptions : style.multimediaOptions}>
+            <div className={style.multimediaOptions}>
                 { assignment.options.map(option => (
                     <MultipleChoiceOption
                         key={option.value}

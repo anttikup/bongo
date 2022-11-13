@@ -48,33 +48,21 @@ const MultipleChoiceOption = ({ option, selectAnswer, selectedAnswer }: Props) =
 
     return (
         <>
-            { isTextOnlyOption(option) &&
-              <Form.Field>
-                  <Radio
-                      label={(option as TextOption).text}
-                      value={option.value}
-                      checked={selectedAnswer === option.value}
-                      onChange={() => selectAnswer(option.value)}
+            <Tabbable className={style.option} onActivate={clicked} activatingKeys={['Enter', ' ', 'p']}>
+                { isImageOption(option) &&
+                  <ImageBox
+                      src={imagePath(option)}
                   />
-              </Form.Field>
-            }
-            { !isTextOnlyOption(option) &&
-              <Tabbable className={style.option} onActivate={clicked} activatingKeys={['Enter', ' ', 'p']}>
-                  { isImageOption(option) &&
-                    <ImageBox
-                        src={imagePath(option)}
-                    />
-                  }
-                  { isAudioOption(option) &&
-                    <PlayButton className={style.playButton} src={audioPath(option)} />
-                  }
-                  { isTextOption(option) &&
-                    <p className={style.optionText}>{option.text}</p>
-                  }
-                  <div className={`${style.indicator} ${selectedAnswer === option.value ? style.selected : ""}`}>
-                  </div>
-              </Tabbable>
-            }
+                }
+                { isAudioOption(option) &&
+                  <PlayButton className={style.playButton} src={audioPath(option)} />
+                }
+                { isTextOption(option) &&
+                  <p className={style.optionText}>{option.text}</p>
+                }
+                <div className={`${style.indicator} ${selectedAnswer === option.value ? style.selected : ""}`}>
+                </div>
+            </Tabbable>
         </>
     );
 };
