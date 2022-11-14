@@ -39,7 +39,7 @@ const PlayButton = (props: Props) => {
     };
 
     return (
-        <Button {...props } className={style.playButton} onClick={onClick} onKeyPress={keyPressed}>
+        <Button {...props } className={`${style.playButton} ${props.className}`} onClick={onClick} onKeyPress={keyPressed}>
             <Icon name={!playing ? 'play' : 'volume up'} />
         </Button>
     );

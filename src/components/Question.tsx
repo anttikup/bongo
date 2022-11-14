@@ -32,19 +32,18 @@ const QuestionComponent = ({ question }: Props) => {
                     isTextQuestion(question)
                     && <span>{question.text}</span>
                 }
-                {
-                    isTextQuestion(question) && isAudioQuestion(question)
-                    && ' '
-                }
-                {
-                    isAudioQuestion(question)
-                    && <PlayButton src={audioPath(question)} />
-                }
             </p>
             {
                 isImageQuestion(question)
-                && <img src={imagePath(question)} style={{ minWidth: 200, minHeight: 150 }} />
+                && <img className={style.image} src={imagePath(question)} style={{ minWidth: 200, minHeight: 150 }} />
             }
+            {
+                isAudioQuestion(question)
+                && <div className={style.playButtonContainer}>
+                    <PlayButton src={audioPath(question)} />
+                </div>
+            }
+
         </div>
     );
 };

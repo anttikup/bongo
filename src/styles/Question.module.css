@@ -2,3 +2,12 @@
     margin-bottom: 2em;
     font-size: 150%;
 }
+
+.image {
+    margin: auto;
+}
+
+.playButtonContainer {
+    width: fit-content;
+    margin: auto;
+}

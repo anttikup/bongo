@@ -16,7 +16,7 @@ type BoxProps = {
     material?: string;
 };
 
-const Box = ({ progress, text, image, color, topic, level, material, levels }: BoxProps) => {
+const Box = ({ progress, refreshed, text, image, color, topic, level, material, levels }: BoxProps) => {
     const [mainHovered, setMainHovered] = useState(false);
 
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -57,8 +57,7 @@ const Box = ({ progress, text, image, color, topic, level, material, levels }: B
                 onMouseEnter={handleMainHover}
                 onMouseLeave={handleMainUnHover}
                 onClick={handleClick}
-                title="Practice"
-                title={`${progress}/${levels}`}
+                title={`${progress}/${levels}, \nlast refreshed: ${refreshed}`}
             >
                 <img src={image}/>
                 {<Progress value={progress} size="small" total={levels} autoSuccess />}

@@ -22,6 +22,7 @@ const Tier = ({ boxes }: TierProps) => {
                     topic={item.topic}
                     level={item.level}
                     progress={userProgress[item.id] ? userProgress[item.id].val : 0}
+                    refreshed={userProgress[item.id] ? userProgress[item.id].updated : 'never'}
                     color={item.color}
                     text={item.text}
                     image={item.image}

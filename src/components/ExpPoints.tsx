@@ -12,9 +12,11 @@ type ExpPointsProps = {
 const ExpPoints = ({ points }: ExpPointsProps) => {
     const [effectStarted, setEffectStarted] = useState(false);
     useEffect(() => {
-        if ( points === 0 ) {
+        console.log("points before", points);
+        if ( !points ) {
             return;
         }
+        console.log("  effect");
         setEffectStarted(true);
         window.setTimeout(() => {
             setEffectStarted(false);
@@ -23,7 +25,7 @@ const ExpPoints = ({ points }: ExpPointsProps) => {
 
     return (
         <span title="Experience points" className={`${styles.expPoints} ${effectStarted ? styles.powerup : styles.normal}`}>
-            <Icon name="star" color="yellow"/> {points}
+            <Icon className={styles.icon} name="star" color="yellow"/> {points}
             </span>
     );
 };

@@ -10,7 +10,7 @@ type LockDividerProps = {
 const LockDivider = ({ open }: LockDividerProps) => {
     return (
         <Divider horizontal>
-            <Icon name={open ? 'lock open' : 'lock'} color="darkred" />
+            <Icon name={open ? 'lock open' : 'lock'} color="teal" />
         </Divider>
     );
 };

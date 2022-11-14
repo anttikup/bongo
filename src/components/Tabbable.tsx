@@ -31,10 +31,10 @@ const Tabbable = (props: Props) => {
 
     const filteredProps = {
         ...props,
-        activatingKeys: undefined,
-        onActivate: undefined,
-        children: undefined,
     };
+    delete filteredProps.activatingKeys;
+    delete filteredProps.onActivate;
+    delete filteredProps.children;
 
     return (
         <a onClick={clicked} onKeyPress={keyPressed} href="" {...filteredProps }  className={`${props.className} ${style.tabbable}`}>
