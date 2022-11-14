@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, _user, _account, profile, _isNewUser }) {
             console.log("JWT CALLBACK: token", token, ", user:", _user, ", account:", _account, ", profile:", profile, ", isNewUser:", _isNewUser);
             if ( profile ) {
-                token.userId = profile.id;
+                token.userId = profile.id.toString() || profile.sub; // TODO onko ok? Id:tä ei ole aina googlella.
             }
 
             return token
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token, user }) {
             console.log("SESSION CALLBACK: session:", session, ", token:", token, ", user:", user);
 
-            console.assert(token.id, "No token id");
+            console.assert(token.userId, "No token id");
             session.user.id = token.userId;
 
 

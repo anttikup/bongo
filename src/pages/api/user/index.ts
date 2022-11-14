@@ -31,18 +31,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    const user = session.user;
-    if ( ! user ) {
+    const userInfo = session.user;
+    if ( ! userInfo ) {
         res.status(401).json({ error: 'invalid user' });
         return;
     }
 
-    console.log("SESSION USER:", user);
+    console.log("SESSION USER:", userInfo);
     console.log("SESSION:", session);
 
-    const userObj = await userService.findByUsername(user.name);
+    const userObj = await userService.findOrCreateUserByUserInfo(userInfo);
     if ( ! userObj ) {
-        res.status(404).json({ error: `invalid user ${user.name}` });
+        res.status(404).json({ error: `invalid user ${userInfo.name}` });
         return;
     }
 
@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(200).json(userObj);
             //res.status(200).json(JSON.parse(JSON.stringify(session, getCircularReplacer())));
             //res.status(200).json(JSON.parse(JSON.stringify(req, getCircularReplacer())));
-            //res.json(user);
+            //res.json(userInfo);
             //res.json(session);
 
             break;
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const fieldsToUpdate = parseUserFields(req.body);
                 console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = await userService.updateUser(user, fieldsToUpdate);
+                const updatedUser = await userService.updateUser(userInfo, fieldsToUpdate);
                 console.log("  result:", updatedUser);
                 res.json(updatedUser);
             } catch (err) {

@@ -11,6 +11,13 @@ const userProgress: UserProgress = userProgressData as unknown as UserProgress;
 const users: UserBackend[] = usersData as unknown as UserBackend[];
 const userStats: UserStats = userStatsData as unknown as UserStats;
 
+type UserInfo = {
+    id: number;
+    name: string;
+    email: string;
+};
+
+
 const clean = (obj: Record<string, unknown>) => {
     const copy = { ...obj };
 
@@ -34,8 +41,8 @@ const getDateTime = () => {
 
 
 
-const getProgress = async (user: UserBackend): UserProgress => {
-    const userData = await findByUsername(user.name);
+const getProgress = async (user: UserInfo): UserProgress => {
+    const userData = await findByUserID(user.id);
 
     console.log("userData:", userData);
     console.log("progr", userData.progress);
@@ -44,7 +51,7 @@ const getProgress = async (user: UserBackend): UserProgress => {
 };
 
 
-const updateProgress = async (user: UserBackend, keyval: Partial<UserProgress>): UserProgress => {
+const updateProgress = async (user: UserInfo, keyval: Partial<UserProgress>): UserProgress => {
     console.log("KEYVAL:", keyval);
     if ( Object.keys(keyval).length !== 1 ) {
         throw new Exception("invalid value, must be single key-value pair");
@@ -63,7 +70,7 @@ const updateProgress = async (user: UserBackend, keyval: Partial<UserProgress>):
     const updateInfo = await db
         .collection("users")
         .findOneAndUpdate(
-            { username: user.name },
+            { userID: user.id },
             {
                 $set: {
                     [`progress.${exerciseId}`]: newValue
@@ -86,8 +93,8 @@ const updateProgress = async (user: UserBackend, keyval: Partial<UserProgress>):
 
 };
 
-const getStats = async (user: UserBackend): UserStats => {
-    const userData = await findByUsername(user.name);
+const getStats = async (user: UserInfo): UserStats => {
+    const userData = await findByUserID(user.id);
 
     console.log("userData:", userData);
     console.log("progr", userData.xpHistory);
@@ -96,7 +103,7 @@ const getStats = async (user: UserBackend): UserStats => {
     return { xpHistory: userData.xpHistory || {} };
 };
 
-const updateUser = async (user: UserBackend, fields: Partial<UserBackend>): UserBackend => {
+const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBackend => {
     try {
         const client = await clientPromise;
         const db = client.db("test");
@@ -104,7 +111,7 @@ const updateUser = async (user: UserBackend, fields: Partial<UserBackend>): User
         const updateInfo = await db
             .collection("users")
             .findOneAndUpdate(
-                { username: user.name },
+                { userID: user.id },
                 {
                     $set: {
                         xp: fields.xp,
@@ -132,14 +139,14 @@ const updateUser = async (user: UserBackend, fields: Partial<UserBackend>): User
     }
 };
 
-const findByUsername = async (username: string): UserBackend | undefined => {
+const findByUserID = async (userID: string): UserBackend | undefined => {
     try {
         const client = await clientPromise;
         const db = client.db("test");
 
         const foundUser = await db
             .collection("users")
-            .findOne({ username });
+            .findOne({ userID });
 
         return clean(foundUser);
     } catch (e) {
@@ -148,35 +155,83 @@ const findByUsername = async (username: string): UserBackend | undefined => {
     return null;
 };
 
+const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | undefined => {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
 
-const isUsernameAvailable = (username: string) => {
-    if ( findByUsername(username) ) {
-        return false;
+        let foundUser = await findByUserID(userInfo.id);
+
+        if ( foundUser && foundUser.id ) {
+            console.log("FOUND USER:", foundUser);
+            return foundUser;
+        }
+
+        db.collection("users")
+          .insertOne({
+              userID: userInfo.id,
+              username: userInfo.name,
+              progress: {
+              },
+              xp: 0,
+              xpHistory: {
+                  [getDate()]: 0,
+              }
+          });
+
+        foundUser = await findByUserID(userInfo.id);
+        console.log("CREATED USER:", foundUser);
+
+        return foundUser;
+    } catch (e) {
+        console.error(e);
     }
+    return null;
 
-    return true;
 };
 
-const saveUser = (user: UserBackend) => {
-    if ( !isUsernameAvailable(user.username) ) {
-        throw new Error("User name already in use");
+const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): UserBackend | undefined => {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
+
+        const foundUser = await db
+            .collection("users")
+            .findAndModify({
+                query: { userID: userInfo.id },
+                update: {
+                    $setOnInsert: {
+                        userID: userInfo.id,
+                        username: userInfo.name,
+                        progress: {
+                        },
+                        xp: 0,
+                        xpHistory: {
+                            [getDate()]: 0,
+                        }
+                    }
+                },
+                new: true,   // return new doc if one is upserted
+                upsert: true // insert the document if it does not exist
+            });
+
+        console.log("FOUND USER:", foundUser);
+
+        return clean(foundUser);
+    } catch (e) {
+        console.error(e);
     }
+    return null;
 
-    const copy = { ...user };
-    users.push(copy);
-
-    return copy;
 };
-
 
 
 
 export default {
-    findByUsername,
+    findByUserID,
     getProgress,
     getStats,
-    isUsernameAvailable,
-    saveUser,
     updateProgress,
     updateUser,
+    findOrCreateUserByUserInfo,
 };
