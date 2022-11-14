@@ -72,6 +72,7 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
         throw new Error(`Malformed JSON`);
     }
 
+    console.log("servicefrontend: got userprogress:", userProgressFromApi);
     return userProgressFromApi;
 };
 

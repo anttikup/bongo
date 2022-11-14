@@ -37,10 +37,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    const token = session.accessToken;
-    console.log("TOKEN:", token);
+    console.log("SESSION USER:", user);
+    console.log("SESSION:", session);
 
-    const userObj = userService.findByUsername(user.name);
+    const userObj = await userService.findByUsername(user.name);
     if ( ! userObj ) {
         res.status(404).json({ error: `invalid user ${user.name}` });
         return;
@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const fieldsToUpdate = parseUserFields(req.body);
                 console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = userService.updateUser(user, fieldsToUpdate);
+                const updatedUser = await userService.updateUser(user, fieldsToUpdate);
                 console.log("  result:", updatedUser);
                 res.json(updatedUser);
             } catch (err) {

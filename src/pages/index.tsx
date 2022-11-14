@@ -38,7 +38,7 @@ function Home ({ lecturesByTier }: HomeProps) {
     return (
         <Layout home>
             <Head>
-                <title>Home — {SITE_TITLE}</title>
+                <title>{`Home | ${SITE_TITLE}`}</title>
             </Head>
             <h2>
                 Duo Bongo <i className="bang">!</i>

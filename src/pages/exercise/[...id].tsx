@@ -89,7 +89,7 @@ const ExercisePage = (props: Props) => {
                 dispatch(setExperience(newXP));
             } catch ( err ) {
                 console.error(err);
-                //setError('Error updating progress', err.message);
+                setError('Error updating progress', err.message);
             }
         }
         Router.push('/overview');

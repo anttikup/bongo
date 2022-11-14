@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import { Header, Loader, Table } from "semantic-ui-react";
 
-import Layout, { SITE_TITLE } from '../components/layout';
+import { SITE_TITLE } from '../config';
+import Layout from '../components/layout';
 import Date from '../components/date';
 import userService from '../services/user';
 import { useErrorMessage } from '../hooks/errorMessage';
@@ -34,7 +35,7 @@ type StatsProps = {
 };
 
 export default function Stats(props: StatsProps) {
-    const [userStats, setUserStats] = useState<XpByDate[]>({ xp: [] });
+    const [userStats, setUserStats] = useState<XpByDate[]>();
     const [loading, setLoading] = useState(true);
     const [setError] = useErrorMessage();
 
@@ -57,10 +58,13 @@ export default function Stats(props: StatsProps) {
         void fetchUserStats();
     }, []);
 
+
+    const dates = userStats ? Object.keys(userStats.xpHistory).sort() : [];
+
     return (
         <Layout home>
             <Head>
-                <title>Stats — {SITE_TITLE}</title>
+                <title>{`Stats | ${SITE_TITLE}`}</title>
             </Head>
             <main className="stats-page">
                 <Header as="header">
@@ -69,7 +73,7 @@ export default function Stats(props: StatsProps) {
                 { loading
                   ? <Loader active/>
                   : <div className="stats">
-                      { userStats && userStats.xp &&
+                      { userStats && userStats.xpHistory &&
                         <Table>
                             <Table.Header>
                                 <Table.Row>
@@ -78,10 +82,10 @@ export default function Stats(props: StatsProps) {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                { userStats.xp.map((row, index) => (
+                                { dates.map((date, index) => (
                                     <Table.Row key={index}>
-                                        <Table.Cell>{row.date}</Table.Cell>
-                                        <Table.Cell>{row.value}</Table.Cell>
+                                        <Table.Cell>{date}</Table.Cell>
+                                        <Table.Cell>{userStats.xpHistory[date]}</Table.Cell>
                                     </Table.Row>
                                 )) }
                             </Table.Body>

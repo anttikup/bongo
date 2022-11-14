@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch ( method ) {
         case 'GET':
-            res.status(200).json(userService.getProgress(user));
+            res.status(200).json(await userService.getProgress(user));
             break;
 
         case 'PATCH':
@@ -31,7 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 console.log("BODY:", req.body);
                 const itemsToUpdate = parseUserProgressFields(req.body);
                 console.log("items to udpate", itemsToUpdate);
-                const updatedProgress = userService.updateProgress(user, itemsToUpdate);
+                const updatedProgress = await userService.updateProgress(user, itemsToUpdate);
+                console.log("updated in api:", updatedProgress);
                 res.status(200).json(updatedProgress);
             } catch (err) {
                 res.status(400).send({

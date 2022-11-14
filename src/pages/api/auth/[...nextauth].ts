@@ -1,5 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
-//import GoogleProvider from "next-auth/providers/google"
+import GoogleProvider from "next-auth/providers/google"
 //import FacebookProvider from "next-auth/providers/facebook"
 import GithubProvider from "next-auth/providers/github"
 //import TwitterProvider from "next-auth/providers/twitter"
@@ -36,12 +36,15 @@ export const authOptions: NextAuthOptions = {
         GithubProvider({
             clientId: process.env.GITHUB_ID,
             clientSecret: process.env.GITHUB_SECRET,
+            //idToken: true,
         }),
-        /* GoogleProvider({
-         *     clientId: process.env.GOOGLE_ID,
-         *     clientSecret: process.env.GOOGLE_SECRET,
-         * }),
-         * TwitterProvider({
+        GoogleProvider({
+            clientId: process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_SECRET,
+            wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
+            idToken: true,
+        }),
+        /* TwitterProvider({
          *     clientId: process.env.TWITTER_ID,
          *     clientSecret: process.env.TWITTER_SECRET,
          * }),
@@ -55,17 +58,23 @@ export const authOptions: NextAuthOptions = {
         colorScheme: "light",
     },
     callbacks: {
-        async jwt({ token, account }) {
-            if ( account ) {
-                token.userRole = "admin";
-                token.accessToken = account.access_token;
+        async jwt({ token, _user, _account, profile, _isNewUser }) {
+            console.log("JWT CALLBACK: token", token, ", user:", _user, ", account:", _account, ", profile:", profile, ", isNewUser:", _isNewUser);
+            if ( profile ) {
+                token.userId = profile.id;
             }
+
             return token
         },
         async session({ session, token, user }) {
-            session.accessToken = token.accessToken
+            console.log("SESSION CALLBACK: session:", session, ", token:", token, ", user:", user);
+
+            console.assert(token.id, "No token id");
+            session.user.id = token.userId;
+
+
             return session
-        },
+        }
     },
 }
 

@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch ( method ) {
         case 'GET':
-            res.status(200).json(userService.getStats());
+            res.status(200).json(await userService.getStats(user));
             break;
 
         default:
