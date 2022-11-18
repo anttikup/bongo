@@ -47,10 +47,27 @@ const getKOfN = (k: number, n: number) => {
  **/
 const pickK = <T>(values: Array<T>, k: number) => {
     const count = Math.min(k, values.length)
-    const indeces = getKOfN(count, values.length)
+    const indices = getKOfN(count, values.length)
 
-    return indeces.map((index) => values[index])
+    return indices.map((index) => values[index])
 }
+
+
+/**
+ * Palauttaa `k:n` mukaisen määrän alkioita taulukosta `values` satunnaisessa järjestyksessä siten,
+ * että sama voi esiintyä useita kertoja.
+ * @param values: taulukko, jonka alkioista valitaan
+ * @param k:      määrä joka valitaan
+ **/
+const pickKWithDuplicates = <T>(values: Array<T>, k: number) => {
+    const indices = [];
+    for ( let i = 0; i < k; i++ ) {
+        indices.push(getRandomInteger(0, values.length));
+    }
+
+    return indices.map((index) => values[index])
+}
+
 
 const pickOne = <T>(values: Array<T>) => {
     const array = pickK(values, 1)
@@ -58,8 +75,8 @@ const pickOne = <T>(values: Array<T>) => {
 }
 
 const shuffle = <T>(array: Array<T>): Array<T> => {
-    const indeces = getKOfN(array.length, array.length)
-    return indeces.map((index) => array[index])
+    const indices = getKOfN(array.length, array.length)
+    return indices.map((index) => array[index])
 }
 
 export default {
@@ -67,6 +84,7 @@ export default {
     getRandomInteger,
     getKOfN,
     pickK,
+    pickKWithDuplicates,
     pickOne,
     shuffle
 };
