@@ -13,7 +13,7 @@ import {
 
 import PlayButton from '../PlayButton';
 import Question from '../Question';
-import style from './Sorting.module.css';
+import style from '../../styles/Sorting.module.css';
 
 
 type ItemList = Array<Option>;
@@ -99,7 +99,7 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
                                                 }
                                                 {
                                                     isAudioOption(item)
-                                                    && <div><PlayButton src={audioPath(item.audio)} /></div>
+                                                    && <div><PlayButton src={audioPath(item.audio)} detune={item.detune} /></div>
                                                 }
                                                 {
                                                     isImageOption(item)

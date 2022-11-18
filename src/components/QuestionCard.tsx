@@ -1,8 +1,10 @@
 import React from 'react';
 
 import { Assignment, MultipleChoiceAssignment, YesNoAssignment } from '../types';
-import YesNoQuestionCard from './assignmenttypes/YesNo';
 import MultipleChoiceQuestionCard from './assignmenttypes/MultipleChoice';
+import SortingQuestionCard from './assignmenttypes/Sorting';
+import TuningQuestionCard from './assignmenttypes/Tuning';
+import YesNoQuestionCard from './assignmenttypes/YesNo';
 import style from '../styles/QuestionCard.module.css';
 
 type Props = {
@@ -18,14 +20,6 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
 
             { (() => {
                   switch ( assignment.type ) {
-                      case "yesno":
-                          return (
-                              <YesNoQuestionCard
-                                  assignment={assignment as unknown as YesNoAssignment}
-                                  selectAnswer={selectAnswer}
-                                  selectedAnswer={selectedAnswer}
-                              />);
-
                       case "multiplechoice":
                           return (
                               <MultipleChoiceQuestionCard
@@ -34,6 +28,29 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                                   selectedAnswer={selectedAnswer}
                               />
                           );
+                      case "sorting":
+                          return (
+                              <SortingQuestionCard
+                                  assignment={assignment as SortingAssignment}
+                                  selectAnswer={selectAnswer}
+                                  selectedAnswer={selectedAnswer}
+                              />
+                          );
+                      case "tuning":
+                          return (
+                              <TuningQuestionCard
+                                  assignment={assignment as TuningAssignment}
+                                  selectAnswer={selectAnswer}
+                                  selectedAnswer={selectedAnswer}
+                              />
+                          );
+                      case "yesno":
+                          return (
+                              <YesNoQuestionCard
+                                  assignment={assignment as unknown as YesNoAssignment}
+                                  selectAnswer={selectAnswer}
+                                  selectedAnswer={selectedAnswer}
+                              />);
                   }
                   return (<p className="error">Unknown assignment type: {assignment.type}</p>);
             })() }
