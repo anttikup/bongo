@@ -8,7 +8,7 @@ import MessageDisplay from '../components/MessageDisplay';
 import ExpPoints from '../components/ExpPoints';
 import { useErrorMessage } from '../hooks/errorMessage';
 import userService from '../services/user';
-import { setExperience, useStateValue } from '../state';
+import { setUser, useStateValue } from '../state';
 
 
 import styles from './SiteHeader.module.css';
@@ -20,14 +20,14 @@ type SiteHeaderProps = {
 const SiteHeader = (props: SiteHeaderProps) => {
     const [loading, setLoading] = useState(true);
     const { data: session } = useSession();
-    const [{ experience }, dispatch] = useStateValue();
+    const [{ experience, user }, dispatch] = useStateValue();
     const [setError] = useErrorMessage();
 
     useEffect(() => {
-        const fetchUserXP = async () => {
+        const fetchUser = async () => {
             try {
-                const userXPFromApi = await userService.getXP();
-                dispatch(setExperience(userXPFromApi));
+                const userFromApi = await userService.getUser();
+                dispatch(setUser(userFromApi));
             } catch (e) {
                 console.error(e);
                 setError('Error fetching user progress', (e as Error).message);
@@ -36,20 +36,18 @@ const SiteHeader = (props: SiteHeaderProps) => {
             }
         };
 
-        void fetchUserXP();
+        void fetchUser();
     }, []);
 
 
-    const user = session?.user;
-
     const handleSignin = (e) => {
-        e.preventDefault()
-        signIn()
+        e.preventDefault();
+        signIn();
     };
 
     const handleSignout = (e) => {
-        e.preventDefault()
-        signOut()
+        e.preventDefault();
+        signOut({ redirect: true, callbackUrl: '/' });
     };
 
 
@@ -99,7 +97,7 @@ const SiteHeader = (props: SiteHeaderProps) => {
                 <Menu.Menu position="right">
                     { user
                       && <Menu.Item>
-                          <Username name={user.name} />
+                          <Username name={user.username} />
                           <ExpPoints points={experience} />
                       </Menu.Item>
                     }

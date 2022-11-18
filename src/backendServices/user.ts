@@ -104,6 +104,8 @@ const getStats = async (user: UserInfo): UserStats => {
 };
 
 const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBackend => {
+    console.assert(!('xp' in fields), "can't set xp using updateUser");
+
     try {
         const client = await clientPromise;
         const db = client.db("test");
@@ -114,8 +116,39 @@ const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBac
                 { userID: user.id },
                 {
                     $set: {
-                        xp: fields.xp,
-                        ['xpHistory.' + getDate()]: fields.xp
+                        ...fields
+                    },
+                },
+                { returnNewDocument: true } // doen't work
+            );
+
+        console.log("UPDATED USER:", updateInfo);
+
+        const updatedUser = {
+            ...updateInfo.value,
+            ...fields
+        };
+
+        return updatedUser;
+
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+const updateXP = async (user: UserInfo, xp): UserBackend => {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
+
+        const updateInfo = await db
+            .collection("users")
+            .findOneAndUpdate(
+                { userID: user.id },
+                {
+                    $set: {
+                        xp: xp,
+                        ['xpHistory.' + getDate()]: xp
                     },
                 },
                 { returnNewDocument: true } // doen't work
@@ -127,9 +160,8 @@ const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBac
             ...updateInfo.value,
             xpHistory: {
                 ...updateInfo.value.xpHistory,
-                ['xpHistory.' + getDate()]: fields.xp
+                [getDate()]: xp
             },
-            ...fields
         };
 
         return updatedUser;
@@ -162,7 +194,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | und
 
         let foundUser = await findByUserID(userInfo.id);
 
-        if ( foundUser && foundUser.id ) {
+        if ( foundUser && foundUser.userID ) {
             console.log("FOUND USER:", foundUser);
             return foundUser;
         }
@@ -233,5 +265,6 @@ export default {
     getStats,
     updateProgress,
     updateUser,
+    updateXP,
     findOrCreateUserByUserInfo,
 };

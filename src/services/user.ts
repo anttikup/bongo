@@ -1,22 +1,80 @@
 import axios from "axios";
 
-import type { User, UserProgress, UserStats } from '../types';
+import type { User, UserProgress, UserSettings, UserStats } from '../types';
 
 
 
-
-const getXP = async () => {
-    const { data: userXPFromApi } = await axios.get<User>(
+const getUser = async () => {
+    const { data: userFromApi } = await axios.get<User>(
         '/api/user',
     );
 
     // Axios returns the json as string if it is not valid json.
-    if ( typeof userXPFromApi === "string" ) {
+    if ( typeof userFromApi === "string" ) {
         throw new Error(`Malformed JSON`);
     }
 
-    console.log("getXP:", userXPFromApi);
-    return userXPFromApi.xp;
+    console.log("getUser:", userFromApi);
+    return userFromApi;
+};
+
+
+const updateUser = async (itemsToUpdate: Record<string, unknown>) => {
+    console.log("UPDATING USER:", itemsToUpdate);
+
+    const { data: userFromApi } = await axios.patch<User>(
+        '/api/user',
+        itemsToUpdate
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof userFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+    console.log("updateUser:", userFromApi);
+    return userFromApi;
+};
+
+
+const getUserSettings = async () => {
+    const { data: userSettingsFromApi } = await axios.get<UserSettings>(
+        '/api/user/settings',
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof userSettingsFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+
+    console.log("getUserSettings:", userSettingsFromApi);
+    return userSettingsFromApi;
+};
+
+const updateUserSettings = async (itemsToUpdate: Partial<UserSettings>) => {
+    console.log("UPDATING USER SETTINGS:", itemsToUpdate);
+
+    const { data: userSettingsFromApi } = await axios.patch<UserSettings>(
+        '/api/user/settings',
+        itemsToUpdate
+    );
+
+    console.log("updateUserSettings:", userSettingsFromApi);
+    return userSettingsFromApi;
+};
+
+
+
+const getXP = async () => {
+    const { data: userFromApi } = await axios.get<User>(
+        '/api/user',
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof userFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+
+    return userFromApi.xp;
 };
 
 const updateXP = async (value: number) => {
@@ -26,17 +84,17 @@ const updateXP = async (value: number) => {
 
     console.log("UPDATING:", itemsToUpdate);
 
-    const { data: userXPFromApi } = await axios.patch<UserProgress>(
+    const { data: userFromApi } = await axios.patch<User>(
         '/api/user',
         itemsToUpdate
     );
 
     // Axios returns the json as string if it is not valid json.
-    if ( typeof userXPFromApi === "string" ) {
+    if ( typeof userFromApi === "string" ) {
         throw new Error(`Malformed JSON`);
     }
-    console.log("updateXP:", userXPFromApi);
-    return userXPFromApi.xp;
+    console.log("updateXP:", userFromApi);
+    return userFromApi.xp;
 };
 
 
@@ -96,9 +154,13 @@ const getStats = async () => {
 
 
 export default {
+    getUser,
+    getUserSettings,
     getProgress,
     getStats,
     getXP,
+    updateUser,
+    updateUserSettings,
     updateXP,
     updateProgress,
 };

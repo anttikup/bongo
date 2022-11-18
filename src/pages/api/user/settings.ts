@@ -14,35 +14,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    const userInfo = session.user;
-    if ( ! userInfo ) {
+    const user = session.user;
+    if ( ! user ) {
         res.status(401).json({ error: 'invalid user' });
         return;
     }
 
-    console.log("SESSION USER:", userInfo);
-    console.log("SESSION:", session);
-
-    const userObj = await userService.findOrCreateUserByUserInfo(userInfo);
-    if ( ! userObj ) {
-        res.status(404).json({ error: `invalid user ${userInfo.name}` });
-        return;
-    }
-
     switch ( method ) {
-        case 'GET':
-            res.status(200).json(userObj);
+        case 'GET': {
+            const userData = await userService.findByUserID(user.id);
+            delete userData.xp;
+            delete userData.xpHistory;
+            delete userData.progress;
+            res.status(200).json(userData);
             break;
-
+        }
         case 'PATCH':
             try {
-                const fieldsToUpdate = parseUserFields(req.body);
-                console.assert(Object.keys(fieldsToUpdate).length === 1, "can only set xp");
-                console.assert('xp' in fieldsToUpdate, "can only set xp");
-                console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = await userService.updateXP(userInfo, fieldsToUpdate['xp']);
-                console.log("  result:", updatedUser);
-                res.json(updatedUser);
+                const itemsToUpdate = parseUserFields(req.body);
+                console.log("settings items to udpate", itemsToUpdate);
+                const updatedProgress = await userService.updateUser(user, itemsToUpdate);
+                console.log("updated in api:", updatedProgress);
+                res.status(200).json(updatedProgress);
             } catch (err) {
                 res.status(400).send({
                     error: err.message
@@ -51,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break;
 
         default:
-            res.setHeader('Allow', ['GET'])
+            res.setHeader('Allow', ['GET', 'PATCH'])
             res.status(405).end(`Method ${method} Not Allowed`)
     }
 };
@@ -62,7 +55,17 @@ type UserFields = Partial<UserBackend>;
 export const parseUserFields = (fields: Record<string, unknown>): UserFields => {
     const userFields: UserFields = {
         username: fields.username ? parseStringField(fields.username, "username") : undefined,
-        xp: fields.xp ? parseIntegerField(fields.xp, "xp") : undefined ,
+        email: fields.email ? parseStringField(fields.email, "email") : undefined,
+        notenamePreference: fields.notenamePreference ? parseNotenamePreferenceField(fields.notenamePreference) : undefined,
+        noAudioExercises: fields.noAudioExercises
+                        ? parseBooleanField(fields.noAudioExercises, "noAudioExercises")
+                        : undefined,
+        noImageExercises: fields.noImageExercises
+                        ? parseBooleanField(fields.noImageExercises, "noImageExercises")
+                        : undefined,
+        noMicrophoneExercises: fields.noMicrophoneExercises
+                             ? parseBooleanField(fields.noMicrophoneExercises, "noMicrophoneExercises")
+                             : undefined,
     }
 
     return userFields;
@@ -99,3 +102,25 @@ const parseIntegerField = (val: unknown, fieldName: string): number => {
 
     return val;
 };
+
+
+const isBoolean = (o: unknown): text is boolean => {
+    return o === true || o === false;
+};
+
+const parseBooleanField = (o: unknown, fieldName: string): boolean => {
+    if ( !isBoolean(o) ) {
+        throw new Error(`Incorrect or missing boolean in field '${fieldName}': ${o}`);
+    }
+
+    return o;
+}
+
+
+const parseNotenamePreferenceField = (o: unknown, fieldName: string): boolean => {
+    if ( o !== "b" && o !== "h" && o !== "si" ) {
+        throw new Error(`Incorrect or missing boolean in field '${fieldName}': ${o}`);
+    }
+
+    return o;
+}
