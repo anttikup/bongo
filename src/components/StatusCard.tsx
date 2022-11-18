@@ -24,13 +24,13 @@ const StatusCard = ({ type, assignXP }: StatusProps) => {
     const loadAudio = (type: string) => {
         switch ( type ) {
             case 'correct':
-                return new Audio('/static/effects/ui_ogg/Ding.ogg');
+                return new Audio('/effects/correct.mp3');
             case 'wrong':
-                return new Audio('/static/effects/ui_ogg/negative_sound2.ogg');
+                return new Audio('/effects/wrong.mp3');
             case 'succeed':
-                return new Audio('/static/effects/VICTORY.ogg');
+                return new Audio('/effects/success.mp3');
             case 'fail':
-                return new Audio('/static/effects/Music Box Game Over III.mp3');
+                return new Audio('/effects/failure.mp3');
         }
         return null;
     };
