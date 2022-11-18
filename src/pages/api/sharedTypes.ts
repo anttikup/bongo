@@ -75,6 +75,9 @@ export interface RangeAudio {
 export const isRangeAudio = (obj: unknown): obj is RangeAudio =>
     isObject(obj) && 'maxPic' in obj && typeof obj.maxPic === 'number' && 'minPic' in obj && typeof obj.minPic === 'number';
 
+export const isRangeImage = (obj: unknown): obj is RangeAudio =>
+    isObject(obj) && 'maxLine' in obj && typeof obj.maxLine === 'number' && 'minLine' in obj && typeof obj.minLine === 'number';
+
 export type Range = RangeImage | RangeAudio;
 
 export interface FileMeta {
