@@ -25,9 +25,10 @@ export type UIMessage = {
 
 
 export type User = {
+    id: string;
     username: string | null;
-    token: string;
-    xp?: number;
+    xp: number;
+    xpHistory: Record<string, number>;
 };
 
 export const isUser = (obj: unknown): obj is User => {
@@ -168,6 +169,17 @@ type TimeDataPoint = {
 };
 
 type Date = string;
+
+export type UserSettings = {
+    username: string;
+    email: string;
+    notenames: 'b' | 'h' | 'si';
+    reminderEnabled: boolean;
+    noAudioExercises: boolean;
+    noImageExercises: boolean;
+    noMicrophoneExercises: boolean;
+};
+
 
 
 
