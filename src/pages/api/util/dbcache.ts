@@ -1,4 +1,4 @@
-import { AudioMeta, ImageMeta, isRangeAudio } from '../sharedTypes';
+import { AudioMeta, ImageMeta, isRangeAudio, isRangeImage } from '../sharedTypes';
 
 import imageData from '../../../../../earoutil/backend/data/image.json';
 import audioData from '../../../../../earoutil/backend/data/audio.json';
@@ -31,6 +31,21 @@ const makeFilter = (q: Query) => {
                 continue;
             }
             if ( key === 'maxPic' && isRangeAudio(item.range) ) {
+                if ( item.range[key] > (qr[key] as number) ) {
+                    console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
+                    return false;
+                }
+                continue;
+            }
+
+            if ( key === 'minLine' && isRangeImage(item.range) ) {
+                if ( item.range[key] < (qr[key] as number) ) {
+                    console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
+                    return false;
+                }
+                continue;
+            }
+            if ( key === 'maxLine' && isRangeImage(item.range) ) {
                 if ( item.range[key] > (qr[key] as number) ) {
                     console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
                     return false;
