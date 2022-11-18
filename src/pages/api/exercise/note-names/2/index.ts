@@ -12,8 +12,10 @@ type PitchImage = ImageMeta & PitchMeta;
 
 const generateExercise = () => {
     const questionTypes: (() => MultipleChoiceAssignment)[] = [
-        generateNameANoteNoOctave,
-        generatePickNoteByName,
+        () => generateNameANoteNoOctave(10, 17),
+        () => generatePickNoteByName(10, 17),
+        () => generateNameANoteNoOctave(-5, 2),
+        () => generatePickNoteByName(-5, 2),
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
@@ -22,18 +24,14 @@ const generateExercise = () => {
 
 
 
-const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
+const generateNameANoteNoOctave = (minLine, maxLine) : MultipleChoiceAssignment => {
     const pool = dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
+        minLine,
+        maxLine,
         clef: 'treble',
     });
-
-    if ( pool.length < 5 ) {
-        throw new Error('not enough items in result');
-    }
 
     const picked = random.pickOne(pool);
     const pickedName: string = (picked.notes[0] as NoteImage).name;
@@ -84,19 +82,15 @@ const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
 
 
 
-const generatePickNoteByName = () : MultipleChoiceAssignment => {
+const generatePickNoteByName = (minLine, maxLine) : MultipleChoiceAssignment => {
     type PitchImage = ImageMeta & PitchMeta;
     const pool = dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
+        minLine,
+        maxLine,
         clef: 'treble',
     });
-
-    if ( pool.length < 5 ) {
-        throw new Error('not enough items in result');
-    }
 
     const picked = random.pickOne(pool);
     const pickedName: string = (picked.notes[0] as NoteImage).name;

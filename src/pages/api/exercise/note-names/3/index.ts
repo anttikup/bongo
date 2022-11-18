@@ -26,14 +26,10 @@ const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
     const pool = dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
-        clef: 'treble',
+        minLine: -10,
+        maxLine: 0,
+        clef: 'bass',
     });
-
-    if ( pool.length < 5 ) {
-        throw new Error('not enough items in result');
-    }
 
     const picked = random.pickOne(pool);
     const pickedName: string = (picked.notes[0] as NoteImage).name;
@@ -89,14 +85,10 @@ const generatePickNoteByName = () : MultipleChoiceAssignment => {
     const pool = dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
-        clef: 'treble',
+        minLine: -10,
+        maxLine: 1,
+        clef: 'bass',
     });
-
-    if ( pool.length < 5 ) {
-        throw new Error('not enough items in result');
-    }
 
     const picked = random.pickOne(pool);
     const pickedName: string = (picked.notes[0] as NoteImage).name;
