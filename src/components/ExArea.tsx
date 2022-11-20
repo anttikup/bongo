@@ -4,11 +4,11 @@ import { Header, Progress, Segment } from 'semantic-ui-react';
 
 import ButtonBar from './ButtonBar';
 import { Phase, isAssignment } from '../types';
-import { QuestionSet } from '../types';
-import Error from './Error';
+import { Answer, QuestionSet, isNumber, isObject } from '../types';
+import ErrorComponent from './Error';
 import QuestionCard from './QuestionCard';
 import StatusCard, { StatusValue } from './StatusCard';
-import style from './ExArea.css';
+import style from './styles/ExArea.module.css';
 
 export enum Part {
     Question,
@@ -27,15 +27,46 @@ type Props = {
     questionSet: QuestionSet;
 };
 
+const isArray = (obj: unknown): obj is Array<unknown> => {
+    return isObject(obj) && ('length' in obj) && isNumber(obj.length);
+};
+
+const equals = (obj1: Answer, obj2: Answer, precision: number) => {
+    if ( isArray(obj1) && isArray(obj2) ) {
+        if ( obj1.length !== obj2.length ) {
+            return false;
+        }
+
+        for ( let i = 0; i < obj1.length; i++ ) {
+            if ( obj1[i] !== obj2[i] ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    if ( isObject(obj1) && isObject(obj2) ) {
+        throw new Error("Not implemented");
+    }
+
+    if ( precision ) {
+        console.log("within precision", precision, obj1, obj2);
+        return (obj1 - 10) < obj2 && (obj1 + 10) > obj2;
+    }
+
+    return (obj1 === obj2);
+};
+
 
 const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
     const [part, setPart] = useState(Part.Question);
     const [assignmentQueue, setAssignmentQueue] = useState([...questionSet]);
     const [correctAnswers, setCorrectAnswers] = useState(0);
-    const [selected, setSelected] = useState('');
+    const [selected, setSelected] = useState<Answer | undefined>(undefined);
     const [phase, setPhase] = useState(ExercisePhase.Practice);
 
-    const onAnswerSelected = (answer: string) => setSelected(answer);
+    const onAnswerSelected = (answer: Answer) => setSelected(answer);
 
     const correctAnswersRequired = questionSet.length - 3;
 
@@ -47,14 +78,14 @@ const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
 
 
     const isCorrectAnswer = () => {
-        if ( currentAssignment && isAssignment(currentAssignment) ) {
-            return (selected === currentAssignment.answer);
+        if ( currentAssignment && isAssignment(currentAssignment) && selected !== undefined ) {
+            return equals(selected, currentAssignment.answer, currentAssignment.answerPrecision);
         }
         return false;
     };
 
     const onSkip = () => {
-        setSelected('');
+        setSelected(undefined);
 
         if ( assignmentQueue.length > 0 ) {
             setAssignmentQueue([ ...assignmentQueue.slice(1), assignmentQueue[0] ]);
@@ -71,10 +102,8 @@ const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
     };
 
     const onNext = () => {
-        setSelected('');
-        const copy = [ ...assignmentQueue ];
-        copy.shift();
-        setAssignmentQueue([...copy]);
+        setSelected(undefined);
+        setAssignmentQueue(assignmentQueue.slice(1));
         setPart(Part.Question);
         if ( health === 0 || correctAnswers === correctAnswersRequired ) {
             setPhase(ExercisePhase.End);
@@ -131,7 +160,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
                           onExit={() => exit(health > 0)}
                       />
                   </>
-                  : <Error message="Exercise queue is empty" />
+                  : <ErrorComponent message="Exercise queue is empty" />
                 }
             </Segment>
         </div>

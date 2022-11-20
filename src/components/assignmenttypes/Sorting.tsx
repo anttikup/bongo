@@ -1,8 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
-import { audioPath, imagePath } from '../../config';
+import { AUDIO_PATH, IMAGE_PATH } from '../../config';
 import {
     ImplAssignment,
     isAudioOption,
@@ -37,12 +37,13 @@ type Props = {
 
 const orderItems = (items: ItemList, answerOrder: Array<string> | undefined): ItemList => {
     if ( !answerOrder ) {
+        console.log("no answer order");
         return [ ...items];
     }
 
     const out = [];
     for ( const answer of answerOrder ) {
-        const found = items.find(item => item.value = answer);
+        const found = items.find(item => item.value === answer);
         if ( found ) {
             out.push(found);
         }
@@ -55,7 +56,7 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
     const [items, setItems] = useState<ItemList>(orderItems(assignment.items, selectedAnswer));
 
     const onDragEnd = (result: DropResult) => {
-        // dropped outside the list
+        // Dropped outside the list
         if (!result.destination) {
             return;
         }
@@ -68,6 +69,7 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
 
         setItems(new_items);
         selectAnswer(new_items.map(item => item.value));
+        console.log("selected answer:", new_items.map(item => item.value));
     };
 
 
@@ -83,10 +85,11 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
                                 className={`${style.list} ${snapshot.isDraggingOver ? style.draggingOver : ''}`}
                                 {...provided.droppableProps}
                             >
-                                {items.map((item, index) => (
-                                    <Draggable key={item.value} draggableId={item.value} index={index}>
+                                {items && items.map((item, index) => (
+                                    <Draggable key={item.key || item.value} draggableId={String(item.key || item.value)} index={index}>
                                         {(provided, snapshot) => (
                                             <div
+                                                title={item.value}
                                                 ref={provided.innerRef}
                                                 className={`${style.item} ${snapshot.isDragging ? style.dragging : ''}`}
                                                 {...provided.draggableProps}
@@ -95,15 +98,15 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
                                             >
                                                 {
                                                     isTextOption(item)
-                                                    && <div className="text-item">{item.text}</div>
+                                                    && <div className="text-item">{item.text} {item.value}</div>
                                                 }
                                                 {
                                                     isAudioOption(item)
-                                                    && <div><PlayButton src={audioPath(item.audio)} detune={item.detune} /></div>
+                                                    && <div><PlayButton src={AUDIO_PATH(item.audio)} detune={item.detune} /></div>
                                                 }
                                                 {
                                                     isImageOption(item)
-                                                    && <img src={imagePath(item.image)} style={{ minWidth: 50, minHeight: 50 }} />
+                                                    && <img src={IMAGE_PATH(item.image)} style={{ minWidth: 50, minHeight: 50 }} />
                                                 }
                                             </div>
                                         )}

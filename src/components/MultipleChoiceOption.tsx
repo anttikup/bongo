@@ -55,7 +55,7 @@ const MultipleChoiceOption = ({ option, selectAnswer, selectedAnswer }: Props) =
                   />
                 }
                 { isAudioOption(option) &&
-                  <PlayButton className={style.playButton} src={audioPath(option)} />
+                  <PlayButton className={style.playButton} src={audioPath(option)} detune={option.detune} />
                 }
                 { isTextOption(option) &&
                   <p className={style.optionText}>{option.text}</p>
