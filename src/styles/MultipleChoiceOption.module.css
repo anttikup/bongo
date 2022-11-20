@@ -16,6 +16,7 @@
 
 .indicator {
     height: 1em;
+    margin-top: 2px;
 }
 
 .indicator.selected {
