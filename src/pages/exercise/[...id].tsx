@@ -103,7 +103,10 @@ const ExercisePage = (props: Props) => {
     return (
         <Layout>
             <Head>
-                <title>{`${topic} ${level} | ${SITE_TITLE}`}</title>
+                { topic && level
+                  ? <title>{`${topic} ${level} | ${SITE_TITLE}`}</title>
+                  : <title>{`Exercise | ${SITE_TITLE}`}</title>
+                }
             </Head>
             <Header as="header">
                 <h2 className={styles.title}>
