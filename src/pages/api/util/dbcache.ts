@@ -25,14 +25,14 @@ const makeFilter = (q: Query) => {
         for ( let key in qr ) {
             if ( key === 'minPic' && isRangeAudio(item.range) ) {
                 if ( item.range[key] < (qr[key] as number) ) {
-                    console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
+                    //console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
                     return false;
                 }
                 continue;
             }
             if ( key === 'maxPic' && isRangeAudio(item.range) ) {
                 if ( item.range[key] > (qr[key] as number) ) {
-                    console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
+                    //console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
                     return false;
                 }
                 continue;
@@ -40,14 +40,14 @@ const makeFilter = (q: Query) => {
 
             if ( key === 'minLine' && isRangeImage(item.range) ) {
                 if ( item.range[key] < (qr[key] as number) ) {
-                    console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
+                    //console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
                     return false;
                 }
                 continue;
             }
             if ( key === 'maxLine' && isRangeImage(item.range) ) {
                 if ( item.range[key] > (qr[key] as number) ) {
-                    console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
+                    //console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
                     return false;
                 }
                 continue;
@@ -62,7 +62,7 @@ const makeFilter = (q: Query) => {
             }
             //console.log("  a match:", key, "—", item[key], "<>", qr[key]);
         }
-        console.log("matches:", item);
+        //console.log("matches:", item);
         return true;
     };
 
@@ -77,7 +77,7 @@ const makeFilter = (q: Query) => {
 
 const query = <T>(q: Query): Array<T> => {
     const filterFunc = makeFilter(q);
-    console.log(filterFunc);
+    //console.log(filterFunc);
     // MOCK
     return  data.filter(filterFunc) as Array<unknown> as Array<T>;
 };

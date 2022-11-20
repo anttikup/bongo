@@ -11,20 +11,16 @@ type PitchAudio = AudioMeta & PitchMeta;
 const generateExercise = () => {
     const questionTypes: (() => SortingAssignment)[] = [
         generateSortAudio,
-        generateSortAudio,
-        generateSortAudio,
-        generateSortAudio,
-        generateSortAudio,
     ];
 
-    const genFunctions = random.pickK(questionTypes, 5);
+    const genFunctions = random.pickKWithDuplicates(questionTypes, 5);
     return genFunctions.map(genFunc => genFunc());
 };
 
 
 
 const generateSortAudio = () : SortingAssignment => {
-    const piano = random.getRandomBoolean();
+    const piano = random.getBoolean();
     const pool = dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',

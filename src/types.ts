@@ -1,7 +1,6 @@
-/* const isNumber = (obj: unknown): obj is number => {
- *     return typeof obj === "number";
- * };
- *  */
+export const isNumber = (obj: unknown): obj is number => {
+    return typeof obj === "number";
+};
 
 
 export const isString = (obj: unknown): obj is string => {

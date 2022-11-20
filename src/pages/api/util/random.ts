@@ -1,12 +1,12 @@
-const getRandomInteger = (min: number, maxPlusOne: number) => {
+const getInteger = (min: number, maxPlusOne: number) => {
     min = Math.ceil(min)
     maxPlusOne = Math.floor(maxPlusOne)
     return Math.floor(Math.random() * (maxPlusOne - min)) + min
 }
 
 
-const getRandomBoolean = () => {
-    return getRandomInteger(0, 2) === 1;
+const getBoolean = () => {
+    return getInteger(0, 2) === 1;
 };
 
 /**
@@ -29,7 +29,7 @@ const getKOfN = (k: number, n: number) => {
     const limit = n - k
 
     for ( let t = n - 1; t >= 0; t-- ) {
-        const r = getRandomInteger(0, t+1)
+        const r = getInteger(0, t+1)
         out.push(getNth(r))
         if ( t === limit ) {
             break;
@@ -62,7 +62,7 @@ const pickK = <T>(values: Array<T>, k: number) => {
 const pickKWithDuplicates = <T>(values: Array<T>, k: number) => {
     const indices = [];
     for ( let i = 0; i < k; i++ ) {
-        indices.push(getRandomInteger(0, values.length));
+        indices.push(getInteger(0, values.length));
     }
 
     return indices.map((index) => values[index])
@@ -80,8 +80,8 @@ const shuffle = <T>(array: Array<T>): Array<T> => {
 }
 
 export default {
-    getRandomBoolean,
-    getRandomInteger,
+    getBoolean,
+    getInteger,
     getKOfN,
     pickK,
     pickKWithDuplicates,
