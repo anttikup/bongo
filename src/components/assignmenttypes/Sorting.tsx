@@ -94,11 +94,11 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
                                                 className={`${style.item} ${snapshot.isDragging ? style.dragging : ''}`}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
-                                                style={provided.draggableProps.style}
+                                                style={{...provided.draggableProps.style, backgroundColor: item.color}}
                                             >
                                                 {
                                                     isTextOption(item)
-                                                    && <div className="text-item">{item.text} {item.value}</div>
+                                                    && <div className="text-item">{item.text}</div>
                                                 }
                                                 {
                                                     isAudioOption(item)

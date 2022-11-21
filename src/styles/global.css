@@ -49,3 +49,8 @@ header h1 span {
     font-size: larger;
     font-weight: bolder;
 }
+
+
+strong {
+    color: #008080;
+}
