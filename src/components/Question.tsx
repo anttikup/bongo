@@ -30,7 +30,7 @@ const QuestionComponent = ({ question }: Props) => {
             <p>
                 {
                     isTextQuestion(question)
-                    && <span>{question.text}</span>
+                    && <span dangerouslySetInnerHTML={{ __html: question.text.toString() }} />
                 }
             </p>
             {
