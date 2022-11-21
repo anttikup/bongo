@@ -1,25 +1,24 @@
 import { useEffect, useState } from 'react';
-import { Button, Icon } from "semantic-ui-react";
 
-import { AUDIO_PATH } from '../config';
+import { Divider, Segment } from 'semantic-ui-react'
 
-import style from '../styles/PlayButton.module.css';
-
+import Slider from './Slider';
+import style from '../styles/Tuner.module.css';
 
 type Props = {
     src: string;
-    detune: number;
-    [x:string]: unknown;
+    deviation: number;
+    onChange?: (val: number) => void;
+    value: number;
 };
 
 
-const PlayButton = ({ src, detune, className }: Props) => {
+const Tuner = ({ src, deviation = 0, onChange, value = 0 }: Props) => {
     const [context, setContext] = useState<AudioContext | null>(null);
     const [sample, setSample] = useState<AudioBuffer | null>(null);
     const [source, setSource] = useState<AudioBufferSourceNode | null>(null);
-    //const [startTime, setStartTime] = useState(0);
-    //const [startOffset, setStartOffset] = useState(0);
-    const [playing, setPlaying] = useState(false);
+    const [startTime, setStartTime] = useState(0);
+    const [startOffset, setStartOffset] = useState(0);
 
     useEffect(() => {
         const loadAudio = async (ctx) => {
@@ -34,9 +33,8 @@ const PlayButton = ({ src, detune, className }: Props) => {
 
     }, [src]);
 
-
     const stopAudio = () => {
-        if ( source !== null ) {
+        if ( source !== null  && context !== null ) {
             //setStartOffset(startOffset + context.currentTime - startTime);
             source.stop();
         }
@@ -48,19 +46,12 @@ const PlayButton = ({ src, detune, className }: Props) => {
             stopAudio();
             const newSource = context.createBufferSource();
             newSource.buffer = sample;
-            if ( detune ) {
-                newSource.detune.value = detune;
-            }
+            newSource.detune.value = deviation + value;
             //newSource.playbackRate.value = value;
 
             newSource.connect(context.destination);
             newSource.start(0);//, startOffset % sample.duration);
-            newSource.addEventListener('ended', function (event) {
-                console.log("stopped:", event.target === source);
-                event.target === source && setPlaying(false);
-            });
             setSource(newSource);
-            setPlaying(true);
         }
     };
 
@@ -70,25 +61,23 @@ const PlayButton = ({ src, detune, className }: Props) => {
         }
     };
 
-    const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.stopPropagation();
-        e.preventDefault();
+    const sliderChanged = (val: number) => {
+        if ( onChange ) {
+            onChange(val);
+        }
         play();
     };
 
-    const keyPressed = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
-        if ( ["Enter", " "].includes(event.key) ) {
-            event.preventDefault();
-            event.stopPropagation();
-            play();
-        }
-    };
 
     return (
-        <Button className={`${style.playButton} ${className}`} onClick={onClick} onKeyPress={keyPressed}>
-            <Icon name={!playing ? 'play' : 'volume up'} />
-        </Button>
+        <Segment className={style.tuner}>
+            <Slider min={-100} max={+100} value={value} step={1} onChange={sliderChanged} onClick={() => play()} />
+            <div className={style.value} style={{ backgroundColor: "white" }}>
+                <div style={{ backgroundColor: "white black 1px" }}></div>
+                {value}
+            </div>
+        </Segment>
     );
 };
 
-export default PlayButton;
+export default Tuner;
