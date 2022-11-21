@@ -20,7 +20,21 @@ const newLetterer = () => {
     };
 };
 
-const generateExercise = () => {
+const newColorer = () => {
+    const colors = random.shuffle([
+        '#6768e1',
+        '#e065e1',
+        '#e3e26a',
+        '#65dd64',
+        '#f26379'
+    ]);
+    let index = 0;
+    return () => {
+        return colors[index++ % colors.length];
+    };
+};
+
+const generateExercise = async () => {
     const questionTypes: (() => TuningAssignment)[] = [
         generateTuneAudio,
         generateSortCents,
@@ -28,18 +42,22 @@ const generateExercise = () => {
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
-    return genFunctions.map(genFunc => genFunc());
+    const exerciseSet = [];
+    for ( let genFunc of genFunctions ) {
+        exerciseSet.push(await genFunc());
+    }
+
+    return exerciseSet;
 };
 
 
 
-const generateTuneAudio = () : TuningAssignment => {
-    const pool = dbcache.query<PitchAudio>({
+const generateTuneAudio = async () : TuningAssignment => {
+    const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'longpitch',
-        //humanDescription: 'PIClass: 6, abs 18',
-        minPic: -12,
-        maxPic: 12,
+        'range.minPic': { $gte: -12 },
+        'range.maxPic': { $lte: 12 },
     });
 
     if ( pool.length === 0 ) {
@@ -67,12 +85,12 @@ const generateTuneAudio = () : TuningAssignment => {
 };
 
 
-const generateSortCents = () : TuningAssignment => {
-    const pool = dbcache.query<PitchAudio>({
+const generateSortCents = async () : TuningAssignment => {
+    const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',
-        minPic: -12,
-        maxPic: 12,
+        'range.minPic': { $gte: -12 },
+        'range.maxPic': { $lte: 12 },
     });
 
     assert(pool.length > 0, 'nothing found');
@@ -84,12 +102,14 @@ const generateSortCents = () : TuningAssignment => {
         5
     );
     const nextLetter = newLetterer();
+    const nextColor = newColorer();
     const items = selectedDetunes.map(
         detune => ({
             value: String(detune),
             audio: original.file,
             detune,
-            text: nextLetter()
+            text: nextLetter(),
+            color: nextColor(),
         })
     );
 
@@ -109,12 +129,12 @@ const generateSortCents = () : TuningAssignment => {
 };
 
 
-const generatePickMatchingCents = () : MultipleChoiceAssignment => {
-    const pool = dbcache.query<PitchAudio>({
+const generatePickMatchingCents = async () : MultipleChoiceAssignment => {
+    const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',
-        minPic: -12,
-        maxPic: 12,
+        'range.minPic': { $gte: -12 },
+        'range.maxPic': { $lte: 12 },
     });
 
     assert(pool.length > 0, 'nothing found');
@@ -140,7 +160,7 @@ const generatePickMatchingCents = () : MultipleChoiceAssignment => {
             text: `Select the matching sound.`
         },
         answer: items[0].value,
-        options: items,
+        options,
         id: uuidv4(),
     };
 };
@@ -148,6 +168,6 @@ const generatePickMatchingCents = () : MultipleChoiceAssignment => {
 
 
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    res.status(200).json(generateExercise());
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.status(200).json(await generateExercise());
 };

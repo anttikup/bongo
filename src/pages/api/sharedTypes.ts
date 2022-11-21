@@ -81,15 +81,15 @@ export const isRangeImage = (obj: unknown): obj is RangeAudio =>
 export type Range = RangeImage | RangeAudio;
 
 export interface FileMeta {
-    id: string;
-    type: ItemType;
-    media: MediaType;
+    abstractAudio: string;
     file: string;
+    humanDescription: string;
+    id: string;
+    //intervals: Interval[];
+    media: MediaType;
     notes: Note[];
     range: Range;
-    intervals: Interval[];
-    abstractAudio: string;
-    humanDescription: string;
+    type: ItemType;
 }
 
 export type PitchMeta = FileMeta;
@@ -116,6 +116,8 @@ export interface ImageMeta extends FileMeta {
 
 export interface AudioMeta extends FileMeta {
     media: MediaType.Audio;
+    instrument: string;
+    tempo: number;
 }
 
 

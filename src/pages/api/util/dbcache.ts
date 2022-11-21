@@ -1,90 +1,45 @@
+import clientPromise from "../../../lib/mongodb";
+
 import { AudioMeta, ImageMeta, isRangeAudio, isRangeImage } from '../sharedTypes';
-
-import imageData from '../../../../../earoutil/backend/data/image.json';
-import audioData from '../../../../../earoutil/backend/data/audio.json';
-
-const data = (imageData as Record<string, unknown>[]).concat(audioData as Record<string, unknown>[]);
 
 type Query = {
     media: string;
     type?: string;
     instrument?: string;
-    minLine?: number;
-    maxLine?: number;
-    minPic?: number;
-    maxPic?: number;
     abstractAudio?: string;
     humanDescription?: string;
     clef?: string;
 };
 
 
-const makeFilter = (q: Query) => {
-    const qr = q as Record<string, unknown>;
-    const queryMatches = (item: Record<string, unknown>) => {
-        for ( let key in qr ) {
-            if ( key === 'minPic' && isRangeAudio(item.range) ) {
-                if ( item.range[key] < (qr[key] as number) ) {
-                    //console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
-                    return false;
-                }
-                continue;
-            }
-            if ( key === 'maxPic' && isRangeAudio(item.range) ) {
-                if ( item.range[key] > (qr[key] as number) ) {
-                    //console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
-                    return false;
-                }
-                continue;
-            }
+const clean = item => {
+    const copy = { ...item };
+    delete copy._id;
+    delete copy.master;
+    delete copy.metadata_version;
 
-            if ( key === 'minLine' && isRangeImage(item.range) ) {
-                if ( item.range[key] < (qr[key] as number) ) {
-                    //console.log("  range lower:", key, "—", item.range[key], "<", qr[key]);
-                    return false;
-                }
-                continue;
-            }
-            if ( key === 'maxLine' && isRangeImage(item.range) ) {
-                if ( item.range[key] > (qr[key] as number) ) {
-                    //console.log("  range higher:", key, "—", item.range[key], ">", qr[key]);
-                    return false;
-                }
-                continue;
-            }
+    return copy;
+};
 
-            if ( !(key in item) ) {
-                return false;
-            }
+const query = async <T>(q: Query): Array<T> => {
+    const client = await clientPromise;
+    const db = client.db("test");
+    if ( q.media === 'audio' ) {
+        const result = await db.collection('audio').find(q);
+        const array = await result.toArray();
+        return array.map(clean);
+    } else if ( q.media === 'image' ) {
+        const result = await db.collection('images').find(q);
+        const array = await result.toArray();
+        return array.map(clean);
+    }
 
-            if (item[key] !== qr[key] ) {
-                return false;
-            }
-            //console.log("  a match:", key, "—", item[key], "<>", qr[key]);
-        }
-        //console.log("matches:", item);
-        return true;
-    };
-
-    return (item: Record<string, unknown>) => {
-        if ( !queryMatches(item) ) {
-            return false;
-        }
-        return true;
-    };
+    throw new Error(`Unrecoqnised media type: '${q.media}'`);
 };
 
 
-const query = <T>(q: Query): Array<T> => {
-    const filterFunc = makeFilter(q);
-    //console.log(filterFunc);
-    // MOCK
-    return  data.filter(filterFunc) as Array<unknown> as Array<T>;
-};
-
-
-const getAssociatedAudio = (imageMeta: ImageMeta, instrument: string): AudioMeta | null => {
-    const associatedAudio = query<AudioMeta>({
+const getAssociatedAudio = async (imageMeta: ImageMeta, instrument: string): AudioMeta | null => {
+    const associatedAudio = await query<AudioMeta>({
         media: 'audio',
         instrument,
         abstractAudio: imageMeta.abstractAudio

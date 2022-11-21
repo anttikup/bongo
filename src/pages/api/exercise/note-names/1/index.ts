@@ -10,24 +10,30 @@ import { MAX_HEALTH } from '../../../../../config';
 type PitchAudio = AudioMeta & PitchMeta;
 type PitchImage = ImageMeta & PitchMeta;
 
-const generateExercise = () => {
+const generateExercise = async () => {
     const questionTypes: (() => MultipleChoiceAssignment)[] = [
         generateNameANoteNoOctave,
         generatePickNoteByName,
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
-    return genFunctions.map(genFunc => genFunc());
+
+    const exerciseSet = [];
+    for ( let genFunc of genFunctions ) {
+        exerciseSet.push(await genFunc());
+    }
+
+    return exerciseSet;
 };
 
 
 
-const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
-    const pool = dbcache.query<PitchImage>({
+const generateNameANoteNoOctave = async () : MultipleChoiceAssignment => {
+    const pool = await dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
+        'range.minLine': { $gte: 2 },
+        'range.maxLine': { $lte: 10 },
         clef: 'treble',
     });
 
@@ -67,7 +73,7 @@ const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
     return {
         type: 'multiplechoice',
         question: {
-            text: 'Name the following pitch.',
+            text: 'Name the following note.',
             image: picked.file,
             audio: associatedAudio.length > 0 ? associatedAudio[0].file : undefined
         },
@@ -84,13 +90,13 @@ const generateNameANoteNoOctave = () : MultipleChoiceAssignment => {
 
 
 
-const generatePickNoteByName = () : MultipleChoiceAssignment => {
+const generatePickNoteByName = async () : MultipleChoiceAssignment => {
     type PitchImage = ImageMeta & PitchMeta;
-    const pool = dbcache.query<PitchImage>({
+    const pool = await dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
-        minLine: 2,
-        maxLine: 10,
+        'range.minLine': { $gte: 2 },
+        'range.maxLine': { $lte: 10 },
         clef: 'treble',
     });
 
@@ -120,7 +126,7 @@ const generatePickNoteByName = () : MultipleChoiceAssignment => {
     return {
         type: 'multiplechoice',
         question: {
-            text: `Pick the ${pickedName} pitch.`
+            text: `Select the <strong>${pickedName}</strong> note.`
         },
         answer: pickedName,
         options: options.map<ImageOption>(
@@ -136,6 +142,6 @@ const generatePickNoteByName = () : MultipleChoiceAssignment => {
 
 
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    res.status(200).json(generateExercise());
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.status(200).json(await generateExercise());
 };

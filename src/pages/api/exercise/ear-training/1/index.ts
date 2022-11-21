@@ -5,39 +5,67 @@ import dbcache from '../../../util/dbcache';
 import random from '../../../util/random';
 import { SortingAssignment } from '../../../types';
 import { AudioMeta, PitchMeta, RangeAudio } from '../../../sharedTypes';
+import { MAX_HEALTH } from '../../../../../config';
 
 type PitchAudio = AudioMeta & PitchMeta;
 
-const generateExercise = () => {
+const newColorer = () => {
+    const colors = random.shuffle([
+        '#6768e1',
+        '#e065e1',
+        '#e3e26a',
+        '#65dd64',
+        '#f26379'
+    ]);
+    let index = 0;
+    return () => {
+        return colors[index++ % colors.length];
+    };
+};
+
+
+const generateExercise = async () => {
     const questionTypes: (() => SortingAssignment)[] = [
-        generateSortAudio,
+        await generateSortAudio,
     ];
 
-    const genFunctions = random.pickKWithDuplicates(questionTypes, 5);
-    return genFunctions.map(genFunc => genFunc());
+    const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
+
+    const exerciseSet = [];
+    for ( let genFunc of genFunctions ) {
+        exerciseSet.push(await genFunc());
+    }
+
+    return exerciseSet;
 };
 
 
 
-const generateSortAudio = () : SortingAssignment => {
+const generateSortAudio = async () : SortingAssignment => {
     const piano = random.getBoolean();
-    const pool = dbcache.query<PitchAudio>({
+    const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',
-        minPic: -12,
-        maxPic: 12,
+        'range.minPic': { $gte: -12 },
+        'range.maxPic': { $lte: 12 },
         instrument: piano ? 'acoustic grand' : 'voice oohs',
     });
 
-    if ( pool.length === 0 ) {
-        throw new Error('nothing found');
+    if ( pool.length < 5 ) {
+        throw new Error('not enough items in result');
     }
 
-    const selected = random.pickK(pool, 5);
-    const items = selected.map(item => ({ value: item.id, audio: item.file }));
+    const nextColor = newColorer();
 
-    selected.sort(item => (item.range as RangeAudio).minPic);
-    const order = selected.map(item => item.file);
+    const selected = random.pickK(pool, 5);
+    const items = selected.map(item => ({
+        value: item.id,
+        audio: item.file,
+        color: nextColor()
+    }));
+
+    selected.sort((a, b) => (a.range as RangeAudio).minPic - (b.range as RangeAudio).minPic);
+    const order = selected.map(item => item.id);
 
     return {
         type: "sorting",
@@ -53,6 +81,6 @@ const generateSortAudio = () : SortingAssignment => {
 
 
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    res.status(200).json(generateExercise());
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.status(200).json(await generateExercise());
 };
