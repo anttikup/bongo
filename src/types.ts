@@ -23,12 +23,12 @@ export type UIMessage = {
 };
 
 
-export type User = {
+export interface User {
     id: string;
     username: string | null;
     xp: number;
     xpHistory: Record<string, number>;
-};
+}
 
 export const isUser = (obj: unknown): obj is User => {
     return isObject(obj)
@@ -151,6 +151,7 @@ export type Overview = TierDescr[];
 
 export type ExerciseProgress = {
     val: number;
+    updated: string;
 };
 
 
@@ -202,3 +203,40 @@ export interface SuccessMessage {
 }
 
 export type Message = ErrorMessage | InfoMessage | SuccessMessage;
+
+
+
+
+export type LearningStatsItem = {
+    wrong: number;
+    right: number;
+};
+
+export type LearningStats = Map<string, LearningStatsItem>;
+
+
+export type StatsCategoryFront = {
+    name: string;
+    data: LearningStats;
+};
+
+export type StatsCategory = {
+    userRef: mongoose.Types.ObjectId;
+    name: string;
+    data: LearningStats;
+};
+
+
+export type DatedValue = {
+    val: number;
+    updated: string;
+};
+
+interface UserDB {
+    userId: string;
+    username: string | null;
+    progress: Record<string, DatedValue>;
+    xp: number;
+    xpHistory: Record<string, number>;
+    learningStats: LearningStatsCategory[];
+}
