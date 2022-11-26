@@ -1,3 +1,4 @@
+import { AUDIO_PATH, IMAGE_PATH } from '../config';
 import {
     Question as QuestionType,
     isTextQuestion,
@@ -14,13 +15,6 @@ type Props = {
 };
 
 
-const audioPath = (option: QuestionType) =>
-    isAudioQuestion(option) ? `/static/audio/${option.audio}` : "";
-
-const imagePath = (option: QuestionType) =>
-    isImageQuestion(option) ? `/static/images/${option.image}` : "";
-
-
 const QuestionComponent = ({ question }: Props) => {
 
     console.log("question:", question);
@@ -35,12 +29,12 @@ const QuestionComponent = ({ question }: Props) => {
             </p>
             {
                 isImageQuestion(question)
-                && <img className={style.image} src={imagePath(question)} style={{ minWidth: 200, minHeight: 150 }} />
+                && <img className={style.image} src={IMAGE_PATH(question.image)} style={{ minWidth: 200, minHeight: 150 }} />
             }
             {
                 isAudioQuestion(question)
                 && <div className={style.playButtonContainer}>
-                    <PlayButton src={audioPath(question)} />
+                    <PlayButton src={AUDIO_PATH(question.audio)} />
                 </div>
             }
 

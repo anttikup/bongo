@@ -1,5 +1,6 @@
 import { Form, Radio } from 'semantic-ui-react';
 
+import { AUDIO_PATH, IMAGE_PATH } from '../config';
 import ImageBox from './ImageBox';
 import PlayButton from './PlayButton';
 import Tabbable from './Tabbable';
@@ -23,12 +24,6 @@ const isKeypress = (event: unknown):
                    event is React.KeyboardEvent =>
                        isObject(event) && 'type' in event && event.type === "keypress";
 
-const audioPath = (option: Option) =>
-    isAudioOption(option) ? `/static/audio/${option.audio}` : "";
-
-const imagePath = (option: Option) =>
-    isImageOption(option) ? `/static/images/${option.image}` : "";
-
 
 
 const MultipleChoiceOption = ({ option, selectAnswer, selectedAnswer }: Props) => {
@@ -51,11 +46,11 @@ const MultipleChoiceOption = ({ option, selectAnswer, selectedAnswer }: Props) =
             <Tabbable className={style.option} onActivate={clicked} activatingKeys={['Enter', ' ', 'p']}>
                 { isImageOption(option) &&
                   <ImageBox
-                      src={imagePath(option)}
+                      src={IMAGE_PATH(option.image)}
                   />
                 }
                 { isAudioOption(option) &&
-                  <PlayButton className={style.playButton} src={audioPath(option)} detune={option.detune} />
+                  <PlayButton className={style.playButton} src={AUDIO_PATH(option.audio)} detune={option.detune} />
                 }
                 { isTextOption(option) &&
                   <p className={style.optionText}>{option.text}</p>
