@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import type { User, UserProgress, UserSettings, UserStats } from '../types';
+import type { User, UserProgress, UserSettings, UserStats, LearningStats } from '../types';
 
 
 
@@ -136,6 +136,37 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
 
 
 
+const getLearningStats = async (statsCategory: string) => {
+    const { data: learningStatsFromApi } = await axios.get<StatsCategory>(
+        `/api/user/learningstats/${statsCategory}`,
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof learningStatsFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+
+    return learningStatsFromApi;
+};
+
+
+const updateLearningStats = async (category: string, stats: LearningStats) => {
+    console.log("UPDATING:", stats);
+
+    const { data: learningStatsFromApi } = await axios.put<LearningStats>(
+        `/api/user/learningstats/${category}`,
+        stats,
+    );
+
+    // Axios returns the json as string if it is not valid json.
+    if ( typeof learningStatsFromApi === "string" ) {
+        throw new Error(`Malformed JSON`);
+    }
+
+    console.log("servicefrontend: got learningstats:", learningStatsFromApi);
+    return learningStatsFromApi;
+};
+
 
 const getStats = async () => {
     const { data: userStatsFromApi } = await axios.get<UserStats>(
@@ -154,13 +185,15 @@ const getStats = async () => {
 
 
 export default {
-    getUser,
-    getUserSettings,
+    getLearningStats,
     getProgress,
     getStats,
+    getUser,
+    getUserSettings,
     getXP,
+    updateLearningStats,
+    updateProgress,
     updateUser,
     updateUserSettings,
     updateXP,
-    updateProgress,
 };

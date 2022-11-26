@@ -25,6 +25,7 @@ type Props = {
     exit: (finishedSuccessfully: boolean) => void;
     health: number;
     questionSet: QuestionSet;
+    updateStats: (selected: Answer, correct: Answer) => void;
 };
 
 const isArray = (obj: unknown): obj is Array<unknown> => {
@@ -59,7 +60,7 @@ const equals = (obj1: Answer, obj2: Answer, precision: number) => {
 };
 
 
-const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
+const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Props) => {
     const [part, setPart] = useState(Part.Question);
     const [assignmentQueue, setAssignmentQueue] = useState([...questionSet]);
     const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -93,11 +94,18 @@ const ExArea = ({ decrementHealth, exit, health, questionSet }: Props) => {
     };
 
     const onCheck = () => {
+        if ( !selected ) {
+            return;
+        }
+
         if ( isCorrectAnswer() ) {
             setCorrectAnswers(correctAnswers + 1);
         } else {
             decrementHealth();
         }
+
+        updateStats(selected, currentAssignment.answer);
+
         setPart(Part.Result);
     };
 

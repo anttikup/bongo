@@ -8,6 +8,7 @@ import ExArea from '../../components/ExArea';
 import Health from '../../components/Health';
 import Layout from '../../components/layout';
 import { useErrorMessage } from '../../hooks/errorMessage';
+import { useQuestionSet } from '../../hooks/data';
 import { getAllExerciseIds } from '../../lib/exercises';
 import exerciseService from '../../services/exercise';
 import userService from '../../services/user';
@@ -49,13 +50,27 @@ const ExercisePage = (props: Props) => {
 
     const [health, setHealth] = useState(3);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
-    const [loading, setLoading] = useState(true);
+    //const [learningStats, setLearningStats] = useState<StatsCategory>([]);
+    const [loadingQS, setLoadingQS] = useState(true);
+    const [loadingLS, setLoadingLS] = useState(true);
     const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
+    //const learningStats = useRef({});
 
+    /* const {
+     *     data: questionSet,
+     *     error: questionSetError,
+     *     loading: questionSetLoading
+     * } = useQuestionSet(topic, level);
+
+
+     * if ( questionSetError ) {
+     *     setError(questionSetError);
+     * } */
 
     useEffect(() => {
         const fetchQuestionSet = async () => {
+            setLoadingQS(true);
             try {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level: parseInt(level, 10) });
                 console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
@@ -65,7 +80,7 @@ const ExercisePage = (props: Props) => {
                 setQuestionSet([]);
                 setError('Error fetching questions', (e as Error).message);
             } finally {
-                setLoading(false);
+                setLoadingQS(false);
             }
         };
 
@@ -73,6 +88,44 @@ const ExercisePage = (props: Props) => {
             void fetchQuestionSet();
         }
     }, [topic, level]);
+
+
+    useEffect(() => {
+        const fetchLearningStats = async () => {
+            setLoadingLS(true);
+            try {
+                const learningStatsFromApi = await userService.getLearningStats('notenames');
+                console.info(learningStatsFromApi);
+                setLearningStats(learningStatsFromApi);
+            } catch (e) {
+                console.error(e);
+                setError('Error fetching learningstats', (e as Error).message);
+            } finally {
+                setLoadingLS(false);
+            }
+        };
+
+        if ( topic && level ) {
+            void fetchLearningStats();
+        }
+    }, [topic, level]);
+
+
+    const updateStats = (userAnswer: Answer, trueAnswer: Answer) => {
+        if ( userAnswer === trueAnswer ) {
+            setlearningStats({
+                ...learningStats,
+                [userAnswer].right: learningStats[userAnswer].right + 1,
+            });
+        } else {
+            setlearningStats({
+                ...learningStats,
+                [userAnswer].wrong: learningStats[userAnswer].wrong + 1,
+                [trueAnswer].wrong: learningStats[trueAnswer].wrong + 1,
+            });
+
+        }
+    };
 
 
 
@@ -87,6 +140,11 @@ const ExercisePage = (props: Props) => {
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));
+                const data = { ...learningStats.data };
+                data['f'] = { right: 99, wrong: 12 };
+                const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
+                console.info(learningStatsFromApi);
+                setLearningStats(learningStatsFromApi);
             } catch ( err ) {
                 console.error(err);
                 setError('Error updating progress', err.message);
@@ -117,7 +175,7 @@ const ExercisePage = (props: Props) => {
                 <Health max={3} value={health} />
             </Header>
 
-            { loading
+            { loadingQS || loadingLS
               ? <Loader active/>
               : <ExArea exit={onExit} health={health} decrementHealth={healthHit} questionSet={questionSet} />
             }

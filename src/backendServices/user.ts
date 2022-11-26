@@ -180,7 +180,8 @@ const findByUserID = async (userID: string): UserBackend | undefined => {
             .collection("users")
             .findOne({ userID });
 
-        return clean(foundUser);
+        //return clean(foundUser);
+        return foundUser;
     } catch (e) {
         console.error(e);
     }
