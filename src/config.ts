@@ -5,7 +5,7 @@ export const EFFECTS_PATH = (fn: string) =>
     fn ? `/effects/${fn}` : "";
 
 export const AUDIO_PATH = (fn: string) =>
-    fn ? `/static/audio/${fn}` : "";
+    fn ? `/media/audio/${fn}` : "";
 
 export const IMAGE_PATH = (fn: string) =>
-    fn ? `/images/${fn}` : "";
+    fn ? `/media/images/${fn}` : "";
