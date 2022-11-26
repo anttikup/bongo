@@ -116,7 +116,6 @@ const generateSortCents = async () : TuningAssignment => {
     const order = items.map(item => item.detune);
     order.sort((a, b) => a - b);
 
-    console.log("ORDER:", order);
     return {
         type: 'sorting',
         question: {
