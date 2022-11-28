@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Router, { useRouter } from 'next/router'
 import { Header, Loader } from "semantic-ui-react";
 
+import LearningSetManager from '../../utils/LearningSetManager';
 import { SITE_TITLE } from '../../config';
 import ExArea from '../../components/ExArea';
 import Health from '../../components/Health';
@@ -55,7 +56,8 @@ const ExercisePage = (props: Props) => {
     const [loadingLS, setLoadingLS] = useState(true);
     const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
-    //const learningStats = useRef({});
+    // Stats data doesn't affect the component, so we store it outside state.
+    const learningStatsRef = useRef<StatsCategory | null>(null);
 
     /* const {
      *     data: questionSet,
@@ -96,7 +98,11 @@ const ExercisePage = (props: Props) => {
             try {
                 const learningStatsFromApi = await userService.getLearningStats('notenames');
                 console.info(learningStatsFromApi);
-                setLearningStats(learningStatsFromApi);
+                if ( !learningStatsRef.current ) {
+                    learningStatsRef.current = new LearningSetManager();
+                }
+
+                learningStatsRef.current.add('notenames', learningStatsFromApi.data);
             } catch (e) {
                 console.error(e);
                 setError('Error fetching learningstats', (e as Error).message);
@@ -112,18 +118,12 @@ const ExercisePage = (props: Props) => {
 
 
     const updateStats = (userAnswer: Answer, trueAnswer: Answer) => {
+        console.log("UPDAT:", learningStatsRef.current);
         if ( userAnswer === trueAnswer ) {
-            setlearningStats({
-                ...learningStats,
-                [userAnswer].right: learningStats[userAnswer].right + 1,
-            });
+            learningStatsRef.current.update('notenames', userAnswer, 2, 0);
         } else {
-            setlearningStats({
-                ...learningStats,
-                [userAnswer].wrong: learningStats[userAnswer].wrong + 1,
-                [trueAnswer].wrong: learningStats[trueAnswer].wrong + 1,
-            });
-
+            learningStatsRef.current.update('notenames', userAnswer, 0, 1);
+            learningStatsRef.current.update('notenames', trueAnswer, 0, 1);
         }
     };
 
@@ -136,15 +136,12 @@ const ExercisePage = (props: Props) => {
             const oldProgress = userProgress[id] || { val: 0 };
             try {
                 const newProgress = await userService.updateProgress(id, oldProgress.val + 1);
-                console.log("updated progress:", newProgress);
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));
-                const data = { ...learningStats.data };
-                data['f'] = { right: 99, wrong: 12 };
+                const data = learningStatsRef.current.getSet('notenames');
                 const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
-                console.info(learningStatsFromApi);
-                setLearningStats(learningStatsFromApi);
+                learningStatsRef.current = learningStatsFromApi;
             } catch ( err ) {
                 console.error(err);
                 setError('Error updating progress', err.message);
@@ -177,7 +174,13 @@ const ExercisePage = (props: Props) => {
 
             { loadingQS || loadingLS
               ? <Loader active/>
-              : <ExArea exit={onExit} health={health} decrementHealth={healthHit} questionSet={questionSet} />
+              : <ExArea
+                    exit={onExit}
+                    health={health}
+                    decrementHealth={healthHit}
+                    questionSet={questionSet}
+                    updateStats={updateStats}
+              />
             }
         </Layout>
     );

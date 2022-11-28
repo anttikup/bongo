@@ -31,7 +31,6 @@ export const setMessage = (message: UIMessage | null): Action => {
     return { type: "SET_MESSAGE", object: message };
 };
 
-
 export const setExerciseProgress = (id: string, progress: ExerciseProgress): Action => {
     return { type: "SET_EXCERCISE_PROGRESS", object: { id, progress } };
 };
