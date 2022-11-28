@@ -1,0 +1,133 @@
+[
+    {
+        "name": "tier-1",
+        "items": [
+            {
+                "topic": "note-reading",
+                "level": 1,
+                "levels": 3,
+                "id": "note-reading/1",
+                "text": "Note reading 1: Treble cleff",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Gartoon_devices_mouse.svg",
+                "color": "#cfbcf0",
+                "material": "/lectures/note-reading/1"
+            },
+            {
+                "topic": "notenames",
+                "level": 1,
+                "levels": 3,
+                "id": "notenames/1",
+                "text": "Note names 1: Basics",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/0/05/Noto_Emoji_v2.034_1f3ba.svg",
+                "color": "#fcbfc0",
+                "material": "/lectures/notenames/1"
+            },
+            {
+                "topic": "tuning",
+                "level": 1,
+                "levels": 3,
+                "id": "tuning/1",
+                "text": "Tuning",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Face-monkey.svg",
+                "color": "#ffcbc0",
+                "material": "/lectures/tuning/1"
+            },
+            {
+                "topic": "guitar",
+                "level": 1,
+                "levels": 3,
+                "id": "guitar/1",
+                "text": "Guitar 1",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Twemoji_1f3b8.svg",
+                "color": "#cbc0ff",
+                "material": "/lectures/guitar/1"
+            },
+            {
+                "topic": "note-reading",
+                "level": 2,
+                "levels": 3,
+                "id": "note-reading/2",
+                "text": "Note reading 2: Leger lines",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Radio.svg",
+                "color": "#c0cbff",
+                "material": "/lectures/note-reading/2"
+            }
+        ]
+    },
+    {
+        "name": "tier-2",
+        "items": [
+            {
+                "topic": "keyboard",
+                "level": 2,
+                "levels": 3,
+                "id": "keyboard/2",
+                "text": "Keyboard 2",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/8/81/Torchlight_eva.png",
+                "color": "#cbc0ff"
+            },
+            {
+                "topic": "guitar",
+                "level": 2,
+                "levels": 3,
+                "id": "guitar/2",
+                "text": "Guitar 2",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/694-guitar.svg",
+                "color": "f0cfcb"
+            },
+            {
+                "topic": "note-reading",
+                "level": 3,
+                "levels": 3,
+                "id": "note-reading/3",
+                "text": "Note reading 3: Bass cleff",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Radio.svg",
+                "color": "#c0cbff",
+                "material": "/lectures/note-reading/3"
+            }
+        ]
+    },
+    {
+        "name": "tier-3",
+        "items": [
+            {
+                "topic": "chords",
+                "level": 2,
+                "levels": 3,
+                "id": "chords/1",
+                "text": "Chords",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/af/Emoji_u1f3b9.svg",
+                "color": "fcfbcc"
+            },
+            {
+                "topic": "melodic",
+                "level": 2,
+                "levels": 3,
+                "id": "melodic/1",
+                "text": "Melodic intervals",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/0/05/Noto_Emoji_v2.034_1f3ba.svg",
+                "color": "cfbfcc"
+            },
+            {
+                "topic": "harmonic",
+                "level": 3,
+                "levels": 3,
+                "id": "harmonic/1",
+                "text": "Harmonic intervals",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Twemoji12_1f6f8.svg",
+                "color": "fccbfc"
+            },
+            {
+                "topic": "tuning",
+                "level": 2,
+                "levels": 3,
+                "id": "tuning/2",
+                "text": "Tuning",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Conical_flask_green.svg",
+                "color": "#cbc0ff",
+                "material": "/lectures/tuning/2"
+            }
+
+        ]
+    }
+]

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import overviewData from '../../../../earo2/mockbackend/api/overview.json';
+import overviewData from '../../../public/overview.json';
 
 const overview: Overview = overviewData as unknown as Overview;
 

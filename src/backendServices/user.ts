@@ -1,15 +1,6 @@
 import clientPromise from "../lib/mongodb";
 
-import userProgressData from '../../../earo2/mockbackend/api/userprogress.json';
-import usersData from '../../../earo2/mockbackend/api/users.json';
-import userStatsData from '../../../earo2/mockbackend/api/userstats.json';
-
-
 import type { ExerciseProgress, UserBackend, UserProgress, UserStats } from '../types';
-
-const userProgress: UserProgress = userProgressData as unknown as UserProgress;
-const users: UserBackend[] = usersData as unknown as UserBackend[];
-const userStats: UserStats = userStatsData as unknown as UserStats;
 
 type UserInfo = {
     id: number;
