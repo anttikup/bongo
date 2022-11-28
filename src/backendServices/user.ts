@@ -1,6 +1,6 @@
 import clientPromise from "../lib/mongodb";
 
-import type { ExerciseProgress, UserBackend, UserProgress, UserStats } from '../types';
+import type { ExerciseProgress, UserDB, UserProgress, UserStats } from '../types';
 
 type UserInfo = {
     id: number;
@@ -94,7 +94,7 @@ const getStats = async (user: UserInfo): UserStats => {
     return { xpHistory: userData.xpHistory || {} };
 };
 
-const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBackend => {
+const updateUser = async (user: UserInfo, fields: Partial<UserDB>): UserDB => {
     console.assert(!('xp' in fields), "can't set xp using updateUser");
 
     try {
@@ -127,7 +127,7 @@ const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBac
     }
 };
 
-const updateXP = async (user: UserInfo, xp): UserBackend => {
+const updateXP = async (user: UserInfo, xp): UserDB => {
     try {
         const client = await clientPromise;
         const db = client.db(process.env.DB_NAME);
@@ -162,7 +162,7 @@ const updateXP = async (user: UserInfo, xp): UserBackend => {
     }
 };
 
-const findByUserID = async (userID: string): UserBackend | undefined => {
+const findByUserID = async (userID: string): UserDB | undefined => {
     try {
         const client = await clientPromise;
         const db = client.db(process.env.DB_NAME);
@@ -179,7 +179,7 @@ const findByUserID = async (userID: string): UserBackend | undefined => {
     return null;
 };
 
-const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | undefined => {
+const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserDB | undefined => {
     try {
         const client = await clientPromise;
         const db = client.db(process.env.DB_NAME);
@@ -214,7 +214,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | und
 
 };
 
-const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): UserBackend | undefined => {
+const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): UserDB | undefined => {
     try {
         const client = await clientPromise;
         const db = client.db(process.env.DB_NAME);
