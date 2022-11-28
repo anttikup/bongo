@@ -60,7 +60,7 @@ const generateNameARelatedNoteHalfSteps = async (user) : MultipleChoiceAssignmen
     return {
         type: 'multiplechoice',
         question: {
-            text: `Pick the note name that is ${distInDirection} halfsteps ${direction} ${compared}`,
+            text: `Pick the note name that is <strong>${distInDirection} halfsteps ${direction} ${compared}</strong>`,
         },
         answer: correct,
         options: options.map<TextOption>(
