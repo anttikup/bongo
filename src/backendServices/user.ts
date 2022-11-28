@@ -60,7 +60,7 @@ const updateProgress = async (user: UserInfo, keyval: Partial<UserProgress>): Us
     const exerciseId = Object.keys(keyval)[0];
 
     const client = await clientPromise;
-    const db = client.db("test");
+    const db = client.db(process.env.DB_NAME);
 
     const newValue = {
         val: keyval[exerciseId].val,
@@ -108,7 +108,7 @@ const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBac
 
     try {
         const client = await clientPromise;
-        const db = client.db("test");
+        const db = client.db(process.env.DB_NAME);
 
         const updateInfo = await db
             .collection("users")
@@ -139,7 +139,7 @@ const updateUser = async (user: UserInfo, fields: Partial<UserBackend>): UserBac
 const updateXP = async (user: UserInfo, xp): UserBackend => {
     try {
         const client = await clientPromise;
-        const db = client.db("test");
+        const db = client.db(process.env.DB_NAME);
 
         const updateInfo = await db
             .collection("users")
@@ -174,7 +174,7 @@ const updateXP = async (user: UserInfo, xp): UserBackend => {
 const findByUserID = async (userID: string): UserBackend | undefined => {
     try {
         const client = await clientPromise;
-        const db = client.db("test");
+        const db = client.db(process.env.DB_NAME);
 
         const foundUser = await db
             .collection("users")
@@ -191,7 +191,7 @@ const findByUserID = async (userID: string): UserBackend | undefined => {
 const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | undefined => {
     try {
         const client = await clientPromise;
-        const db = client.db("test");
+        const db = client.db(process.env.DB_NAME);
 
         let foundUser = await findByUserID(userInfo.id);
 
@@ -226,7 +226,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): UserBackend | und
 const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): UserBackend | undefined => {
     try {
         const client = await clientPromise;
-        const db = client.db("test");
+        const db = client.db(process.env.DB_NAME);
 
         const foundUser = await db
             .collection("users")
