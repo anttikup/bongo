@@ -5,14 +5,52 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { SITE_TITLE } from '../../config';
 import Layout from '../../components/layout';
 import Date from '../../components/date';
-import { getLecturesDataByTier } from '../../lib/lectures';
 
 import utilStyles from '../../styles/utils.module.css';
 import styles from '../../styles/lecture.module.css';
 
 
+const lecturesDataByTier = [
+    {
+        lectures: [
+            {
+                id: 'notenames/1',
+                date: '2000000',
+                topic: 'notenames',
+                number: 1,
+                title: ''
+            },
+            {
+                id: 'note-reading/1',
+                date: '2000000',
+                topic: 'note-reading',
+                number: 1,
+                title: ''
+            },
+            {
+                id: 'tuning/1',
+                date: '2000000',
+                topic: 'tuning',
+                number: 1,
+                title: ''
+            },
+        ]
+    },
+    {
+        lectures: [
+            {
+                id: 'note-reading/2',
+                date: '2000000',
+                topic: 'note-reading',
+                number: 2,
+                title: ''
+            },
+        ]
+    },
+];
+
 export const getStaticProps: GetStaticProps = () => {
-    const lecturesByTier = getLecturesDataByTier();
+    const lecturesByTier = lecturesDataByTier;
     return {
         props: {
             lecturesByTier
@@ -21,17 +59,19 @@ export const getStaticProps: GetStaticProps = () => {
 };
 
 type LectureData = {
+    id: string
+    topic: string
+    number: number
     title: string
     date: string
-    contentHtml: string
 };
 
 type Tier = {
-    lectures: Array<LectureData>
+    lectures: Array<LectureData>;
 };
 
 type LecturesProps = {
-    tiers: Array<Tier>
+    lecturesByTier: Array<Tier>
 };
 
 export default function Lectures({ lecturesByTier }: LecturesProps) {
@@ -43,7 +83,7 @@ export default function Lectures({ lecturesByTier }: LecturesProps) {
             <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
                 <h1 className={utilStyles.headingLg}>Lectures</h1>
                 <ul className={utilStyles.list}>
-                    {lecturesByTier.map((tier, index) =>
+                    {lecturesByTier && lecturesByTier.map((tier, index) =>
                         (
                             <div className={styles.tier} key={index}>
                                 <div className={styles.tierHeading}>
@@ -51,7 +91,7 @@ export default function Lectures({ lecturesByTier }: LecturesProps) {
 
                                     {index + 1}
                                 </div>
-                                {tier.map(({ id, date, topic, number, title }) => (
+                                {tier.lectures.map(({ id, date, topic, number, title }) => (
                                     <li className={utilStyles.listItem} key={id}>
                                         <Link href={`/lectures/${id}`}>
                                             {topic} {number}: {title}

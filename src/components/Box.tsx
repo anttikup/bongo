@@ -14,12 +14,14 @@ type BoxProps = {
     topic: string;
     level: number;
     material?: string;
+    refreshed: string;
+    levels: number;
 };
 
 const Box = ({ progress, refreshed, text, image, color, topic, level, material, levels }: BoxProps) => {
     const [mainHovered, setMainHovered] = useState(false);
 
-    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         Router.push(`/exercise/${topic}/${level}`);
     };
 
@@ -30,11 +32,11 @@ const Box = ({ progress, refreshed, text, image, color, topic, level, material, 
     };
 
 
-    const handleMainHover = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleMainHover = (event: React.MouseEvent<HTMLDivElement>) => {
         setMainHovered(true);
     };
 
-    const handleMainUnHover = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleMainUnHover = (event: React.MouseEvent<HTMLDivElement>) => {
         setMainHovered(false);
     };
 

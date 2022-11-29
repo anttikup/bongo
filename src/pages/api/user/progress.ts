@@ -3,8 +3,9 @@ import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
 import userService from '../../../backendServices/user';
-import { parseIntegerField } from '../util/typeutil';
+import { parseIntegerField, parseStringField } from '../util/typeutil';
 
+import type { UserProgress } from '../../../types';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -29,11 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         case 'PATCH':
             try {
-                console.log("BODY:", req.body);
                 const itemsToUpdate = parseUserProgressFields(req.body);
-                console.log("items to udpate", itemsToUpdate);
                 const updatedProgress = await userService.updateProgress(user, itemsToUpdate);
-                console.log("updated in api:", updatedProgress);
                 res.status(200).json(updatedProgress);
             } catch (err) {
                 res.status(400).send({
@@ -50,7 +48,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
 type Val = {
-    val: string | number;
+    val: number;
+    updated: string;
 };
 
 type ProgressFields = Partial<UserProgress>;
@@ -62,7 +61,10 @@ const parseUserProgressFields = (fields: Record<string, Val>): ProgressFields =>
     for ( let key in fields ) {
         console.log("key:", key);
         console.log("    :", fields[key].val);
-        progressFields[key] = { val: parseIntegerField(fields[key].val, key) };
+        progressFields[key] = {
+            val: parseIntegerField(fields[key].val, key),
+            updated: parseStringField(fields[key].updated, key)
+        };
     }
 
     return progressFields;

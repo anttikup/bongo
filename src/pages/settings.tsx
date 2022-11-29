@@ -6,10 +6,13 @@ import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
 import { useMessage } from '../hooks/message';
 import userService from '../services/user';
-import { setUser, useStateValue } from '../state';
+import { setUser, useStateValue, setUserSettings } from '../state';
 
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/overview.module.css';
+
+import type { NotenamePreference } from '../types';
+
 
 const notenameOptions = [
     {
@@ -37,23 +40,22 @@ type Props = {
 };
 
 const SettingsPage = (props: Props) => {
+    const [{ user, userSettings }, dispatch] = useStateValue();
     const [loading, setLoading] = useState(true);
-    const [{ user }, dispatch] = useStateValue();
-    const [userSettings, setUserSettings] = useStateValue(null);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [reminderEnabled, setReminderEnabled] = useState(false);
     const [audioExercisesEnabled, setAudioExercisesEnabled] = useState(false);
     const [imageExercisesEnabled, setImageExercisesEnabled] = useState(false);
     const [microphoneExercisesEnabled, setMicrophoneExercisesEnabled] = useState(false);
-    const [notenamePreference, setNotenamePreference] = useState('b');
+    const [notenamePreference, setNotenamePreference] = useState<NotenamePreference>('b');
     const [_, setMessage] = useMessage();
 
     useEffect(() => {
         const fetchUserSettings = async () => {
             try {
                 const userSettingsFromApi = await userService.getUserSettings();
-                setUserSettings(userSettingsFromApi);
+                dispatch(setUserSettings(userSettingsFromApi));
                 setUsername(userSettingsFromApi.username || "");
                 setEmail(userSettingsFromApi.email || "");
                 setNotenamePreference(userSettingsFromApi.notenamePreference || 'b');
@@ -77,7 +79,7 @@ const SettingsPage = (props: Props) => {
         const data = {
             username,
             email,
-            notenamePreference: notenamePreference === 'b' ? undefined : notenamePreference,
+            notenamePreference: notenamePreference === 'b' ? undefined : notenamePreference as NotenamePreference,
             noAudioExercises: !audioExercisesEnabled,
             noImageExercises: !imageExercisesEnabled,
             noMicrophoneExercises: !microphoneExercisesEnabled,
@@ -157,7 +159,7 @@ const SettingsPage = (props: Props) => {
                             options={notenameOptions}
                             style={{ float: 'right' }}
                             value={notenamePreference}
-                            onChange={(e, data) => setNotenamePreference(data.value)}
+                            onChange={(e, data) => setNotenamePreference(data.value as NotenamePreference)}
                         />
                     </Form.Field>
                     <p>Select the standard to use for note names.</p>

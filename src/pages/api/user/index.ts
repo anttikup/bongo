@@ -3,6 +3,8 @@ import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
 import userService from '../../../backendServices/user';
+
+import { UserDB } from '../../../types';
 import { parseStringField, parseIntegerField } from '../util/typeutil';
 
 
@@ -58,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 };
 
 
-type UserFields = Partial<UserBackend>;
+type UserFields = Partial<UserDB>;
 
 export const parseUserFields = (fields: Record<string, unknown>): UserFields => {
     const userFields: UserFields = {

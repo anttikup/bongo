@@ -3,9 +3,10 @@ import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../../auth/[...nextauth]";
 import learningStatsLib from '../../../../lib/learningstats';
-import { parseString, parseNumber } from '../../util/typeutil';
+import { isNumber, parseNumberField } from '../../util/typeutil';
 
-import type { LearningStatsItem } from '../../../../types';
+import type { LearningStats, LearningStatsItem } from '../../../../types';
+import { isObject } from '../../../../types';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -51,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 };
 
 
-const parseLearningStats = (val: unknown): Map<string, LearningStatsItem> => {
+const parseLearningStats = (val: unknown): LearningStats => {
     if ( typeof val !== "object" || val === null ) {
         throw new Error('Incorrect or missing value');
     }
@@ -64,17 +65,23 @@ const parseLearningStats = (val: unknown): Map<string, LearningStatsItem> => {
     return map;
 };
 
+
+const isLearningStatsItem = (val: unknown): val is LearningStatsItem => {
+    if ( isObject(val) && ('right' in val) && ('wrong' in val) ) {
+        return true;
+    }
+
+    return false;
+};
+
+
 const parseLearningStatsItem = (val: unknown): LearningStatsItem => {
-    if ( typeof val !== "object" || val === null ) {
-        throw new Error('Incorrect or missing value');
+    if ( isLearningStatsItem(val) ) {
+        return {
+            right: parseNumberField(val.right, 'right'),
+            wrong: parseNumberField(val.wrong, 'wrong'),
+        };
+    } else {
+        throw new Error("Incorrect or missing value");
     }
-
-    if ( !val['right'] || !val['wrong'] ) {
-        throw new Error('Incorrect or missing value');
-    }
-
-    return {
-        right: parseNumber(val.right),
-        wrong: parseNumber(val.wrong),
-    };
 };

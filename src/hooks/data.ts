@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import exerciseService from '../../services/exercise';
-
+import exerciseService from '../services/exercise';
+import { QuestionSet } from '../types';
 
 export function useFetchedData<T>(url) {
     const [data, setData] = useState<T>(null);
@@ -36,7 +37,7 @@ export function useFetchedData<T>(url) {
 };
 
 export function useQuestionSet(topic, level) {
-    const [data, setData] = useState<T>(initialValue);
+    const [data, setData] = useState<QuestionSet>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -45,7 +46,6 @@ export function useQuestionSet(topic, level) {
             setLoading(true);
             try {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level });
-                console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
                 setData(questionSetFromApi);
             } catch (e) {
                 console.error(e);

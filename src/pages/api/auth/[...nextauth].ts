@@ -14,9 +14,9 @@ export const authOptions: NextAuthOptions = {
     // https://next-auth.js.org/configuration/providers/oauth
     providers: [
         /*EmailProvider({
-            server: process.env.EMAIL_SERVER,
-            from: process.env.EMAIL_FROM,
-        }),*/
+           server: process.env.EMAIL_SERVER,
+           from: process.env.EMAIL_FROM,
+           }),*/
         // Temporarily removing the Apple provider from the demo site as the
         // callback URL for it needs updating due to Vercel changing domains
         /* Providers.Apple({
@@ -58,23 +58,23 @@ export const authOptions: NextAuthOptions = {
         colorScheme: "light",
     },
     callbacks: {
-        async jwt({ token, _user, _account, profile, _isNewUser }) {
+        async jwt({ token, user, account, profile, isNewUser }) {
             // Can be called many times. If first call
-            if ( !token.userId ) {
-                console.log("JWT CALLBACK:\n  token:", token, "\n  user:", _user, "\n  account:", _account,
-                            "\n  profile:", profile, "\n  isNewUser:", _isNewUser);
+            if ( !token.idToken ) {
+                console.log("JWT CALLBACK:\n  token:", token, "\n  user:", user, "\n  account:", account,
+                            "\n  profile:", profile, "\n  isNewUser:", isNewUser);
                 // TODO onko ok? Id:tä ei ole aina googlella. Sub näyttää olevan sama arvo.
-                token.userId = (profile?.id || profile?.sub || token.sub).toString();
+                token.idToken = (profile?.id || profile?.sub || token.sub).toString();
             }
 
             return token
         },
         async session({ session, token, user }) {
-            console.assert(token.userId, "No token id");
+            console.assert(token.idToken, "No token id");
             // first call
             if ( !session.user.id ) {
                 console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
-                session.user.id = token.userId;
+                session.user.id = token.idToken;
             }
 
             return session

@@ -8,7 +8,7 @@ import style from '../styles/PlayButton.module.css';
 
 type Props = {
     src: string;
-    detune: number;
+    detune?: number;
     [x:string]: unknown;
 };
 

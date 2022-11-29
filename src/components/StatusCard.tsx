@@ -3,7 +3,8 @@ import { Icon } from "semantic-ui-react";
 
 import StatusCardLayout from './StatusCardLayout';
 import { setExperience, useStateValue } from "../state";
-import style from '../styles/StatusCard.css';
+
+import style from '../styles/StatusCard.module.css';
 
 
 export enum StatusValue {
@@ -15,7 +16,7 @@ export enum StatusValue {
 
 type StatusProps = {
     type: StatusValue;
-    assignXP: number;
+    assignXP?: number;
 };
 
 

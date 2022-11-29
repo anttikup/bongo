@@ -13,6 +13,8 @@ import { useErrorMessage } from '../hooks/errorMessage';
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/stats.module.css';
 
+import type { UserStats, XpByDate } from '../types';
+
 
 /* export const getStaticProps: GetStaticProps = async () => {
  *     const xpByDate = await userService.getStats();
@@ -24,18 +26,13 @@ import styles from '../styles/stats.module.css';
  *     };
  * };
  *  */
-type DateType = string;
 
-type XpByDate = {
-    date: DateType
-    xp: number
-};
 
 type StatsProps = {
 };
 
 export default function Stats(props: StatsProps) {
-    const [userStats, setUserStats] = useState<XpByDate[]>();
+    const [userStats, setUserStats] = useState<UserStats>({});
     const [loading, setLoading] = useState(true);
     const [setError] = useErrorMessage();
 
@@ -44,10 +41,10 @@ export default function Stats(props: StatsProps) {
             try {
                 const userStatsFromApi = await userService.getStats();
                 setUserStats(userStatsFromApi);
-                setError(null);
+                setError(null, null);
             } catch (e) {
                 console.error(e);
-                setUserStats([]);
+                setUserStats({});
                 setError('Error fetching overview', (e as Error).message);
                 console.log((e as Error).message);
             } finally {
@@ -59,7 +56,7 @@ export default function Stats(props: StatsProps) {
     }, []);
 
 
-    const dates = userStats ? Object.keys(userStats.xpHistory).sort() : [];
+    const dates = userStats && userStats.xpHistory ? Object.keys(userStats.xpHistory).sort() : [];
 
     return (
         <Layout home>

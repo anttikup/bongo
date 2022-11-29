@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export const isNumber = (obj: unknown): obj is number => {
     return typeof obj === "number";
 };
@@ -10,6 +12,10 @@ export const isString = (obj: unknown): obj is string => {
 
 export const isObject = (obj: unknown): obj is Record<string, unknown> => {
     return typeof obj === "object" && obj !== null;
+};
+
+export const isArray = <T>(obj: unknown): obj is T[]  => {
+    return isObject(obj) && obj.length !== undefined;
 };
 
 
@@ -55,18 +61,35 @@ export type Multi = number | string | boolean;
 export type QuestionSet = Assignment[];
 
 export interface Assignment {
+    id: string;
     type: string;
     question: Question;
     answer: AssignmentAnswer;
+    answerPrecision?: number;
+    updateStats?: string[];
 }
 
 export const isAssignment = (obj: unknown): obj is Assignment =>
     isObject(obj) && 'type' in obj && 'question' in obj && 'answer' in obj;
 
+export interface YesNoAssignment extends Assignment {
+    type: "yesno";
+}
 
-export interface ImplAssignment extends Assignment {
-    type: "ordering";
+export interface MultipleChoiceAssignment extends Assignment {
+    type: "multiplechoice";
+    options: Option[];
+}
+
+export interface SortingAssignment extends Assignment {
+    type: "sorting";
     items: Option[];
+}
+
+export interface TuningAssignment extends Assignment {
+    type: "tuning";
+    audioToTune: string;
+    answerPrecision: number;
 }
 
 export type AssignmentAnswer = string | number | Array<string> | Array<number>;
@@ -99,6 +122,8 @@ export const isAudioQuestion = (obj: unknown): obj is AudioQuestion => isQuestio
 
 interface BaseOption {
     value: string;
+    key?: string;
+    color?: string;
 }
 
 export interface TextOption extends BaseOption {
@@ -111,6 +136,7 @@ export interface ImageOption extends BaseOption {
 
 export interface AudioOption extends BaseOption {
     audio: Url;
+    detune: number;
 }
 
 export interface MultiOption extends BaseOption {
@@ -140,6 +166,8 @@ export type ExerciseDescr = {
     text: string;
     image: string;
     material?: string;
+    levels: number;
+    refreshed: string;
 };
 
 export type TierDescr = {
@@ -158,29 +186,26 @@ export type ExerciseProgress = {
 export type UserProgress = Record<string, ExerciseProgress>;
 
 export type UserStats = {
-    xp?: TimeSeries;
+    xpHistory?: XpByDate;
 };
 
-export type TimeSeries = TimeDataPoint[];
+export type XpByDate = Record<DateType, number>;
 
-type TimeDataPoint = {
-    date: Date;
-    value: number;
-};
+type DateType = string;
 
-type Date = string;
 
 export type UserSettings = {
-    username: string;
-    email: string;
-    notenames: 'b' | 'h' | 'si';
-    reminderEnabled: boolean;
-    noAudioExercises: boolean;
-    noImageExercises: boolean;
-    noMicrophoneExercises: boolean;
+    username?: string;
+    email?: string;
+    notenamePreference?: NotenamePreference;
+    reminderEnabled?: boolean;
+    noAudioExercises?: boolean;
+    noImageExercises?: boolean;
+    noMicrophoneExercises?: boolean;
 };
 
 
+export type NotenamePreference = 'b' | 'h' | 'si';
 
 
 
@@ -220,7 +245,7 @@ export type StatsCategoryFront = {
     data: LearningStats;
 };
 
-export type StatsCategory = {
+export type LearningStatsCategory = {
     userRef: mongoose.Types.ObjectId;
     name: string;
     data: LearningStats;
@@ -232,7 +257,8 @@ export type DatedValue = {
     updated: string;
 };
 
-interface UserDB {
+export interface UserDB {
+    id: string;
     userId: string;
     username: string | null;
     progress: Record<string, DatedValue>;
@@ -240,3 +266,13 @@ interface UserDB {
     xpHistory: Record<string, number>;
     learningStats: LearningStatsCategory[];
 }
+
+
+export function isUserDB(user: unknown): user is UserDB {
+    return isObject(user)
+        && isString(user.userId)
+        && isObject(user.progress)
+        && isNumber(user.xp)
+        && isObject(user.xpHistory)
+        && isArray<LearningStatsCategory>(user.learningStats)
+};

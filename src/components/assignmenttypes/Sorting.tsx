@@ -4,17 +4,20 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 
 import { AUDIO_PATH, IMAGE_PATH } from '../../config';
 import {
-    ImplAssignment,
     isAudioOption,
     isImageOption,
     isTextOption,
-    Option,
 } from '../../types';
 
 import PlayButton from '../PlayButton';
 import Question from '../Question';
 import style from '../../styles/Sorting.module.css';
 
+import type {
+    AssignmentAnswer,
+    SortingAssignment,
+    Option,
+} from '../../types';
 
 type ItemList = Array<Option>;
 
@@ -30,9 +33,9 @@ const reorder = (list: ItemList, startIndex: number, endIndex: number) => {
 
 
 type Props = {
-    assignment: ImplAssignment;
+    assignment: SortingAssignment;
     selectAnswer: (answer: string[]) => void;
-    selectedAnswer?: string[];
+    selectedAnswer: string[] | undefined;
 };
 
 const orderItems = (items: ItemList, answerOrder: Array<string> | undefined): ItemList => {

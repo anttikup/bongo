@@ -20,4 +20,9 @@ export default class LearningSetManager {
     getSet(setName) {
         return this.sets.get(setName);
     }
+
+    setSet(setName, data) {
+        return this.sets.set(setName, data);
+    }
+
 }

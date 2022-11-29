@@ -2,14 +2,13 @@ import clientPromise from "../../../lib/mongodb";
 
 import { AudioMeta, ImageMeta, isRangeAudio, isRangeImage } from '../sharedTypes';
 
-type Query = {
+
+type QueryBase = {
     media: string;
     type?: string;
-    instrument?: string;
-    abstractAudio?: string;
-    humanDescription?: string;
-    clef?: string;
 };
+
+type Query = QueryBase & Record<string, unknown>;
 
 
 const clean = item => {
@@ -21,7 +20,7 @@ const clean = item => {
     return copy;
 };
 
-const query = async <T>(q: Query): Array<T> => {
+const query = async <T>(q: Query): Promise<Array<T>> => {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
     if ( q.media === 'audio' ) {
@@ -38,7 +37,7 @@ const query = async <T>(q: Query): Array<T> => {
 };
 
 
-const getAssociatedAudio = async (imageMeta: ImageMeta, instrument: string): AudioMeta | null => {
+const getAssociatedAudio = async (imageMeta: ImageMeta, instrument: string): Promise<AudioMeta | null> => {
     const associatedAudio = await query<AudioMeta>({
         media: 'audio',
         instrument,

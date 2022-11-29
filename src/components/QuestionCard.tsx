@@ -1,16 +1,26 @@
 import React from 'react';
 
-import { Assignment, MultipleChoiceAssignment, YesNoAssignment } from '../types';
 import MultipleChoiceQuestionCard from './assignmenttypes/MultipleChoice';
 import SortingQuestionCard from './assignmenttypes/Sorting';
 import TuningQuestionCard from './assignmenttypes/Tuning';
 import YesNoQuestionCard from './assignmenttypes/YesNo';
+
 import style from '../styles/QuestionCard.module.css';
+
+import type {
+    Assignment,
+    AssignmentAnswer,
+    MultipleChoiceAssignment,
+    SortingAssignment,
+    TuningAssignment,
+    YesNoAssignment
+} from '../types';
+
 
 type Props = {
     assignment: Assignment;
-    selectAnswer: (answer: string) => void;
-    selectedAnswer: string;
+    selectAnswer: (answer: AssignmentAnswer) => void;
+    selectedAnswer: AssignmentAnswer;
 };
 
 const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
@@ -25,7 +35,7 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                               <MultipleChoiceQuestionCard
                                   assignment={assignment as MultipleChoiceAssignment}
                                   selectAnswer={selectAnswer}
-                                  selectedAnswer={selectedAnswer}
+                                  selectedAnswer={selectedAnswer as string}
                               />
                           );
                       case "sorting":
@@ -33,7 +43,7 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                               <SortingQuestionCard
                                   assignment={assignment as SortingAssignment}
                                   selectAnswer={selectAnswer}
-                                  selectedAnswer={selectedAnswer}
+                                  selectedAnswer={selectedAnswer as string[]}
                               />
                           );
                       case "tuning":
@@ -41,7 +51,7 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                               <TuningQuestionCard
                                   assignment={assignment as TuningAssignment}
                                   selectAnswer={selectAnswer}
-                                  selectedAnswer={selectedAnswer}
+                                  selectedAnswer={selectedAnswer as number}
                               />
                           );
                       case "yesno":
@@ -49,7 +59,7 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                               <YesNoQuestionCard
                                   assignment={assignment as unknown as YesNoAssignment}
                                   selectAnswer={selectAnswer}
-                                  selectedAnswer={selectedAnswer}
+                                  selectedAnswer={selectedAnswer as string}
                               />);
                   }
                   return (<p className="error">Unknown assignment type: {assignment.type}</p>);

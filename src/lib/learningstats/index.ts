@@ -5,7 +5,12 @@ import LearningStats from '../../models/learningstats';
 import notenames from './notenames';
 import WeightedRandomTable from '../../utils/weightedRandomTable';
 
-import type { DatedValue, LearningStatsItem, StatsCategory, UserDB } from '../../types';
+import type {
+    DatedValue,
+    LearningStatsCategory as LearningStatsCategory_t,
+    LearningStatsItem,
+    UserDB
+} from '../../types';
 
 
 function getDefaults(categoryName: string) {
@@ -28,9 +33,9 @@ async function getLearningStatsForCategory(userInfo, categoryName: string) {
     const user = await userLib.findByUserID(userInfo.id);
     categoryName = categoryName.toString();
 
-    const result = await LearningStats.findOne(
+    const result = await LearningStats.findOne<LearningStatsCategory_t>(
         {
-            userRef: user._id,
+            userRef: user.id,
             name: categoryName,
         }
     );
@@ -42,7 +47,7 @@ async function getLearningStatsForCategory(userInfo, categoryName: string) {
 
     console.log("createging new");
     return new LearningStats({
-        userRef: user._id,
+        userRef: user.id,
         name: categoryName,
         data: getDefaults(categoryName),
     });
@@ -53,15 +58,15 @@ async function updateLearningStatsOfCategory(userInfo, categoryName, stats) {
     const user = await userLib.findByUserID(userInfo.id);
 
     console.log("updateLearningStatsOfCategory:", user, userInfo, categoryName);
-    console.log("update or insert:", user._id.toString(), categoryName);
+    console.log("update or insert:", user.id, categoryName);
     try {
         return await LearningStats.findOneAndUpdate(
             {
-                userRef: user._id.toString(),
+                userRef: user.id,
                 name: categoryName,
             },
             {
-                userRef: user._id,
+                userRef: user.id,
                 name: categoryName,
                 data: stats,
             },

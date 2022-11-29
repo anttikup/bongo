@@ -4,37 +4,26 @@ import { GetStaticProps } from 'next';
 import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
 import Date from '../components/date';
-import { getLecturesDataByTier } from '../lib/lectures';
 
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/overview.module.css';
 
 
 export const getStaticProps: GetStaticProps = () => {
-    const lecturesByTier = getLecturesDataByTier();
     return {
         props: {
-            lecturesByTier
         }
     };
 };
 
-type LecturesData = {
-    id: string
-    tier: number
-    topic: string
-    number: number
-    title: string
-    date: string
-};
 
 type HomeProps = {
-    lecturesByTier: LecturesData[]
+
 };
 
 
 
-function Home ({ lecturesByTier }: HomeProps) {
+function Home ({  }: HomeProps) {
     return (
         <Layout home>
             <Head>

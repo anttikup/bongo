@@ -8,13 +8,13 @@ import { isTextOnlyOption, isAudioOption, isImageOption, isTextOption, isObject 
 
 import style from '../styles/MultipleChoiceOption.module.css';
 
-import type { Option, TextOption } from '../types';
+import type { AssignmentAnswer, Option, TextOption } from '../types';
 
 
 type Props = {
     option: Option;
-    selectAnswer: (answer: string) => void;
-    selectedAnswer: string;
+    selectAnswer: (answer: AssignmentAnswer) => void;
+    selectedAnswer: AssignmentAnswer;
 };
 
 

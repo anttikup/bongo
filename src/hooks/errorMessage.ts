@@ -1,7 +1,7 @@
 import { useMessage } from './message';
 
 export function useErrorMessage() {
-    const [_, setMessage] = useMessage(null);
+    const [_, setMessage] = useMessage();
     const setErrorMessage = (title, text) => {
         console.log("set error", title);
         if ( title || text ) {
@@ -9,5 +9,5 @@ export function useErrorMessage() {
         }
     };
 
-    return [setErrorMessage];
+    return [setErrorMessage] as const;
 };

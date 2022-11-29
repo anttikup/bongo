@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import type { Overview } from '../../types';
+
 import overviewData from '../../../public/overview.json';
 
 const overview: Overview = overviewData as unknown as Overview;

@@ -1,9 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 import dbcache from '../../../util/dbcache';
 import { makeFilterFirstNOrLess } from '../../../util/misc';
 import random from '../../../util/random';
-import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../types';
+import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../../../types';
 import { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../sharedTypes';
 import { MAX_HEALTH } from '../../../../../config';
 
@@ -11,7 +12,7 @@ type PitchAudio = AudioMeta & PitchMeta;
 type PitchImage = ImageMeta & PitchMeta;
 
 const generateExercise = async () => {
-    const questionTypes: (() => MultipleChoiceAssignment)[] = [
+    const questionTypes: (() => Promise<MultipleChoiceAssignment>)[] = [
         () => generateNameANoteNoOctave(12, 17),
         () => generatePickNoteByName(12, 17),
         () => generateNameANoteNoOctave(-5, 0),
@@ -30,7 +31,7 @@ const generateExercise = async () => {
 
 
 
-const generateNameANoteNoOctave = async (minLine, maxLine) : MultipleChoiceAssignment => {
+const generateNameANoteNoOctave = async (minLine, maxLine) : Promise<MultipleChoiceAssignment> => {
     const pool = await dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
@@ -66,7 +67,7 @@ const generateNameANoteNoOctave = async (minLine, maxLine) : MultipleChoiceAssig
     const redHerringNames = redHerrings.map(herring => (herring.notes[0] as NoteImage).name);
     const optionNames = random.shuffle(redHerringNames.concat(pickedName));
 
-    const associatedAudio = dbcache.query<PitchAudio>({
+    const associatedAudio = await dbcache.query<PitchAudio>({
         media: 'audio',
         instrument: 'acoustic grand',
         abstractAudio: picked.abstractAudio
@@ -92,7 +93,7 @@ const generateNameANoteNoOctave = async (minLine, maxLine) : MultipleChoiceAssig
 
 
 
-const generatePickNoteByName = async (minLine, maxLine) : MultipleChoiceAssignment => {
+const generatePickNoteByName = async (minLine, maxLine) : Promise<MultipleChoiceAssignment> => {
     type PitchImage = ImageMeta & PitchMeta;
     const pool = await dbcache.query<PitchImage>({
         media: 'image',
@@ -120,9 +121,9 @@ const generatePickNoteByName = async (minLine, maxLine) : MultipleChoiceAssignme
     const options = random.shuffle(redHerrings.concat(picked));
 
 
-    const getAssociatedAudioFile = (herring: PitchImage) => {
-        const meta = dbcache.getAssociatedAudio(herring, 'acoustic grand');
-        return meta ? meta.file : null;
+    const getAssociatedAudioFile = async (herring: PitchImage) => {
+        const meta = await dbcache.getAssociatedAudio(herring, 'acoustic grand');
+        return meta?.file;
     };
 
     return {
@@ -131,13 +132,13 @@ const generatePickNoteByName = async (minLine, maxLine) : MultipleChoiceAssignme
             text: `Select the <strong>${pickedName}</strong> note.`
         },
         answer: pickedName,
-        options: options.map<ImageOption>(
-            herring => ({
+        options: await Promise.all(options.map<Promise<ImageOption>>(
+            async (herring) => ({
                 value: (herring.notes[0] as NoteImage).name,
                 image: herring.file,
-                audio: getAssociatedAudioFile(herring)
+                audio: await getAssociatedAudioFile(herring)
             })
-        ),
+        )),
         id: uuidv4(),
     };
 };

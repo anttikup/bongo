@@ -1,5 +1,11 @@
 import { State } from "./state";
-import { ExerciseProgress, UIMessage, User, UserProgress } from "../types";
+import {
+    ExerciseProgress,
+    UIMessage,
+    User,
+    UserProgress,
+    UserSettings,
+} from "../types";
 
 export type Action =
     | {
@@ -20,6 +26,10 @@ export type Action =
     | {
         type: "SET_USER_PROGRESS";
         object: UserProgress;
+    }
+    | {
+        type: "SET_USER_SETTINGS";
+        object: UserSettings;
     }
     | {
         type: "SET_EXPERIENCE";
@@ -43,6 +53,10 @@ export const setUserProgress = (userProgress: UserProgress): Action => {
     return { type: "SET_USER_PROGRESS", object: userProgress };
 };
 
+export const setUserSettings = (userSettings: UserSettings): Action => {
+    return { type: "SET_USER_SETTINGS", object: userSettings };
+};
+
 export const setExperience = (xp: number): Action => {
     return { type: "SET_EXPERIENCE", object: xp };
 };
@@ -55,7 +69,8 @@ export const reducer = (state: State, action: Action): State => {
             const obj = action.object;
             const id = obj.id;
             const progress = obj.progress.val;
-            const newUserProgress = { ...state.userProgress, [id]: { val: progress } };
+            const updated = obj.progress.updated;
+            const newUserProgress = { ...state.userProgress, [id]: { val: progress, updated } };
             console.log("Reducer: user progress before:", state.userProgress, ", after:", newUserProgress);
             return {
                 ...state,
@@ -74,13 +89,18 @@ export const reducer = (state: State, action: Action): State => {
                 ...state,
                 user: action.object,
                 experience: action.object.xp,
-                userProgress: action.object.progress
             };
 
         case "SET_USER_PROGRESS":
             return {
                 ...state,
                 userProgress: action.object
+            };
+
+        case "SET_USER_SETTINGS":
+            return {
+                ...state,
+                userSettings: action.object
             };
 
         case "SET_EXPERIENCE":

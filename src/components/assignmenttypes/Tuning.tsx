@@ -1,11 +1,14 @@
 import React from 'react';
 import { useEffect } from 'react';
 
-import { TuningAssignment } from '../../types';
 import { AUDIO_PATH } from '../../config';
 import Question from '../Question';
 import Tuner from '../Tuner';
+
 import style from '../../styles/Tuning.module.css';
+
+import { AssignmentAnswer, TuningAssignment } from '../../types';
+
 
 type Props = {
     assignment: TuningAssignment;
@@ -23,15 +26,8 @@ const TuningQuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props)
     const deviation = -assignment.answer;
     const selectedFloat = selectedAnswer ? selectedAnswer : 0;
 
-    const play = () => {
-        if ( sample !== null ) {
-            playSample(sample);
-        }
-    };
-
     const answerChanged = (answer: number) => {
         selectAnswer(answer);
-        play();
     };
 
 
@@ -40,7 +36,6 @@ const TuningQuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props)
             <Question question={assignment.question} />
 
             <Tuner src={AUDIO_PATH(assignment.audioToTune)} deviation={deviation} value={selectedFloat} onChange={answerChanged} />
-            <button onClick={play}>play</button>
             val: {selectedFloat}, deviation: {deviation}, answer: {assignment.answer}
         </div>
     );

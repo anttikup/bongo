@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import overviewData from '../../../public/overview.json';
 
+import type { Overview } from '../../types';
+
 const overview: Overview = overviewData as unknown as Overview;
 
 const getEntries = (): Overview => {

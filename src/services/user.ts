@@ -1,6 +1,13 @@
 import axios from "axios";
 
-import type { User, UserProgress, UserSettings, UserStats, LearningStats } from '../types';
+import type {
+    User,
+    UserProgress,
+    UserSettings,
+    UserStats,
+    LearningStats,
+    LearningStatsCategory
+} from '../types';
 
 
 
@@ -137,7 +144,7 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
 
 
 const getLearningStats = async (statsCategory: string) => {
-    const { data: learningStatsFromApi } = await axios.get<StatsCategory>(
+    const { data: learningStatsFromApi } = await axios.get<LearningStatsCategory>(
         `/api/user/learningstats/${statsCategory}`,
     );
 

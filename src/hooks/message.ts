@@ -7,5 +7,5 @@ export function useMessage() {
     const exportedSetMessage = newMessage => {
         dispatch(setMessage(newMessage));
     };
-    return [message, exportedSetMessage];
+    return [message, exportedSetMessage] as const;
 };

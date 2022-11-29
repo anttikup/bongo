@@ -1,11 +1,19 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 import { assert } from '../../../util/debug';
 import dbcache from '../../../util/dbcache';
 import random from '../../../util/random';
-import { TuningAssignment } from '../../../types';
 import { AudioMeta, PitchMeta } from '../../../sharedTypes';
 import { MAX_HEALTH } from '../../../../../config';
+
+import type {
+    Assignment,
+    AudioOption,
+    MultipleChoiceAssignment,
+    SortingAssignment,
+    TuningAssignment
+} from '../../../../../types';
 
 type PitchAudio = AudioMeta & PitchMeta;
 
@@ -35,7 +43,7 @@ const newColorer = () => {
 };
 
 const generateExercise = async () => {
-    const questionTypes: (() => TuningAssignment)[] = [
+    const questionTypes: (() => Promise<Assignment>)[] = [
         generateTuneAudio,
         generateSortCents,
         generatePickMatchingCents,
@@ -52,7 +60,7 @@ const generateExercise = async () => {
 
 
 
-const generateTuneAudio = async () : TuningAssignment => {
+const generateTuneAudio = async () : Promise<TuningAssignment> => {
     const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'longpitch',
@@ -85,7 +93,7 @@ const generateTuneAudio = async () : TuningAssignment => {
 };
 
 
-const generateSortCents = async () : TuningAssignment => {
+const generateSortCents = async () : Promise<SortingAssignment> => {
     const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',
@@ -128,7 +136,7 @@ const generateSortCents = async () : TuningAssignment => {
 };
 
 
-const generatePickMatchingCents = async () : MultipleChoiceAssignment => {
+const generatePickMatchingCents = async () : Promise<MultipleChoiceAssignment> => {
     const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',

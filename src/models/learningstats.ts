@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { LearningStatsCategory as LearningStatsCategory_t } from '../types';
 
-const statsCategorySchema = new mongoose.Schema({
+const statsCategorySchema = new mongoose.Schema<LearningStatsCategory_t>({
     userRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -38,5 +39,4 @@ statsCategorySchema.set('toJSON', {
 
 statsCategorySchema.index({ userRef: 1, name: 1 }, { unique: true });
 
-//export default statsCategorySchema;
-export default mongoose.models.LearningStats || mongoose.model('LearningStats', statsCategorySchema);
+export default (mongoose.models.LearningStatsCategory || mongoose.model('LearningStatsCategory', statsCategorySchema)) as mongoose.Model<LearningStatsCategory_t>;

@@ -16,6 +16,7 @@ import { useStateValue, setUserProgress } from "../state";
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/overview.module.css';
 
+import type { TierDescr } from '../types';
 
 export const getStaticProps: GetStaticProps = async () => {
     const exercisesByTier = await exerciseLib.getOverview();

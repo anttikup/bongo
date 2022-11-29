@@ -3,40 +3,22 @@ import Head from 'next/head';
 import Router, { useRouter } from 'next/router'
 import { Header, Loader } from "semantic-ui-react";
 
-import LearningSetManager from '../../utils/LearningSetManager';
-import { SITE_TITLE } from '../../config';
-import ExArea from '../../components/ExArea';
-import Health from '../../components/Health';
-import Layout from '../../components/layout';
-import { useErrorMessage } from '../../hooks/errorMessage';
-import { useQuestionSet } from '../../hooks/data';
-import { getAllExerciseIds } from '../../lib/exercises';
-import exerciseService from '../../services/exercise';
-import userService from '../../services/user';
-import { setExerciseProgress, setExperience, useStateValue } from "../../state";
+import LearningSetManager from '../../../utils/LearningSetManager';
+import { SITE_TITLE } from '../../../config';
+import ExArea from '../../../components/ExArea';
+import Health from '../../../components/Health';
+import Layout from '../../../components/layout';
+import { useErrorMessage } from '../../../hooks/errorMessage';
+import { useQuestionSet } from '../../../hooks/data';
+import { getAllExerciseIds } from '../../../lib/exercises';
+import exerciseService from '../../../services/exercise';
+import userService from '../../../services/user';
+import { setExerciseProgress, setExperience, useStateValue } from '../../../state';
 
-
-import styles from  '../../styles/exercise.module.css';
+import styles from  '../../../styles/exercise.module.css';
 
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import type { QuestionSet } from "../../types";
-
-
-export const getServerSidePaths: GetServerSidePaths = () => {
-    const paths = getAllExercisesParams();
-    return {
-        id: paths.map(id => {
-            const parts = id.split('/');
-            return {
-                params: {
-                    topic: parts[0],
-                    number: Number(parts[1]),
-                }
-            };
-        }),
-        fallback: false,
-    };
-};
+import type { AssignmentAnswer, QuestionSet, LearningStats } from '../../../types';
 
 
 type Props = {
@@ -46,8 +28,8 @@ type Props = {
 
 const ExercisePage = (props: Props) => {
     const router = useRouter();
-    const id = router.query.id;
-    const [topic, level] = id && id.length > 1 ? id : [];
+    const topic = router.query.topic as string;
+    const level = router.query.level as string;
 
     const [health, setHealth] = useState(3);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
@@ -57,7 +39,7 @@ const ExercisePage = (props: Props) => {
     const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
     // Stats data doesn't affect the component, so we store it outside state.
-    const learningStatsRef = useRef<StatsCategory | null>(null);
+    const learningStatsRef = useRef<LearningSetManager | null>(null);
 
     /* const {
      *     data: questionSet,
@@ -117,7 +99,7 @@ const ExercisePage = (props: Props) => {
     }, [topic, level]);
 
 
-    const updateStats = (userAnswer: Answer, trueAnswer: Answer) => {
+    const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer) => {
         console.log("UPDAT:", learningStatsRef.current);
         if ( userAnswer === trueAnswer ) {
             learningStatsRef.current.update('notenames', userAnswer, 2, 0);
@@ -141,7 +123,7 @@ const ExercisePage = (props: Props) => {
                 dispatch(setExperience(newXP));
                 const data = learningStatsRef.current.getSet('notenames');
                 const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
-                learningStatsRef.current = learningStatsFromApi;
+                learningStatsRef.current.setSet('notenames', learningStatsFromApi);
             } catch ( err ) {
                 console.error(err);
                 setError('Error updating progress', err.message);

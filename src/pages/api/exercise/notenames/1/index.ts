@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 import { unstable_getServerSession } from "next-auth/next";
 
@@ -5,7 +6,7 @@ import { authOptions } from "../../../auth/[...nextauth]";
 import dbcache from '../../../util/dbcache';
 import { makeFilterFirstNOrLess } from '../../../util/misc';
 import random from '../../../util/random';
-import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../types';
+import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../../../types';
 import { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../sharedTypes';
 import { MAX_HEALTH } from '../../../../../config';
 
@@ -13,8 +14,8 @@ import learningStatsLib from '../../../../../lib/learningstats';
 
 
 const generateExercise = async (user) => {
-    const questionTypes: (() => MultipleChoiceAssignment)[] = [
-        generateNameARelatedNoteHalfSteps,
+    const questionTypes: ((user) => Promise<MultipleChoiceAssignment>)[] = [
+        (user) => generateNameARelatedNoteHalfSteps(user),
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
@@ -33,14 +34,14 @@ const generateExercise = async (user) => {
 
 
 
-const generateNameARelatedNoteHalfSteps = async (user) : MultipleChoiceAssignment => {
+const generateNameARelatedNoteHalfSteps = async (user) : Promise<MultipleChoiceAssignment> => {
     const notesByHalfSteps = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
     const notenamePoolAll = await learningStatsLib
         .getWeightsForCategory(user, 'notenames');
 
     console.log("GOT POOL ********************************************************\n", notenamePoolAll);
-        const notenamePool = notenamePoolAll
-            .getSubset(['c', 'd', 'e', 'f', 'g', 'a', 'b']);
+    const notenamePool = notenamePoolAll
+        .getSubset(['c', 'd', 'e', 'f', 'g', 'a', 'b']);
 
 
     const pool = notenamePool.chooseMany(5);

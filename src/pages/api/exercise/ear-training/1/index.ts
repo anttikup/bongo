@@ -1,9 +1,10 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
 import dbcache from '../../../util/dbcache';
 //import { makeFilterFirstNOrLess } from '../../../util/misc';
 import random from '../../../util/random';
-import { SortingAssignment } from '../../../types';
+import { SortingAssignment } from '../../../../../types';
 import { AudioMeta, PitchMeta, RangeAudio } from '../../../sharedTypes';
 import { MAX_HEALTH } from '../../../../../config';
 
@@ -25,7 +26,7 @@ const newColorer = () => {
 
 
 const generateExercise = async () => {
-    const questionTypes: (() => SortingAssignment)[] = [
+    const questionTypes: (() => Promise<SortingAssignment>)[] = [
         await generateSortAudio,
     ];
 
@@ -41,7 +42,7 @@ const generateExercise = async () => {
 
 
 
-const generateSortAudio = async () : SortingAssignment => {
+const generateSortAudio = async () : Promise<SortingAssignment> => {
     const piano = random.getBoolean();
     const pool = await dbcache.query<PitchAudio>({
         media: 'audio',

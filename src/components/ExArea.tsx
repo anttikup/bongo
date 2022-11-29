@@ -4,7 +4,7 @@ import { Header, Progress, Segment } from 'semantic-ui-react';
 
 import ButtonBar from './ButtonBar';
 import { Phase, isAssignment } from '../types';
-import { Answer, QuestionSet, isNumber, isObject } from '../types';
+import { AssignmentAnswer, QuestionSet, isNumber, isObject } from '../types';
 import ErrorComponent from './Error';
 import QuestionCard from './QuestionCard';
 import StatusCard, { StatusValue } from './StatusCard';
@@ -25,14 +25,14 @@ type Props = {
     exit: (finishedSuccessfully: boolean) => void;
     health: number;
     questionSet: QuestionSet;
-    updateStats: (selected: Answer, correct: Answer) => void;
+    updateStats: (selected: AssignmentAnswer, correct: AssignmentAnswer) => void;
 };
 
 const isArray = (obj: unknown): obj is Array<unknown> => {
     return isObject(obj) && ('length' in obj) && isNumber(obj.length);
 };
 
-const equals = (obj1: Answer, obj2: Answer, precision: number) => {
+const equals = (obj1: AssignmentAnswer, obj2: AssignmentAnswer, precision: number) => {
     if ( isArray(obj1) && isArray(obj2) ) {
         if ( obj1.length !== obj2.length ) {
             return false;
@@ -51,7 +51,7 @@ const equals = (obj1: Answer, obj2: Answer, precision: number) => {
         throw new Error("Not implemented");
     }
 
-    if ( precision ) {
+    if ( precision && isNumber(obj1) && isNumber(obj2) ) {
         console.log("within precision", precision, obj1, obj2);
         return (obj1 - 10) < obj2 && (obj1 + 10) > obj2;
     }
@@ -64,10 +64,10 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
     const [part, setPart] = useState(Part.Question);
     const [assignmentQueue, setAssignmentQueue] = useState([...questionSet]);
     const [correctAnswers, setCorrectAnswers] = useState(0);
-    const [selected, setSelected] = useState<Answer | undefined>(undefined);
+    const [selected, setSelected] = useState<AssignmentAnswer | undefined>(undefined);
     const [phase, setPhase] = useState(ExercisePhase.Practice);
 
-    const onAnswerSelected = (answer: Answer) => setSelected(answer);
+    const onAnswerSelected = (answer: AssignmentAnswer) => setSelected(answer);
 
     const correctAnswersRequired = questionSet.length - 3;
 

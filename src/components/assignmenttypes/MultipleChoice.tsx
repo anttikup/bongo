@@ -2,7 +2,8 @@ import React from 'react';
 
 import {
     MultipleChoiceAssignment,
-    isTextOnlyOption
+    isTextOnlyOption,
+    AssignmentAnswer,
 } from '../../types';
 
 import Question from '../Question';
@@ -12,8 +13,8 @@ import style from '../../styles/MultipleChoiceAssignment.module.css';
 
 type Props = {
     assignment: MultipleChoiceAssignment;
-    selectAnswer: (answer: string) => void;
-    selectedAnswer: string;
+    selectAnswer: (answer: AssignmentAnswer) => void;
+    selectedAnswer: AssignmentAnswer;
 };
 
 
