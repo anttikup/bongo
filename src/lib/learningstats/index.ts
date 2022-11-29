@@ -8,8 +8,10 @@ import WeightedRandomTable from '../../utils/weightedRandomTable';
 import type {
     DatedValue,
     LearningStatsCategory as LearningStatsCategory_t,
+    LearningStats as LearningStats_t,
     LearningStatsItem,
-    UserDB
+    UserDB,
+    UserInfo,
 } from '../../types';
 
 
@@ -28,9 +30,13 @@ function getDefaults(categoryName: string) {
 }
 
 
-async function getLearningStatsForCategory(userInfo, categoryName: string) {
+async function getLearningStatsForCategory(userInfo: UserInfo, categoryName: string) {
     await dbConnect();
     const user = await userLib.findByUserID(userInfo.id);
+    if ( !user ) {
+        throw new Error(`User missing: ${userInfo.name}`);
+    }
+
     categoryName = categoryName.toString();
 
     const result = await LearningStats.findOne<LearningStatsCategory_t>(
@@ -54,35 +60,33 @@ async function getLearningStatsForCategory(userInfo, categoryName: string) {
 }
 
 // TODO
-async function updateLearningStatsOfCategory(userInfo, categoryName, stats) {
+async function updateLearningStatsOfCategory(userInfo: UserInfo, categoryName: string, stats: LearningStats_t) {
     const user = await userLib.findByUserID(userInfo.id);
+    if ( !user ) {
+        throw new Error(`User missing: ${userInfo.name}`);
+    }
 
     console.log("updateLearningStatsOfCategory:", user, userInfo, categoryName);
     console.log("update or insert:", user.id, categoryName);
-    try {
-        return await LearningStats.findOneAndUpdate(
-            {
-                userRef: user.id,
-                name: categoryName,
-            },
-            {
-                userRef: user.id,
-                name: categoryName,
-                data: stats,
-            },
-            {
-                upsert: true,
-                new: true,
-            }
-        );
-    } catch ( err ) {
-        console.error(err.message);
-        throw err;
-    }
+    return await LearningStats.findOneAndUpdate(
+        {
+            userRef: user.id,
+            name: categoryName,
+        },
+        {
+            userRef: user.id,
+            name: categoryName,
+            data: stats,
+        },
+        {
+            upsert: true,
+            new: true,
+        }
+    );
 }
 
 
-async function getWeightsForCategory(userInfo, categoryName) {
+async function getWeightsForCategory(userInfo: UserInfo, categoryName: string) {
     const category = await getLearningStatsForCategory(userInfo, categoryName);
 
     return WeightedRandomTable.fromRightWrongValues(category.data);

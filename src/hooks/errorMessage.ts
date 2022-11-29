@@ -2,8 +2,7 @@ import { useMessage } from './message';
 
 export function useErrorMessage() {
     const [_, setMessage] = useMessage();
-    const setErrorMessage = (title, text) => {
-        console.log("set error", title);
+    const setErrorMessage = (title: string, text: string) => {
         if ( title || text ) {
             setMessage({ type: "error", title, text });
         }

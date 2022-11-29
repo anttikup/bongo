@@ -4,9 +4,9 @@ type Event = React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.KeyboardEve
 
 type Props = {
     onActivate?: (event: Event) => void;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className: string;
-    activatingKeys: string[];
+    activatingKeys?: string[];
     [x:string]: unknown;
 };
 
@@ -20,7 +20,7 @@ const Tabbable = (props: Props) => {
     };
 
     const keyPressed = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
-        if ( props.activatingKeys.includes(event.key) ) {
+        if ( props.activatingKeys?.includes(event.key) ) {
             event.preventDefault();
             event.stopPropagation();
             if ( props.onActivate ) {

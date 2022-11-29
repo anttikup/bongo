@@ -20,13 +20,6 @@ const MessageDisplay = (props: Props) => {
         }, 8000);
     }, [message]);
 
-    useEffect(() => {
-        if ( myRef && myRef.current ) {
-            myRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [message]);
-
-
     if ( message === null ) {
         return null;
     }

@@ -21,7 +21,7 @@ const Tuner = ({ src, deviation = 0, onChange, value = 0 }: Props) => {
     const [startOffset, setStartOffset] = useState(0);
 
     useEffect(() => {
-        const loadAudio = async (ctx) => {
+        const loadAudio = async (ctx: AudioContext) => {
             const response = await fetch(src);
             const buffer = await response.arrayBuffer();
             setSample(await ctx.decodeAudioData(buffer));

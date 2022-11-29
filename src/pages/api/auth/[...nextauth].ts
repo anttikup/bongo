@@ -34,13 +34,13 @@ export const authOptions: NextAuthOptions = {
          *     clientSecret: process.env.FACEBOOK_SECRET,
          * }), */
         GithubProvider({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
+            clientId: process.env.GITHUB_ID as string,
+            clientSecret: process.env.GITHUB_SECRET as string,
             //idToken: true,
         }),
         GoogleProvider({
-            clientId: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_SECRET,
+            clientId: process.env.GOOGLE_ID as string,
+            clientSecret: process.env.GOOGLE_SECRET as string,
             wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
             idToken: true,
         }),
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
                 console.log("JWT CALLBACK:\n  token:", token, "\n  user:", user, "\n  account:", account,
                             "\n  profile:", profile, "\n  isNewUser:", isNewUser);
                 // TODO onko ok? Id:tä ei ole aina googlella. Sub näyttää olevan sama arvo.
-                token.idToken = (profile?.id || profile?.sub || token.sub).toString();
+                token.idToken = (profile?.id || profile?.sub || token.sub || 0).toString();
             }
 
             return token
@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
             // first call
             if ( !session.user.id ) {
                 console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
-                session.user.id = token.idToken;
+                session.user.id = token.idToken || "x";
             }
 
             return session

@@ -31,7 +31,7 @@ const generateExercise = async () => {
 
 
 
-const generateNameANoteNoOctave = async (minLine, maxLine) : Promise<MultipleChoiceAssignment> => {
+const generateNameANoteNoOctave = async (minLine: number, maxLine: number) : Promise<MultipleChoiceAssignment> => {
     const pool = await dbcache.query<PitchImage>({
         media: 'image',
         type: 'pitch',
@@ -93,7 +93,7 @@ const generateNameANoteNoOctave = async (minLine, maxLine) : Promise<MultipleCho
 
 
 
-const generatePickNoteByName = async (minLine, maxLine) : Promise<MultipleChoiceAssignment> => {
+const generatePickNoteByName = async (minLine: number, maxLine: number) : Promise<MultipleChoiceAssignment> => {
     type PitchImage = ImageMeta & PitchMeta;
     const pool = await dbcache.query<PitchImage>({
         media: 'image',

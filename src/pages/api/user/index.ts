@@ -4,8 +4,11 @@ import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import userService from '../../../backendServices/user';
 
-import { UserDB } from '../../../types';
+import { isObject } from '../../../types';
 import { parseStringField, parseIntegerField } from '../util/typeutil';
+
+import type { UserDB, UserInfo } from '../../../types';
+
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -26,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log("SESSION USER:", userInfo);
     console.log("SESSION:", session);
 
-    const userObj = await userService.findOrCreateUserByUserInfo(userInfo);
+    const userObj = await userService.findOrCreateUserByUserInfo(userInfo as UserInfo);
     if ( ! userObj ) {
         res.status(404).json({ error: `invalid user ${userInfo.name}` });
         return;
@@ -43,13 +46,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 console.assert(Object.keys(fieldsToUpdate).length === 1, "can only set xp");
                 console.assert('xp' in fieldsToUpdate, "can only set xp");
                 console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = await userService.updateXP(userInfo, fieldsToUpdate['xp']);
+                const updatedUser = await userService.updateXP(userInfo as UserInfo, fieldsToUpdate['xp'] || 0);
                 console.log("  result:", updatedUser);
                 res.json(updatedUser);
-            } catch (err) {
-                res.status(400).send({
-                    error: err.message
-                });
+            } catch ( err ) {
+                if ( isObject(err) && 'message' in err ) {
+                    res.status(400).send({
+                        error: err.message
+                    });
+                } else {
+                    throw err;
+                }
             }
             break;
 

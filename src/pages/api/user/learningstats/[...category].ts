@@ -5,13 +5,19 @@ import { authOptions } from "../../auth/[...nextauth]";
 import learningStatsLib from '../../../../lib/learningstats';
 import { isNumber, parseNumberField } from '../../util/typeutil';
 
-import type { LearningStats, LearningStatsItem } from '../../../../types';
+import type { LearningStats, LearningStatsItem, UserInfo } from '../../../../types';
+
 import { isObject } from '../../../../types';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
     const { category } = req.query;
+
+    if ( !category ) {
+        res.status(401).json({ error: 'missing category' });
+        return;
+    }
 
     const session = await unstable_getServerSession(req, res, authOptions);
     if ( !session ) {
@@ -20,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const user = session.user;
-    if ( ! user ) {
+    if ( !user ) {
         res.status(401).json({ error: 'invalid user' });
         return;
     }
@@ -28,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch ( method ) {
         case 'GET':
             res.status(200).json(
-                await learningStatsLib.getLearningStatsForCategory(user, category.toString())
+                await learningStatsLib.getLearningStatsForCategory(user as UserInfo, category.toString())
             );
             break;
 
@@ -36,12 +42,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const parsedStats = parseLearningStats(req.body);
                 console.log("PUT: parsed stats", parsedStats);
-                const updatedStats = await learningStatsLib.updateLearningStatsOfCategory(user, category.toString(), parsedStats);
+                const updatedStats = await learningStatsLib.updateLearningStatsOfCategory(user as UserInfo, category.toString(), parsedStats);
                 res.status(200).send(updatedStats);
             } catch (err) {
-                res.status(400).send({
-                    error: err.message
-                });
+                if ( isObject(err) && 'message' in err ) {
+                    res.status(400).send({
+                        error: err.message
+                    });
+                }
             }
             break;
 

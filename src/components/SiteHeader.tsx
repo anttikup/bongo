@@ -13,6 +13,9 @@ import { setUser, useStateValue } from '../state';
 
 import styles from './SiteHeader.module.css';
 
+import type { MouseEvent } from 'react';
+
+
 type SiteHeaderProps = {
 
 };
@@ -40,13 +43,13 @@ const SiteHeader = (props: SiteHeaderProps) => {
     }, []);
 
 
-    const handleSignin = (e) => {
-        e.preventDefault();
+    const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
+        //e.preventDefault();
         signIn();
     };
 
-    const handleSignout = (e) => {
-        e.preventDefault();
+    const handleSignout = (e: MouseEvent<HTMLAnchorElement>) => {
+        //e.preventDefault();
         signOut({ redirect: true, callbackUrl: '/' });
     };
 

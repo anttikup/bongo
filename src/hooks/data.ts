@@ -4,10 +4,10 @@ import axios from 'axios';
 import exerciseService from '../services/exercise';
 import { QuestionSet } from '../types';
 
-export function useFetchedData<T>(url) {
-    const [data, setData] = useState<T>(null);
+export function useFetchedData<T>(url: string) {
+    const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,10 +36,10 @@ export function useFetchedData<T>(url) {
     return { data, loading, error };
 };
 
-export function useQuestionSet(topic, level) {
-    const [data, setData] = useState<QuestionSet>(null);
+export function useQuestionSet(topic: string, level: number) {
+    const [data, setData] = useState<QuestionSet | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {

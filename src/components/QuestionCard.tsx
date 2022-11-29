@@ -20,7 +20,7 @@ import type {
 type Props = {
     assignment: Assignment;
     selectAnswer: (answer: AssignmentAnswer) => void;
-    selectedAnswer: AssignmentAnswer;
+    selectedAnswer?: AssignmentAnswer;
 };
 
 const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {

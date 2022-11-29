@@ -6,16 +6,22 @@ import { authOptions } from "../../../auth/[...nextauth]";
 import dbcache from '../../../util/dbcache';
 import { makeFilterFirstNOrLess } from '../../../util/misc';
 import random from '../../../util/random';
-import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../../../types';
 import { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../sharedTypes';
 import { MAX_HEALTH } from '../../../../../config';
 
 import learningStatsLib from '../../../../../lib/learningstats';
 
+import {
+    ImageOption,
+    MultipleChoiceAssignment,
+    TextOption,
+    UserInfo,
+} from '../../../../../types';
 
-const generateExercise = async (user) => {
-    const questionTypes: ((user) => Promise<MultipleChoiceAssignment>)[] = [
-        (user) => generateNameARelatedNoteHalfSteps(user),
+
+const generateExercise = async (user: UserInfo) => {
+    const questionTypes: ((user: UserInfo) => Promise<MultipleChoiceAssignment>)[] = [
+        (user: UserInfo) => generateNameARelatedNoteHalfSteps(user),
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
@@ -34,7 +40,7 @@ const generateExercise = async (user) => {
 
 
 
-const generateNameARelatedNoteHalfSteps = async (user) : Promise<MultipleChoiceAssignment> => {
+const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<MultipleChoiceAssignment> => {
     const notesByHalfSteps = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
     const notenamePoolAll = await learningStatsLib
         .getWeightsForCategory(user, 'notenames');
@@ -91,5 +97,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
 
-    res.status(200).json(await generateExercise(user));
+    res.status(200).json(await generateExercise(user as UserInfo));
 };

@@ -44,6 +44,13 @@ export const isUser = (obj: unknown): obj is User => {
         && isString(obj.token);
 };
 
+export type UserInfo = {
+    id: string;
+    name?: string | null;
+    email?: string;
+    image?: string;
+};
+
 
 export enum Phase {
     Question = 0,

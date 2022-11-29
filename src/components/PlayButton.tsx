@@ -25,7 +25,7 @@ const PlayButton = ({ src, detune, className }: Props) => {
 
     console.log("render: playing=", playing);
     useEffect(() => {
-        const loadAudio = async (ctx) => {
+        const loadAudio = async (ctx: AudioContext) => {
             const response = await fetch(src);
             const buffer = await response.arrayBuffer();
             setSample(await ctx.decodeAudioData(buffer));

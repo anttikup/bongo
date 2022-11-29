@@ -32,7 +32,7 @@ const isArray = (obj: unknown): obj is Array<unknown> => {
     return isObject(obj) && ('length' in obj) && isNumber(obj.length);
 };
 
-const equals = (obj1: AssignmentAnswer, obj2: AssignmentAnswer, precision: number) => {
+const equals = (obj1: AssignmentAnswer, obj2: AssignmentAnswer, precision?: number) => {
     if ( isArray(obj1) && isArray(obj2) ) {
         if ( obj1.length !== obj2.length ) {
             return false;
@@ -94,7 +94,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
     };
 
     const onCheck = () => {
-        if ( !selected ) {
+        if ( !selected || !currentAssignment ) {
             return;
         }
 
