@@ -37,8 +37,6 @@ async function getLearningStatsForCategory(userInfo: UserInfo, categoryName: str
         throw new Error(`User missing: ${userInfo.name}`);
     }
 
-    categoryName = categoryName.toString();
-
     const result = await LearningStats.findOne<LearningStatsCategory_t>(
         {
             userRef: user.id,

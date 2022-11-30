@@ -8,7 +8,7 @@ import { reducer, StateProvider } from "../state";
 import 'semantic-ui-css/semantic.min.css';
 import '../styles/global.css';
 
-import type { User, Message, isString, isUser } from '../types';
+import type { User, UIMessage, isString, isUser } from '../types';
 import type { AppProps } from 'next/app';
 import type { Session } from "next-auth";
 

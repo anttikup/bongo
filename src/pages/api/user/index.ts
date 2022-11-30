@@ -1,79 +1,65 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unstable_getServerSession } from "next-auth/next";
 
-import { authOptions } from "../auth/[...nextauth]";
+import sessionLib from '../../../lib/session';
 import userLib from '../../../lib/user';
+import { getErrorMessage } from '../../../lib/error';
+import { parseUserFields } from '../../../lib/typeparsers';
+import { assert } from '../../../lib/debug';
 
-import { isObject } from '../../../types';
-import { parseStringField, parseIntegerField } from '../util/typeutil';
-
-import type { UserDB, UserInfo } from '../../../types';
-
+import { isObject, isNumber } from '../../../types';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
 
-    const session = await unstable_getServerSession(req, res, authOptions);
-    if ( !session ) {
+    const user = await sessionLib.getCurrentUser(req, res);
+    if ( !user ) {
         res.status(401).json({ error: `You are not authorized to access this content` });
-        return;
-    }
-
-    const userInfo = session.user;
-    if ( ! userInfo ) {
-        res.status(401).json({ error: 'invalid user' });
-        return;
-    }
-
-    console.log("SESSION USER:", userInfo);
-    console.log("SESSION:", session);
-
-    const userObj = await userLib.findOrCreateUserByUserInfo(userInfo as UserInfo);
-    if ( ! userObj ) {
-        res.status(404).json({ error: `invalid user ${userInfo.name}` });
         return;
     }
 
     switch ( method ) {
         case 'GET':
-            res.status(200).json(userObj);
+            try {
+                const userData = await userLib.findOrCreateUserByUserInfo(user);
+                res.status(200).json(userData);
+            } catch ( err ) {
+                res.status(400).send({
+                    error: getErrorMessage(err)
+                });
+            }
             break;
 
         case 'PATCH':
             try {
                 const fieldsToUpdate = parseUserFields(req.body);
-                console.assert(Object.keys(fieldsToUpdate).length === 1, "can only set xp");
-                console.assert('xp' in fieldsToUpdate, "can only set xp");
-                console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = await userLib.updateXP(userInfo as UserInfo, fieldsToUpdate['xp'] || 0);
-                console.log("  result:", updatedUser);
-                res.json(updatedUser);
-            } catch ( err ) {
-                if ( isObject(err) && 'message' in err ) {
-                    res.status(400).send({
-                        error: err.message
-                    });
+                if ( isXpField(fieldsToUpdate) ) {
+                    const updatedUser = await userLib.updateXP(user, fieldsToUpdate.xp);
+                    res.json(updatedUser);
                 } else {
-                    throw err;
+                    throw new Error('not implemented');
                 }
+            } catch ( err ) {
+                res.status(400).send({
+                    error: getErrorMessage(err)
+                });
             }
             break;
 
         default:
-            res.setHeader('Allow', ['GET'])
+            res.setHeader('Allow', ['GET', 'PATCH'])
             res.status(405).end(`Method ${method} Not Allowed`)
     }
 };
 
 
-type UserFields = Partial<UserDB>;
+type XpField = {
+    xp: number;
+};
 
-export const parseUserFields = (fields: Record<string, unknown>): UserFields => {
-    const userFields: UserFields = {
-        username: fields.username ? parseStringField(fields.username, "username") : undefined,
-        xp: fields.xp ? parseIntegerField(fields.xp, "xp") : undefined ,
+const isXpField = (obj: unknown): obj is XpField => {
+    if ( isObject(obj) && 'xp' in obj && Object.keys(obj).length === 1 && isNumber(obj.xp) ) {
+        return true;
     }
-
-    return userFields;
+    return false;
 };

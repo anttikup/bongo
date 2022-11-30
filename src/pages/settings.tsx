@@ -5,13 +5,15 @@ import { Button, Checkbox, Dropdown, Form, Header, Input, Segment, Transition } 
 import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
 import { useMessage } from '../hooks/message';
+import { getErrorMessage } from '../lib/error';
 import userService from '../services/user';
 import { setUser, useStateValue, setUserSettings } from '../state';
 
 import utilStyles from '../styles/utils.module.css';
 import styles from '../styles/overview.module.css';
 
-import type { NotenamePreference } from '../types';
+import type { MouseEvent, FormEvent } from 'react';
+import type { NotenamePreference, User } from '../types';
 
 
 const notenameOptions = [
@@ -41,7 +43,7 @@ type Props = {
 
 const SettingsPage = (props: Props) => {
     const [{ user, userSettings }, dispatch] = useStateValue();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [reminderEnabled, setReminderEnabled] = useState(false);
@@ -53,6 +55,7 @@ const SettingsPage = (props: Props) => {
 
     useEffect(() => {
         const fetchUserSettings = async () => {
+            setLoading(true);
             try {
                 const userSettingsFromApi = await userService.getUserSettings();
                 dispatch(setUserSettings(userSettingsFromApi));
@@ -65,7 +68,11 @@ const SettingsPage = (props: Props) => {
                 setMicrophoneExercisesEnabled(!userSettingsFromApi.noMicrophoneExercises);
             } catch (e) {
                 console.error(e);
-                setMessage({ type: 'error', title: "Error fetching user settings", text: e.message });
+                setMessage({
+                    type: 'error',
+                    title: "Error fetching user settings",
+                    text: getErrorMessage(e)
+                });
                 setUserSettings({});
             } finally {
                 setLoading(false);
@@ -75,7 +82,7 @@ const SettingsPage = (props: Props) => {
         void fetchUserSettings();
     }, []);
 
-    const handleSaveClicked = async (event) => {
+    const handleSaveClicked = async (event: FormEvent<HTMLFormElement>) => {
         const data = {
             username,
             email,
@@ -83,10 +90,12 @@ const SettingsPage = (props: Props) => {
             noAudioExercises: !audioExercisesEnabled,
             noImageExercises: !imageExercisesEnabled,
             noMicrophoneExercises: !microphoneExercisesEnabled,
-        };
+        } as Record<string, unknown>;
+
+        type key = keyof typeof data;
 
         Object.keys(data).forEach(
-            key => !data[key] && delete data[key]
+            (key: key) => !data[key] && delete data[key]
         );
 
         try {
@@ -96,11 +105,15 @@ const SettingsPage = (props: Props) => {
             setUserSettings(newUserSettings);
         } catch ( err ) {
             console.error(err);
-            setMessage({ type: 'error', title: 'Error updating settings', text: err.message });
+            setMessage({
+                type: 'error',
+                title: 'Error updating settings',
+                text: getErrorMessage(err)
+            });
         }
 
         if ( username ) {
-            dispatch(setUser({ ...user, username }));
+            dispatch(setUser({ ...user, username } as User));
         }
     };
 
@@ -129,7 +142,7 @@ const SettingsPage = (props: Props) => {
                             style={{ float: 'right' }}
                             value="send notifications"
                             checked={reminderEnabled}
-                            onChange={(e, data) => setReminderEnabled(data.checked)}
+                            onChange={(e, data) => setReminderEnabled(data.checked || false)}
                         />
                     </Form.Field>
                     <Transition.Group animation="slide down" duration={200}>
@@ -173,7 +186,7 @@ const SettingsPage = (props: Props) => {
                             id="enable-audio"
                             style={{ float: 'right' }}
                             checked={audioExercisesEnabled}
-                            onChange={(e, data) => setAudioExercisesEnabled(data.checked)}
+                            onChange={(e, data) => setAudioExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
                     <p>Disable this, if you don't want to do any exercises with audio.</p>
@@ -187,7 +200,7 @@ const SettingsPage = (props: Props) => {
                             id="enable-images"
                             style={{ float: 'right' }}
                             checked={imageExercisesEnabled}
-                            onChange={(e, data) => setImageExercisesEnabled(data.checked)}
+                            onChange={(e, data) => setImageExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
                     <p>Disable this, if you don't want to do any exercises with images.</p>
@@ -201,7 +214,7 @@ const SettingsPage = (props: Props) => {
                             id="enable-mic"
                             style={{ float: 'right' }}
                             checked={microphoneExercisesEnabled}
-                            onChange={(e, data) => setMicrophoneExercisesEnabled(data.checked)}
+                            onChange={(e, data) => setMicrophoneExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
                     <p>Disable this, if you don't want to do any exercises that uses microphone.</p>

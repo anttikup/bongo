@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
-import dbcache from '../../../util/dbcache';
-import { makeFilterFirstNOrLess } from '../../../util/misc';
-import random from '../../../util/random';
-import { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../../../types';
-import { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../sharedTypes';
+import dbcache from '../../../../../lib/dbcache';
+import { makeFilterFirstNOrLess } from '../../../../../lib/misc';
+import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
+
+import type { TextOption, ImageOption, MultipleChoiceAssignment } from '../../../../../types';
+import type { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../../../types';
 
 type PitchAudio = AudioMeta & PitchMeta;
 type PitchImage = ImageMeta & PitchMeta;

@@ -1,6 +1,7 @@
-import clientPromise from "../../../lib/mongodb";
+import clientPromise from './mongodb';
 
-import { AudioMeta, ImageMeta, isRangeAudio, isRangeImage } from '../sharedTypes';
+import { isObject, isRangeAudio, isRangeImage } from '../types';
+import type { FileMeta, AudioMeta, ImageMeta, MetadataDB } from '../types';
 
 
 type QueryBase = {
@@ -10,27 +11,40 @@ type QueryBase = {
 
 type Query = QueryBase & Record<string, unknown>;
 
-
-const clean = item => {
-    const copy = { ...item };
-    delete copy._id;
-    delete copy.master;
-    delete copy.metadata_version;
-
-    return copy;
+const isMetadataDB = (obj: unknown): obj is MetadataDB => {
+    if ( isObject(
+        obj) && '_id' in obj
+      && 'master' in obj
+      && 'metadata_version' in obj
+      && '__v' in obj ) {
+        return true;
+    }
+    return false
 };
+
+const clean = (item: any) => {
+    if ( isMetadataDB(item) ) {
+        const copy = { ...item };
+        delete copy._id;
+        delete copy.master;
+        delete copy.metadata_version;
+        return copy;
+    }
+    throw new Error("Incompatible");
+};
+
 
 const query = async <T>(q: Query): Promise<Array<T>> => {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
+
     if ( q.media === 'audio' ) {
         const result = await db.collection('audio').find(q);
-        const array = await result.toArray();
-        return array.map(clean);
+        return await result.toArray() as T[];
+
     } else if ( q.media === 'image' ) {
         const result = await db.collection('images').find(q);
-        const array = await result.toArray();
-        return array.map(clean);
+        return await result.toArray() as T[];
     }
 
     throw new Error(`Unrecoqnised media type: '${q.media}'`);
@@ -44,7 +58,7 @@ const getAssociatedAudio = async (imageMeta: ImageMeta, instrument: string): Pro
         abstractAudio: imageMeta.abstractAudio
     });
 
-    console.assert(associatedAudio.length <= 1, "Too many audios found");
+    console.assert(associatedAudio.length <= 1, 'Too many audios found');
 
     if ( associatedAudio.length > 0 ) {
         return associatedAudio[0];

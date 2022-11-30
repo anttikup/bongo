@@ -1,11 +1,10 @@
-export const isString = (obj: unknown): obj is string => {
-    return typeof obj === "string";
-};
+import { ObjectId } from 'mongodb';
 
+import {
+    isObject,
+    isString,
+} from './basic';
 
-export const isObject = (obj: unknown): obj is Record<string, unknown> => {
-    return typeof obj === "object" && obj !== null;
-};
 
 
 export enum MediaType {
@@ -14,7 +13,7 @@ export enum MediaType {
 }
 
 export const isMediaType = (type: string): type is MediaType =>
-    typeof type === 'string' && (type === 'audio' || type === 'image');
+    typeof isString(type) && (type === 'audio' || type === 'image');
 
 
 export interface File {
@@ -30,7 +29,7 @@ export enum ItemType {
 }
 
 export const isItemType = (type: string): type is ItemType =>
-    typeof type === 'string' && (type in ['chord', 'melodic', 'harmonic', 'pitch']);
+    typeof isString(type) && (type in ['chord', 'melodic', 'harmonic', 'pitch']);
 
 
 
@@ -80,7 +79,15 @@ export const isRangeImage = (obj: unknown): obj is RangeAudio =>
 
 export type Range = RangeImage | RangeAudio;
 
-export interface FileMeta {
+
+export interface MetadataDB {
+    _id?: ObjectId;
+    __v?: string;
+    master?: string;
+    metadata_version?: string;
+}
+
+export interface FileMeta extends MetadataDB {
     abstractAudio: string;
     file: string;
     humanDescription: string;
@@ -119,7 +126,3 @@ export interface AudioMeta extends FileMeta {
     instrument: string;
     tempo: number;
 }
-
-
-//export const isFileMeta = (obj: unknown): obj is FileMeta =>
-//    isObject(obj) && 'id' in obj && 'type' in obj && isItemType(obj.type) && 'media' in obj && isMediaType(obj.media);

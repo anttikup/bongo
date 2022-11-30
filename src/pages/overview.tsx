@@ -10,6 +10,7 @@ import Layout from '../components/layout';
 import LockDivider from "../components/LockDivider";
 import Tier from "../components/Tier";
 import { useErrorMessage } from '../hooks/errorMessage';
+import { getErrorMessage } from '../lib/error';
 import userService from '../services/user';
 import { useStateValue, setUserProgress } from "../state";
 
@@ -46,7 +47,7 @@ export default function Overview({ exercisesByTier }: OverviewProps) {
                 dispatch(setUserProgress(userProgressFromApi));
             } catch (e) {
                 console.error(e);
-                setError("Error fetching user progress", e.message);
+                setError("Error fetching user progress", getErrorMessage(e));
                 setUserProgress({});
             } finally {
                 setLoading(false);

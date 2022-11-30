@@ -1,14 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
-import dbcache from '../../../util/dbcache';
-//import { makeFilterFirstNOrLess } from '../../../util/misc';
-import random from '../../../util/random';
-import { SortingAssignment } from '../../../../../types';
-import { AudioMeta, PitchMeta, RangeAudio } from '../../../sharedTypes';
+import dbcache from '../../../../../lib/dbcache';
+//import { makeFilterFirstNOrLess } from '../../../../../lib/misc';
+import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
 
+import type { SortingAssignment } from '../../../../../types';
+import type { AudioMeta, PitchMeta, RangeAudio } from '../../../../../types';
+
 type PitchAudio = AudioMeta & PitchMeta;
+
 
 const newColorer = () => {
     const colors = random.shuffle([

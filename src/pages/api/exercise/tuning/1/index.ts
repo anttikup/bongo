@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 
-import { assert } from '../../../util/debug';
-import dbcache from '../../../util/dbcache';
-import random from '../../../util/random';
-import { AudioMeta, PitchMeta } from '../../../sharedTypes';
+import { assert } from '../../../../../lib/debug';
+import dbcache from '../../../../../lib/dbcache';
+import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
+import type { AudioMeta, PitchMeta } from '../../../../../types';
 
 import type {
     Assignment,

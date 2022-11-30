@@ -8,6 +8,7 @@ import { SITE_TITLE } from '../../../config';
 import ExArea from '../../../components/ExArea';
 import Health from '../../../components/Health';
 import Layout from '../../../components/layout';
+import { getErrorMessage } from '../../../lib/error';
 import { useErrorMessage } from '../../../hooks/errorMessage';
 import { useQuestionSet } from '../../../hooks/data';
 import exerciseService from '../../../services/exercise';
@@ -99,12 +100,15 @@ const ExercisePage = (props: Props) => {
 
 
     const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer) => {
+        if ( ! learningStatsRef?.current ) {
+            return;
+        }
         console.log("UPDAT:", learningStatsRef.current);
         if ( userAnswer === trueAnswer ) {
-            learningStatsRef.current.update('notenames', userAnswer, 2, 0);
+            learningStatsRef.current.update('notenames', userAnswer.toString(), 2, 0);
         } else {
-            learningStatsRef.current.update('notenames', userAnswer, 0, 1);
-            learningStatsRef.current.update('notenames', trueAnswer, 0, 1);
+            learningStatsRef.current.update('notenames', userAnswer.toString(), 0, 1);
+            learningStatsRef.current.update('notenames', trueAnswer.toString(), 0, 1);
         }
     };
 
@@ -120,12 +124,14 @@ const ExercisePage = (props: Props) => {
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));
-                const data = learningStatsRef.current.getSet('notenames');
-                const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
-                learningStatsRef.current.setSet('notenames', learningStatsFromApi);
+                if ( learningStatsRef?.current ) {
+                    const data = learningStatsRef.current.getSet('notenames');
+                    const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
+                    learningStatsRef.current.setSet('notenames', learningStatsFromApi);
+                }
             } catch ( err ) {
                 console.error(err);
-                setError('Error updating progress', err.message);
+                setError('Error updating progress', getErrorMessage(err));
             }
         }
         Router.push('/overview');

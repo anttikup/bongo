@@ -88,7 +88,7 @@ export const reducer = (state: State, action: Action): State => {
             return {
                 ...state,
                 user: action.object,
-                experience: action.object.xp,
+                experience: action.object ? action.object.xp : state.experience,
             };
 
         case "SET_USER_PROGRESS":

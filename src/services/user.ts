@@ -34,10 +34,6 @@ const updateUser = async (itemsToUpdate: Record<string, unknown>) => {
         itemsToUpdate
     );
 
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
     console.log("updateUser:", userFromApi);
     return userFromApi;
 };
@@ -47,11 +43,6 @@ const getUserSettings = async () => {
     const { data: userSettingsFromApi } = await axios.get<UserSettings>(
         '/api/user/settings',
     );
-
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userSettingsFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
 
     console.log("getUserSettings:", userSettingsFromApi);
     return userSettingsFromApi;

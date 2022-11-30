@@ -1,22 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { unstable_getServerSession } from "next-auth/next";
 
-import { authOptions } from "../auth/[...nextauth]";
+import sessionLib from '../../../lib/session';
 import userLib from '../../../lib/user';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
 
-    const session = await unstable_getServerSession(req, res, authOptions);
-    if ( !session ) {
+    const user = await sessionLib.getCurrentUser(req, res);
+    if ( !user ) {
         res.status(401).json({ error: `You are not authorized to access this content` });
-        return;
-    }
-
-    const user = session.user;
-    if ( ! user ) {
-        res.status(401).json({ error: 'invalid user' });
         return;
     }
 

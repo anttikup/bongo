@@ -1,19 +1,14 @@
 import clientPromise from "../lib/mongodb";
 
-import type { ExerciseProgress, UserDB, UserInfo, UserProgress, UserStats } from '../types';
 import { isUserDB } from '../types';
+import type {
+    ExerciseProgress,
+    UserDB,
+    UserInfo,
+    UserProgress,
+    UserStats,
+} from '../types';
 
-
-
-const clean = (obj: Record<string, unknown>) => {
-    const copy = { ...obj };
-
-    delete copy.__v;
-    delete copy._id;
-    delete copy.passwordHash;
-
-    return copy;
-};
 
 
 const getDate = () => {
@@ -110,33 +105,33 @@ const updateUser = async (user: UserInfo, fields: Partial<UserDB>): Promise<User
 
 
 const updateXP = async (user: UserInfo, xp: number): Promise<Partial<UserDB>> => {
-        const client = await clientPromise;
-        const db = client.db(process.env.DB_NAME);
+    const client = await clientPromise;
+    const db = client.db(process.env.DB_NAME);
 
-        const updateInfo = await db
-            .collection("users")
-            .findOneAndUpdate(
-                { userID: user.id },
-                {
-                    $set: {
-                        xp: xp,
-                        ['xpHistory.' + getDate()]: xp
-                    },
+    const updateInfo = await db
+        .collection("users")
+        .findOneAndUpdate(
+            { userID: user.id },
+            {
+                $set: {
+                    xp: xp,
+                    ['xpHistory.' + getDate()]: xp
                 },
-                //{ returnNewDocument: true } // doen't work
-            );
-
-        console.log("UPDATED USER:", updateInfo);
-
-        const updatedUser = {
-            ...updateInfo.value,
-            xpHistory: {
-                ...updateInfo.value?.xpHistory,
-                [getDate()]: xp
             },
-        };
+            //{ returnNewDocument: true } // doen't work
+        );
 
-        return updatedUser as Partial<UserDB>;
+    console.log("UPDATED USER:", updateInfo);
+
+    const updatedUser = {
+        ...updateInfo.value,
+        xpHistory: {
+            ...updateInfo.value?.xpHistory,
+            [getDate()]: xp
+        },
+    };
+
+    return updatedUser as Partial<UserDB>;
 
 };
 
@@ -151,6 +146,7 @@ const findByUserID = async (userID: string): Promise<UserDB | undefined> => {
     //return clean(foundUser);
     return foundUser as unknown as UserDB;
 };
+
 
 const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> => {
     const client = await clientPromise;
@@ -182,6 +178,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
 
     return foundUser;
 };
+
 
 /* const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): Promise<UserDB | undefined> => {
  *     try {
@@ -218,6 +215,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
  *
  * };
  *  */
+
 
 
 export default {

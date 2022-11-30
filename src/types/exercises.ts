@@ -1,56 +1,14 @@
-import mongoose from 'mongoose';
+import {
+    isObject,
+    isString
+} from './basic';
 
-export const isNumber = (obj: unknown): obj is number => {
-    return typeof obj === "number";
+
+type Url = string;
+
+const isUrl = (val: unknown): val is Url => {
+    return isString(val);
 };
-
-
-export const isString = (obj: unknown): obj is string => {
-    return typeof obj === "string";
-};
-
-
-export const isObject = (obj: unknown): obj is Record<string, unknown> => {
-    return typeof obj === "object" && obj !== null;
-};
-
-export const isArray = <T>(obj: unknown): obj is T[]  => {
-    return isObject(obj) && obj.length !== undefined;
-};
-
-
-export type Color = string;
-
-
-export type UIMessage = {
-    type: "success" | "error";
-    title: string;
-    text: string;
-};
-
-
-export interface User {
-    id: string;
-    username: string | null;
-    xp: number;
-    xpHistory: Record<string, number>;
-}
-
-export const isUser = (obj: unknown): obj is User => {
-    return isObject(obj)
-        && ("username" in obj)
-        && isString(obj.username)
-        && ("token" in obj)
-        && isString(obj.token);
-};
-
-export type UserInfo = {
-    id: string;
-    name?: string | null;
-    email?: string;
-    image?: string;
-};
-
 
 export enum Phase {
     Question = 0,
@@ -58,10 +16,6 @@ export enum Phase {
     LastCheck = 2,
     Results = 3,
 }
-
-type Url = string;
-
-const isUrl = (obj: unknown) => typeof obj === "string";
 
 export type Multi = number | string | boolean;
 
@@ -183,103 +137,3 @@ export type TierDescr = {
 };
 
 export type Overview = TierDescr[];
-
-export type ExerciseProgress = {
-    val: number;
-    updated: string;
-};
-
-
-export type UserProgress = Record<string, ExerciseProgress>;
-
-export type UserStats = {
-    xpHistory?: XpByDate;
-};
-
-export type XpByDate = Record<DateType, number>;
-
-type DateType = string;
-
-
-export type UserSettings = {
-    username?: string;
-    email?: string;
-    notenamePreference?: NotenamePreference;
-    reminderEnabled?: boolean;
-    noAudioExercises?: boolean;
-    noImageExercises?: boolean;
-    noMicrophoneExercises?: boolean;
-};
-
-
-export type NotenamePreference = 'b' | 'h' | 'si';
-
-
-
-export interface ErrorMessage {
-    type: "error";
-    title: string;
-    text: string;
-}
-
-export interface InfoMessage {
-    type: "success";
-    title: string;
-    text: string;
-}
-
-export interface SuccessMessage {
-    type: "success";
-    title: string;
-    text: string;
-}
-
-export type Message = ErrorMessage | InfoMessage | SuccessMessage;
-
-
-
-
-export type LearningStatsItem = {
-    wrong: number;
-    right: number;
-};
-
-export type LearningStats = Map<string, LearningStatsItem>;
-
-
-export type StatsCategoryFront = {
-    name: string;
-    data: LearningStats;
-};
-
-export type LearningStatsCategory = {
-    userRef: mongoose.Types.ObjectId;
-    name: string;
-    data: LearningStats;
-};
-
-
-export type DatedValue = {
-    val: number;
-    updated: string;
-};
-
-export interface UserDB {
-    id: string;
-    userId: string;
-    username: string | null;
-    progress: Record<string, DatedValue>;
-    xp: number;
-    xpHistory: Record<string, number>;
-    learningStats: LearningStatsCategory[];
-}
-
-
-export function isUserDB(user: unknown): user is UserDB {
-    return isObject(user)
-        && isString(user.userId)
-        && isObject(user.progress)
-        && isNumber(user.xp)
-        && isObject(user.xpHistory)
-        && isArray<LearningStatsCategory>(user.learningStats)
-};

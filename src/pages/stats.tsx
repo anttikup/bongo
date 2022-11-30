@@ -41,7 +41,7 @@ export default function Stats(props: StatsProps) {
             try {
                 const userStatsFromApi = await userService.getStats();
                 setUserStats(userStatsFromApi);
-                setError(null, null);
+                setError(null);
             } catch (e) {
                 console.error(e);
                 setUserStats({});
@@ -82,7 +82,7 @@ export default function Stats(props: StatsProps) {
                                 { dates.map((date, index) => (
                                     <Table.Row key={index}>
                                         <Table.Cell>{date}</Table.Cell>
-                                        <Table.Cell>{userStats.xpHistory[date]}</Table.Cell>
+                                        <Table.Cell>{userStats?.xpHistory && userStats.xpHistory[date]}</Table.Cell>
                                     </Table.Row>
                                 )) }
                             </Table.Body>

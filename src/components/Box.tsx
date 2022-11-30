@@ -14,7 +14,7 @@ type BoxProps = {
     topic: string;
     level: number;
     material?: string;
-    refreshed: string;
+    refreshed?: string;
     levels: number;
 };
 
@@ -59,7 +59,7 @@ const Box = ({ progress, refreshed, text, image, color, topic, level, material, 
                 onMouseEnter={handleMainHover}
                 onMouseLeave={handleMainUnHover}
                 onClick={handleClick}
-                title={`${progress}/${levels}, \nlast refreshed: ${refreshed}`}
+                title={`${progress}/${levels}, \nlast refreshed: ${refreshed || 'never'}`}
             >
                 <img src={image}/>
                 {<Progress value={progress} size="small" total={levels} autoSuccess />}

@@ -13,7 +13,6 @@ type TierProps = {
 const Tier = ({ boxes }: TierProps) => {
     const [{ userProgress }, ] = useStateValue();
 
-    console.log("userProgress:", userProgress);
     return (
         <Segment className={style.tier}>
             { boxes.map((item, index) => (
@@ -22,7 +21,7 @@ const Tier = ({ boxes }: TierProps) => {
                     topic={item.topic}
                     level={item.level}
                     progress={userProgress[item.id] ? userProgress[item.id].val : 0}
-                    refreshed={userProgress[item.id] ? userProgress[item.id].updated : 'never'}
+                    refreshed={userProgress[item.id]?.updated}
                     color={item.color}
                     text={item.text}
                     image={item.image}

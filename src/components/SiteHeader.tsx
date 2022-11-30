@@ -7,6 +7,7 @@ import Username from '../components/Username';
 import MessageDisplay from '../components/MessageDisplay';
 import ExpPoints from '../components/ExpPoints';
 import { useErrorMessage } from '../hooks/errorMessage';
+import { getErrorMessage } from '../lib/error';
 import userService from '../services/user';
 import { setUser, useStateValue } from '../state';
 
@@ -33,7 +34,7 @@ const SiteHeader = (props: SiteHeaderProps) => {
                 dispatch(setUser(userFromApi));
             } catch (e) {
                 console.error(e);
-                setError('Error fetching user progress', (e as Error).message);
+                setError('Error fetching user progress', getErrorMessage(e));
             } finally {
                 setLoading(false);
             }

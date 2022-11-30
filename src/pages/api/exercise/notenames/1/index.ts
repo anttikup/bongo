@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../../../auth/[...nextauth]";
-import dbcache from '../../../util/dbcache';
-import { makeFilterFirstNOrLess } from '../../../util/misc';
-import random from '../../../util/random';
-import { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../sharedTypes';
+import dbcache from '../../../../../lib/dbcache';
+import { makeFilterFirstNOrLess } from '../../../../../lib/misc';
+import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
-
 import learningStatsLib from '../../../../../lib/learningstats';
+
+import type { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../../../types';
 
 import {
     ImageOption,

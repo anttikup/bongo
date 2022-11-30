@@ -1,10 +1,9 @@
-import React from 'react';
 import { useEffect, useRef } from 'react';
-import { Message as MessageComponent } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 
 import { useMessage } from '../hooks/message';
 
-import { Message as MessageType } from '../types';
+import { UIMessage } from '../types';
 
 
 type Props = {
@@ -27,10 +26,10 @@ const MessageDisplay = (props: Props) => {
 
     return (
         <div ref={myRef}>
-            <MessageComponent negative={message.type === "error"} positive={message.type === "success"}>
-                <MessageComponent.Header>{message.title}</MessageComponent.Header>
+            <Message negative={message.type === "error"} positive={message.type === "success"}>
+                <Message.Header>{message.title}</Message.Header>
                 <p>{message.text}</p>
-            </MessageComponent>
+            </Message>
         </div>
     );
 };
