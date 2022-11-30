@@ -10,7 +10,6 @@ import Health from '../../../components/Health';
 import Layout from '../../../components/layout';
 import { useErrorMessage } from '../../../hooks/errorMessage';
 import { useQuestionSet } from '../../../hooks/data';
-import { getAllExerciseIds } from '../../../lib/exercises';
 import exerciseService from '../../../services/exercise';
 import userService from '../../../services/user';
 import { setExerciseProgress, setExperience, useStateValue } from '../../../state';

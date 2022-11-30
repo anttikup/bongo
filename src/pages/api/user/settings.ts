@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
-import userService from '../../../backendServices/user';
+import userLib from '../../../lib/user';
 import { parseBooleanField, parseStringField, parseIntegerField } from '../util/typeutil';
 
 import type { UserSettings, NotenamePreference } from '../../../types';
@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch ( method ) {
         case 'GET': {
-            const userData = await userService.findByUserID(user.id);
+            const userData = await userLib.findByUserID(user.id);
             delete userData.xp;
             delete userData.xpHistory;
             delete userData.progress;
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const itemsToUpdate = parseUserFields(req.body);
                 console.log("settings items to udpate", itemsToUpdate);
-                const updatedProgress = await userService.updateUser(user, itemsToUpdate);
+                const updatedProgress = await userLib.updateUser(user, itemsToUpdate);
                 console.log("updated in api:", updatedProgress);
                 res.status(200).json(updatedProgress);
             } catch (err) {

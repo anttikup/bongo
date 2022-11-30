@@ -1,5 +1,5 @@
 import dbConnect from '../dbconnect'
-import userLib from '../../backendServices/user';
+import userLib from '../../lib/user';
 import LearningStats from '../../models/learningstats';
 
 import notenames from './notenames';

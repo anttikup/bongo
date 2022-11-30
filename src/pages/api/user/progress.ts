@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
-import userService from '../../../backendServices/user';
+import userLib from '../../../lib/user';
 import { parseIntegerField, parseStringField } from '../util/typeutil';
 
 import type { UserProgress } from '../../../types';
@@ -25,13 +25,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch ( method ) {
         case 'GET':
-            res.status(200).json(await userService.getProgress(user));
+            res.status(200).json(await userLib.getProgress(user));
             break;
 
         case 'PATCH':
             try {
                 const itemsToUpdate = parseUserProgressFields(req.body);
-                const updatedProgress = await userService.updateProgress(user, itemsToUpdate);
+                const updatedProgress = await userLib.updateProgress(user, itemsToUpdate);
                 res.status(200).json(updatedProgress);
             } catch (err) {
                 res.status(400).send({

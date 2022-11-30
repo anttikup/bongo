@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 
-import exerciseLib from '../backendServices/exercises';
+import exerciseLib from '../lib/exercises';
 import { SITE_TITLE } from '../config';
 import Date from '../components/date';
 import Layout from '../components/layout';

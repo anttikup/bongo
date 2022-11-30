@@ -60,8 +60,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 };
 
 
+const isRecordWithStringKey = (val: unknown): val is Record<string, unknown> => {
+    if ( isObject(val) && val !== null && Object.keys(val).length > 0 ) {
+        return true;
+    }
+
+    return false;
+};
+
+
 const parseLearningStats = (val: unknown): LearningStats => {
-    if ( typeof val !== "object" || val === null ) {
+    if ( !isRecordWithStringKey(val) ) {
         throw new Error('Incorrect or missing value');
     }
 

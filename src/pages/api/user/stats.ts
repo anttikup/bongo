@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
-import userService from '../../../backendServices/user';
+import userLib from '../../../lib/user';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     switch ( method ) {
         case 'GET':
-            res.status(200).json(await userService.getStats(user));
+            res.status(200).json(await userLib.getStats(user));
             break;
 
         default:

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from "next-auth/next";
 
 import { authOptions } from "../auth/[...nextauth]";
-import userService from '../../../backendServices/user';
+import userLib from '../../../lib/user';
 
 import { isObject } from '../../../types';
 import { parseStringField, parseIntegerField } from '../util/typeutil';
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log("SESSION USER:", userInfo);
     console.log("SESSION:", session);
 
-    const userObj = await userService.findOrCreateUserByUserInfo(userInfo as UserInfo);
+    const userObj = await userLib.findOrCreateUserByUserInfo(userInfo as UserInfo);
     if ( ! userObj ) {
         res.status(404).json({ error: `invalid user ${userInfo.name}` });
         return;
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 console.assert(Object.keys(fieldsToUpdate).length === 1, "can only set xp");
                 console.assert('xp' in fieldsToUpdate, "can only set xp");
                 console.log("udpate user, fields:", fieldsToUpdate);
-                const updatedUser = await userService.updateXP(userInfo as UserInfo, fieldsToUpdate['xp'] || 0);
+                const updatedUser = await userLib.updateXP(userInfo as UserInfo, fieldsToUpdate['xp'] || 0);
                 console.log("  result:", updatedUser);
                 res.json(updatedUser);
             } catch ( err ) {
