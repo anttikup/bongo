@@ -45,12 +45,12 @@ const SiteHeader = (props: SiteHeaderProps) => {
 
 
     const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
-        //e.preventDefault();
+        e.preventDefault();
         signIn();
     };
 
     const handleSignout = (e: MouseEvent<HTMLAnchorElement>) => {
-        //e.preventDefault();
+        e.preventDefault();
         signOut({ redirect: true, callbackUrl: '/' });
     };
 
