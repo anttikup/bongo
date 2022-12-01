@@ -39,4 +39,4 @@ userSchema.set('toJSON', {
 
 userSchema.index({ userID: 1 }, { unique: true });
 
-export default mongoose.model<UserDB>('User', userSchema);
+export default (mongoose.models.User || mongoose.model<UserDB>('User', userSchema)) as mongoose.Model<UserDB>;

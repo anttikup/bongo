@@ -1,4 +1,5 @@
-import clientPromise from "../lib/mongodb";
+import dbConnect from './dbconnect'
+import User from '../models/user';
 
 import { isUserDB } from '../types';
 import type {
@@ -35,38 +36,30 @@ const updateProgress = async (user: UserInfo, keyval: Partial<UserProgress>): Pr
         throw new Error("invalid value, must be single key-value pair");
     }
 
+    await dbConnect();
+
     const exerciseId = Object.keys(keyval)[0];
-    const client = await clientPromise;
-    const db = client.db(process.env.DB_NAME);
 
     const newValue = {
         val: keyval[exerciseId]?.val,
         updated: getDateTime()
     };
 
-    const updateInfo = await db
-        .collection("users")
+    const updatedUser = await User
         .findOneAndUpdate(
-            { userID: user.id },
+            { userId: user.id },
             {
-                $set: {
-                    [`progress.${exerciseId}`]: newValue
-                },
+                [`progress.${exerciseId}`]: newValue
             },
-            //{ returnNewDocument: true } // doen't work
+            {
+                upsert: true,
+                new: true,
+            }
         );
 
-    const updatedUser = {
-        ...updateInfo.value,
-        progress: {
-            ...updateInfo?.value?.progress,
-            [exerciseId]: newValue
-        }
-    };
-
     return updatedUser.progress;
-
 };
+
 
 const getStats = async (user: UserInfo): Promise<UserStats> => {
     const userData = await findByUserID(user.id);
@@ -74,103 +67,76 @@ const getStats = async (user: UserInfo): Promise<UserStats> => {
     return { xpHistory: userData?.xpHistory || {} };
 };
 
+
 const updateUser = async (user: UserInfo, fields: Partial<UserDB>): Promise<UserDB | null> => {
     console.assert(!('xp' in fields), "can't set xp using updateUser");
 
-    const client = await clientPromise;
-    const db = client.db(process.env.DB_NAME);
+    await dbConnect();
 
-    const updateInfo = await db
-        .collection("users")
-        .findOneAndUpdate(
-            { userID: user.id },
-            {
-                $set: {
-                    ...fields
-                },
-            },
-            //{ returnNewDocument: true } // doen't work
-        );
+    const updatedUser = await User.findOneAndUpdate(
+        { userId: user.id },
+        {
+            ...fields
+        },
+        {
+            upsert: true,
+            new: true,
+        }
+    );
 
-    const updatedUser = {
-        ...updateInfo.value,
-        ...fields
-    };
+    console.log("UPDATED USER:", updatedUser);
 
-    if ( isUserDB(updatedUser) ) {
-        return updatedUser as UserDB;
-    }
-    return null;
+    return updatedUser;
 };
 
 
 const updateXP = async (user: UserInfo, xp: number): Promise<Partial<UserDB>> => {
-    const client = await clientPromise;
-    const db = client.db(process.env.DB_NAME);
+    await dbConnect();
 
-    const updateInfo = await db
-        .collection("users")
-        .findOneAndUpdate(
-            { userID: user.id },
-            {
-                $set: {
-                    xp: xp,
-                    ['xpHistory.' + getDate()]: xp
-                },
-            },
-            //{ returnNewDocument: true } // doen't work
-        );
-
-    console.log("UPDATED USER:", updateInfo);
-
-    const updatedUser = {
-        ...updateInfo.value,
-        xpHistory: {
-            ...updateInfo.value?.xpHistory,
-            [getDate()]: xp
+    const updatedUser = await User.findOneAndUpdate(
+        { userId: user.id },
+        {
+            xp: xp,
+            ['xpHistory.' + getDate()]: xp
         },
-    };
+        {
+            upsert: true,
+            new: true,
+        }
+    );
 
-    return updatedUser as Partial<UserDB>;
+    console.log("UPDATED USER (XP):", updatedUser);
 
+    return updatedUser;
 };
 
-const findByUserID = async (userID: string): Promise<UserDB | undefined> => {
-    const client = await clientPromise;
-    const db = client.db(process.env.DB_NAME);
+const findByUserID = async (userId: string): Promise<UserDB | undefined> => {
+    await dbConnect();
+    const foundUser = await User.findOne<UserDB>(
+        { userId }
+    );
 
-    const foundUser = await db
-        .collection("users")
-        .findOne({ userID });
+    console.log("******************FOUND:", foundUser);
 
-    //return clean(foundUser);
-    return foundUser as unknown as UserDB;
+    return foundUser;
 };
 
 
 const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> => {
-    const client = await clientPromise;
-    const db = client.db(process.env.DB_NAME);
-
+    await dbConnect();
     let foundUser = await findByUserID(userInfo.id);
 
-    if ( foundUser && foundUser.userId ) {
-        return foundUser;
+    if ( !foundUser ) {
+        foundUser = new User({
+            userId: userInfo.id,
+            username: userInfo.name,
+            progress: {},
+            xp: 0,
+            xpHistory: {
+                [getDate()]: 0,
+            }
+        }).save();
     }
-
-    db.collection("users")
-      .insertOne({
-          userID: userInfo.id,
-          username: userInfo.name,
-          progress: {
-          },
-          xp: 0,
-          xpHistory: {
-              [getDate()]: 0,
-          }
-      });
-
-    foundUser = await findByUserID(userInfo.id);
 
     if ( !foundUser ) {
         throw new Error("Couldn't create user");
@@ -180,41 +146,6 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
 };
 
 
-/* const findOrCreateUserByUserInfo2 = async (userInfo: UserInfo): Promise<UserDB | undefined> => {
- *     try {
- *         const client = await clientPromise;
- *         const db = client.db(process.env.DB_NAME);
- *
- *         const foundUser = await db
- *             .collection("users")
- *             .findAndModify({
- *                 query: { userID: userInfo.id },
- *                 update: {
- *                     $setOnInsert: {
- *                         userID: userInfo.id,
- *                         username: userInfo.name,
- *                         progress: {
- *                         },
- *                         xp: 0,
- *                         xpHistory: {
- *                             [getDate()]: 0,
- *                         }
- *                     }
- *                 },
- *                 new: true,   // return new doc if one is upserted
- *                 upsert: true // insert the document if it does not exist
- *             });
- *
- *         console.log("FOUND USER:", foundUser);
- *
- *         return clean(foundUser);
- *     } catch (e) {
- *         console.error(e);
- *     }
- *     return null;
- *
- * };
- *  */
 
 
 
