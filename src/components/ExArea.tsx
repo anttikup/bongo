@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Header, Progress, Segment } from 'semantic-ui-react';
 
 import ButtonBar from './ButtonBar';
+import { MAX_HEALTH } from '../config';
 import { Phase, isAssignment } from '../types';
 import { AssignmentAnswer, QuestionSet, isNumber, isObject } from '../types';
 import ErrorComponent from './Error';
@@ -69,7 +70,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
 
     const onAnswerSelected = (answer: AssignmentAnswer) => setSelected(answer);
 
-    const correctAnswersRequired = questionSet.length - 3;
+    const correctAnswersRequired = questionSet.length - MAX_HEALTH;
 
     const assignmentsLeft = () => {
         return assignmentQueue.length - health;
@@ -141,7 +142,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
     return (
         <div className="ex-area">
             Total: {questionSet.length}, correct required: {correctAnswersRequired}, correct: {correctAnswers},
-            wrong: {3 - health} =&gt; answered: {correctAnswers + (3 - health)}, n more corrects required: {assignmentsLeft()}
+            wrong: {MAX_HEALTH - health} =&gt; answered: {correctAnswers + (MAX_HEALTH - health)}, n more corrects required: {assignmentsLeft()}
             <Header as="header">
                 <Progress value={correctAnswers} total={correctAnswersRequired} autoSuccess color="yellow" />
             </Header>
