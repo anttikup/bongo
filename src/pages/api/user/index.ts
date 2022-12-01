@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     const updatedUser = await userLib.updateXP(user, fieldsToUpdate.xp);
                     res.json(updatedUser);
                 } else {
-                    throw new Error('not implemented');
+                    throw new Error(`not implemented: ${JSON.stringify(fieldsToUpdate)}`);
                 }
             } catch ( err ) {
                 res.status(400).send({
@@ -61,5 +61,6 @@ const isXpField = (obj: unknown): obj is XpField => {
     if ( isObject(obj) && 'xp' in obj && Object.keys(obj).length === 1 && isNumber(obj.xp) ) {
         return true;
     }
+
     return false;
 };

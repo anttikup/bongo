@@ -130,16 +130,19 @@ const parseNotenamePreferenceField = (o: unknown, fieldName: string): NotenamePr
 
 type UserFields = Partial<UserDB>;
 export const parseUserFields = (fields: Record<string, unknown>): UserFields => {
-    const userFields: UserFields = {
-        xp: fields.xp
-          ? parseIntegerField(fields.xp, "xp")
-          : undefined,
-        username: fields.username
-                ? parseStringField(fields.username, 'username')
-                : undefined,
-        email: fields.email
-             ? parseStringField(fields.email, 'email')
-             : undefined,
+    const userFields: UserFields = {};
+
+
+    if ( fields.xp ) {
+          userFields.xp = parseIntegerField(fields.xp, "xp");
+    }
+
+    if ( fields.username ) {
+        userFields.username = parseStringField(fields.username, 'username');
+    }
+
+    if ( fields.email ) {
+        userFields.email = parseStringField(fields.email, 'email');
     }
 
     return userFields;
