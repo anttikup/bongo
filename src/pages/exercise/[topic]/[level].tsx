@@ -34,8 +34,8 @@ const ExercisePage = (props: Props) => {
     const [health, setHealth] = useState(3);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
     //const [learningStats, setLearningStats] = useState<StatsCategory>([]);
-    const [loadingQS, setLoadingQS] = useState(true);
-    const [loadingLS, setLoadingLS] = useState(true);
+    const [loadingQS, setLoadingQS] = useState(false);
+    const [loadingLS, setLoadingLS] = useState(false);
     const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
     // Stats data doesn't affect the component, so we store it outside state.
@@ -75,16 +75,16 @@ const ExercisePage = (props: Props) => {
 
 
     useEffect(() => {
-        const fetchLearningStats = async () => {
+        const fetchLearningStats = async (setName: string) => {
             setLoadingLS(true);
             try {
-                const learningStatsFromApi = await userService.getLearningStats('notenames');
+                const { data: learningStatsFromApi } = await userService.getLearningStats(statSet);
                 console.info(learningStatsFromApi);
                 if ( !learningStatsRef.current ) {
                     learningStatsRef.current = new LearningSetManager();
                 }
 
-                learningStatsRef.current.add('notenames', learningStatsFromApi.data);
+                learningStatsRef.current.add(setName, learningStatsFromApi);
             } catch (e) {
                 console.error(e);
                 setError('Error fetching learningstats', (e as Error).message);
@@ -93,29 +93,29 @@ const ExercisePage = (props: Props) => {
             }
         };
 
-        if ( topic && level ) {
-            void fetchLearningStats();
+        if ( questionSet && questionSet.updateStats ) {
+            void fetchLearningStats(questionSet.updateStat);
         }
-    }, [topic, level]);
+    }, [questionSet]);
 
 
     const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer) => {
-        if ( ! learningStatsRef?.current ) {
+        if ( !learningStatsRef?.current || !questionSet?.updateStat ) {
             return;
         }
-        console.log("UPDAT:", learningStatsRef.current);
+
+        const setName = questionSet.updateStat;
         if ( userAnswer === trueAnswer ) {
-            learningStatsRef.current.update('notenames', userAnswer.toString(), 2, 0);
+            learningStatsRef.current.update(setName, userAnswer.toString(), 2, 0);
         } else {
-            learningStatsRef.current.update('notenames', userAnswer.toString(), 0, 1);
-            learningStatsRef.current.update('notenames', trueAnswer.toString(), 0, 1);
+            learningStatsRef.current.update(setName, userAnswer.toString(), 0, 1);
+            learningStatsRef.current.update(setName, trueAnswer.toString(), 0, 1);
         }
     };
 
 
 
     const onExit = async (finishedSuccessfully: boolean) => {
-        console.log("EXIT", finishedSuccessfully);
         if ( finishedSuccessfully ) {
             const id = topic + "/" + level;
             const oldProgress = userProgress[id] || { val: 0 };
@@ -124,17 +124,25 @@ const ExercisePage = (props: Props) => {
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));
-                if ( learningStatsRef?.current ) {
-                    const data = learningStatsRef.current.getSet('notenames');
-                    const learningStatsFromApi = await userService.updateLearningStats('notenames', data);
-                    learningStatsRef.current.setSet('notenames', learningStatsFromApi);
-                }
+                saveLearningStats();
             } catch ( err ) {
                 console.error(err);
                 setError('Error updating progress', getErrorMessage(err));
             }
         }
         Router.push('/overview');
+    };
+
+
+    const saveLearningStats = async () => {
+        if ( !learningStatsRef?.current || !questionSet?.updateStat ) {
+            return;
+        }
+
+        const setName = questionSet.updateStat;
+        const data = learningStatsRef.current.getSet(setName);
+        const learningStatsFromApi = await userService.updateLearningStats(setName, data);
+        learningStatsRef.current.setSet(setName, learningStatsFromApi);
     };
 
     const healthHit = () => {
@@ -159,8 +167,9 @@ const ExercisePage = (props: Props) => {
                 <Health max={3} value={health} />
             </Header>
 
+            <Loader active={loadingQS || loadingLS} />
             { loadingQS || loadingLS
-              ? <Loader active/>
+              ? null
               : <ExArea
                     exit={onExit}
                     health={health}
@@ -169,6 +178,7 @@ const ExercisePage = (props: Props) => {
                     updateStats={updateStats}
               />
             }
+
         </Layout>
     );
 };

@@ -14,9 +14,15 @@ export default class LearningSetManager {
     }
 
     update(setName: string, valueName: string, right: number, wrong: number) {
+        if ( !this.sets.has(setName ) ) {
+            return;
+        }
+
         const item = this.sets.get(setName)[valueName];
-        item.right = item.right * (AVGN - 1) / AVGN + right / AVGN;
-        item.wrong = item.wrong * (AVGN - 1) / AVGN + wrong / AVGN;
+        if ( item ) {
+            item.right = item.right * (AVGN - 1) / AVGN + right / AVGN;
+            item.wrong = item.wrong * (AVGN - 1) / AVGN + wrong / AVGN;
+        }
     }
 
     getSet(setName: string) {
