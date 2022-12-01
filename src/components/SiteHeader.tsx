@@ -40,8 +40,10 @@ const SiteHeader = (props: SiteHeaderProps) => {
             }
         };
 
-        void fetchUser();
-    }, []);
+        if ( session ) {
+            void fetchUser();
+        }
+    }, [session]);
 
 
     const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
