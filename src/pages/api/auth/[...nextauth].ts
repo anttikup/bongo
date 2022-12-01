@@ -64,8 +64,8 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account, profile, isNewUser }) {
             // Can be called many times. If first call
             if ( !token.idToken ) {
-                console.log("JWT CALLBACK:\n  token:", token, "\n  user:", user, "\n  account:", account,
-                            "\n  profile:", profile, "\n  isNewUser:", isNewUser);
+                //console.log("JWT CALLBACK:\n  token:", token, "\n  user:", user, "\n  account:", account,
+                //            "\n  profile:", profile, "\n  isNewUser:", isNewUser);
                 // TODO onko ok? Id:tä ei ole aina googlella. Sub näyttää olevan sama arvo.
                 token.idToken = (profile?.id || profile?.sub || token.sub || 0).toString();
             }
@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
             console.assert(token.idToken, "No token id");
             // first call
             if ( !session.user.id ) {
-                console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
+                //console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
                 session.user.id = token.idToken || "x";
             }
 
