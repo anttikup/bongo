@@ -16,11 +16,6 @@ const getUser = async () => {
         '/api/user',
     );
 
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
-
     console.log("getUser:", userFromApi);
     return userFromApi;
 };
@@ -87,10 +82,6 @@ const updateXP = async (value: number) => {
         itemsToUpdate
     );
 
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
     console.log("updateXP:", userFromApi);
     return userFromApi.xp;
 };
@@ -101,11 +92,6 @@ const getProgress = async () => {
     const { data: userProgressFromApi } = await axios.get<UserProgress>(
         '/api/user/progress',
     );
-
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userProgressFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
 
     return userProgressFromApi;
 };
@@ -123,11 +109,6 @@ const updateProgress = async (exerciseId: string, value: string | number) => {
         itemsToUpdate,
     );
 
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof userProgressFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
-
     console.log("servicefrontend: got userprogress:", userProgressFromApi);
     return userProgressFromApi;
 };
@@ -138,11 +119,6 @@ const getLearningStats = async (statsCategory: string) => {
     const { data: learningStatsFromApi } = await axios.get<LearningStatsCategory>(
         `/api/user/learningstats/${statsCategory}`,
     );
-
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof learningStatsFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
 
     return learningStatsFromApi;
 };
@@ -155,11 +131,6 @@ const updateLearningStats = async (category: string, stats: LearningStats) => {
         `/api/user/learningstats/${category}`,
         stats,
     );
-
-    // Axios returns the json as string if it is not valid json.
-    if ( typeof learningStatsFromApi === "string" ) {
-        throw new Error(`Malformed JSON`);
-    }
 
     console.log("servicefrontend: got learningstats:", learningStatsFromApi);
     return learningStatsFromApi;
