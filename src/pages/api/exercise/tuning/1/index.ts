@@ -94,6 +94,7 @@ const generateTuneAudio = async () : Promise<TuningAssignment> => {
 
 
 const generateSortCents = async () : Promise<SortingAssignment> => {
+    const NUMBER_OF_ITEMS = 3;
     const pool = await dbcache.query<PitchAudio>({
         media: 'audio',
         type: 'pitch',
@@ -107,7 +108,7 @@ const generateSortCents = async () : Promise<SortingAssignment> => {
     const selectedDetunes = random.pickK(
         //[-100, -90, -80, -70, -60, -50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         [-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100],
-        5
+        NUMBER_OF_ITEMS
     );
     const nextLetter = newLetterer();
     const nextColor = newColorer();
@@ -154,11 +155,10 @@ const generatePickMatchingCents = async () : Promise<MultipleChoiceAssignment> =
             value: String(detune),
             audio: original.file,
             detune,
-            text: nextLetter()
         })
     );
 
-    const options = random.shuffle(items);
+    const options = random.shuffle(items).map(item => ({ ...item, text: nextLetter() }));
 
     return {
         type: 'multiplechoice',
