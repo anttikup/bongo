@@ -44,12 +44,10 @@ async function getLearningStatsForCategory(userInfo: UserInfo, categoryName: str
         }
     );
 
-    console.log("findone result:", result);
     if ( result ) {
         return result;
     }
 
-    console.log("createging new");
     return new LearningStats({
         userRef: user.id,
         name: categoryName,
