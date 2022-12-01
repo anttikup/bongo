@@ -56,6 +56,9 @@ export const authOptions: NextAuthOptions = {
     ],
     theme: {
         colorScheme: "light",
+        brandColor: "#dd5522",
+        logo: "/images/687-musical-score.svg",
+        buttonText: "#2255dd",
     },
     callbacks: {
         async jwt({ token, user, account, profile, isNewUser }) {
