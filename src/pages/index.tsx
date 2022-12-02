@@ -34,7 +34,7 @@ function Home ({  }: HomeProps) {
                 Duo Bongo <i className="bang">!</i>
             </h2>
             <section>
-                <Image src="/images/687-musical-score.svg" size="medium" centered />
+                <Image src="/images/icons/687-musical-score.svg" size="medium" centered />
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus ornare suspendisse sed nisi. Orci nulla pellentesque dignissim enim sit amet venenatis urna. Sit amet consectetur adipiscing elit duis. Sed risus ultricies tristique nulla aliquet.</p>
 
                 <h3>Diam quam nulla</h3>
