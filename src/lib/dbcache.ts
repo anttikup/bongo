@@ -36,7 +36,7 @@ const clean = (item: any) => {
 
 const query = async <T>(q: Query): Promise<Array<T>> => {
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB);
+    const db = client.db('bongo');
 
     if ( q.media === 'audio' ) {
         const result = await db.collection('audio').find(q);

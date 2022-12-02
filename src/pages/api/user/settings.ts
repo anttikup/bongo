@@ -16,18 +16,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     switch ( method ) {
-        case 'GET': {
-            const userData = await userLib.findByUserID(user.id);
-            res.status(200).json(userData);
+        case 'GET':
+            try {
+                const settings = await userLib.getSettings(user);
+                res.status(200).json(settings);
+            } catch (err) {
+                res.status(400).send({
+                    error: getErrorMessage(err)
+                });
+            }
             break;
-        }
+
         case 'PATCH':
             try {
                 const itemsToUpdate = parseUserSettingsFields(req.body);
-                // TODO
-                //const updatedSettings = await userLib.updateUserSettings(user, itemsToUpdate);
-                //res.status(200).json(updatedSettings);
-                res.status(400).send({ error: 'not implemented' });
+                const updatedUser = await userLib.updateSettings(user, itemsToUpdate);
+                res.status(200).json(updatedUser);
             } catch (err) {
                 res.status(400).send({
                     error: getErrorMessage(err)

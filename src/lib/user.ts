@@ -68,6 +68,61 @@ const getStats = async (user: UserInfo): Promise<UserStats> => {
 };
 
 
+
+// Note: settings here references the preferences + username + email.
+const getSettings = async (user: UserInfo): Promise<UserSettings> => {
+    const userData = await findByUserID(user.id);
+    if ( !userData ) {
+        throw new Error(`User not found: ${user.username}`);
+    }
+
+    return {
+        username: userData.username,
+        email: userData.email,
+        ...userData?.preferences
+    };
+};
+
+const updateSettings = async (user: UserInfo, settings: Partial<UserSettings>): Promise<UserDB> => {
+    await dbConnect();
+
+    const dataToUpdate = { };
+
+    if ( settings.username ) {
+        dataToUpdate.username = settings.username;
+        delete settings.username;
+    }
+
+    if ( settings.email ) {
+        dataToUpdate.email = settings.email;
+        delete settings.email;
+    }
+
+    dataToUpdate.preferences = settings;
+
+    const updatedUser = await User
+        .findOneAndUpdate(
+            { userId: user.id },
+            {
+                $set: dataToUpdate,
+            },
+            {
+                upsert: true,
+                new: true,
+            }
+        );
+
+    console.log("udpating:", dataToUpdate);
+    console.log("udpated settings:", updatedUser);
+
+    return {
+        username: updatedUser.username,
+        email: updatedUser.email,
+        ...updatedUser.preferences
+    };
+};
+
+
 const updateUser = async (user: UserInfo, fields: Partial<UserDB>): Promise<UserDB | null> => {
     console.assert(!('xp' in fields), "can't set xp using updateUser");
 
@@ -146,9 +201,11 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
 export default {
     findByUserID,
     getProgress,
+    getSettings,
     getStats,
     updateProgress,
     updateUser,
+    updateSettings,
     updateXP,
     findOrCreateUserByUserInfo,
 };

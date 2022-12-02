@@ -34,25 +34,25 @@ const updateUser = async (itemsToUpdate: Record<string, unknown>) => {
 };
 
 
-const getUserSettings = async () => {
-    const { data: userSettingsFromApi } = await axios.get<UserSettings>(
+const getSettings = async () => {
+    const { data: settingsFromApi } = await axios.get<UserSettings>(
         '/api/user/settings',
     );
 
-    console.log("getUserSettings:", userSettingsFromApi);
-    return userSettingsFromApi;
+    console.log("getSettings:", settingsFromApi);
+    return settingsFromApi;
 };
 
-const updateUserSettings = async (itemsToUpdate: Partial<UserSettings>) => {
+const updateSettings = async (itemsToUpdate: Partial<UserSettings>) => {
     console.log("UPDATING USER SETTINGS:", itemsToUpdate);
 
-    const { data: userSettingsFromApi } = await axios.patch<UserSettings>(
+    const { data: settingsFromApi } = await axios.patch<UserSettings>(
         '/api/user/settings',
         itemsToUpdate
     );
 
-    console.log("updateUserSettings:", userSettingsFromApi);
-    return userSettingsFromApi;
+    console.log("updateSettings:", settingsFromApi);
+    return settingsFromApi;
 };
 
 
@@ -156,13 +156,13 @@ const getStats = async () => {
 export default {
     getLearningStats,
     getProgress,
+    getSettings,
     getStats,
     getUser,
-    getUserSettings,
     getXP,
     updateLearningStats,
     updateProgress,
+    updateSettings,
     updateUser,
-    updateUserSettings,
     updateXP,
 };

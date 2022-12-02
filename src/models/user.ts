@@ -4,8 +4,12 @@ import type { UserDB } from '../types';
 
 
 const userSchema = new mongoose.Schema<UserDB>({
-    userId: String,
+    userId: {
+        type: String,
+        required: true,
+    },
     username: String,
+    email: String,
     progress: {
         type: Map,
         of: {
@@ -19,6 +23,16 @@ const userSchema = new mongoose.Schema<UserDB>({
         type: Map,
         of: Number,
         required: true,
+    },
+    preferences: {
+        notenamePreference: {
+            type: String,
+            enum: ['b', 'h', 'si'],
+        },
+        reminderEnabled: Boolean,
+        noAudioExercises: Boolean,
+        noImageExercises: Boolean,
+        noMicrophoneExercises: Boolean,
     },
     /* learningStats: [
      *     {
@@ -37,6 +51,6 @@ userSchema.set('toJSON', {
 });
 
 
-userSchema.index({ userID: 1 }, { unique: true });
+userSchema.index({ userId: 1 }, { unique: true });
 
 export default (mongoose.models.User || mongoose.model<UserDB>('User', userSchema)) as mongoose.Model<UserDB>;

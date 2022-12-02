@@ -57,7 +57,7 @@ const SettingsPage = (props: Props) => {
         const fetchUserSettings = async () => {
             setLoading(true);
             try {
-                const userSettingsFromApi = await userService.getUserSettings();
+                const userSettingsFromApi = await userService.getSettings();
                 dispatch(setUserSettings(userSettingsFromApi));
                 setUsername(userSettingsFromApi.username || "");
                 setEmail(userSettingsFromApi.email || "");
@@ -79,13 +79,16 @@ const SettingsPage = (props: Props) => {
             }
         };
 
-        void fetchUserSettings();
+        if ( user ) {
+            void fetchUserSettings();
+        }
     }, []);
 
     const handleSaveClicked = async (event: FormEvent<HTMLFormElement>) => {
         const data = {
             username,
             email,
+            reminderEnabled: reminderEnabled,
             notenamePreference: notenamePreference === 'b' ? undefined : notenamePreference as NotenamePreference,
             noAudioExercises: !audioExercisesEnabled,
             noImageExercises: !imageExercisesEnabled,
@@ -99,7 +102,7 @@ const SettingsPage = (props: Props) => {
         );
 
         try {
-            const newUserSettings = await userService.updateUserSettings(data);
+            const newUserSettings = await userService.updateSettings(data);
             console.log("updated user:", newUserSettings);
             setMessage({ type: 'success', title: 'Saved', text: 'Saved settings successfully' });
             setUserSettings(newUserSettings);
