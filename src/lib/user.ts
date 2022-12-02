@@ -84,8 +84,6 @@ const updateUser = async (user: UserInfo, fields: Partial<UserDB>): Promise<User
         }
     );
 
-    console.log("UPDATED USER:", updatedUser);
-
     return updatedUser;
 };
 
@@ -105,8 +103,6 @@ const updateXP = async (user: UserInfo, xp: number): Promise<Partial<UserDB>> =>
         }
     );
 
-    console.log("UPDATED USER (XP):", updatedUser);
-
     return updatedUser;
 };
 
@@ -115,8 +111,6 @@ const findByUserID = async (userId: string): Promise<UserDB | undefined> => {
     const foundUser = await User.findOne<UserDB>(
         { userId }
     );
-
-    console.log("******************FOUND:", foundUser);
 
     return foundUser;
 };
