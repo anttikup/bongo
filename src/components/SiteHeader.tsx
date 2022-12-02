@@ -60,11 +60,11 @@ const SiteHeader = (props: SiteHeaderProps) => {
     return (
         <>
             <Header as="header">
-                <h1>
+                <div class="site-title">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Musical_notes.svg" height="50"/>
                     {' '}
                     <span>Duo Bongo</span>
-                </h1>
+                </div>
             </Header>
             <Menu>
                 <Menu.Item>
