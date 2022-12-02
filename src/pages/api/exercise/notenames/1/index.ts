@@ -84,7 +84,7 @@ const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<Multi
                 text: option
             })
         ),
-        updateStat: 'notenames',
+        updateStats: ['notenames'],
         id: uuidv4(),
     };
 };

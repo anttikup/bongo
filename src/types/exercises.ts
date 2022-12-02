@@ -129,10 +129,12 @@ export type ExerciseDescr = {
     image: string;
     hasLecture: boolean;
     refreshed: string;
+    tier: number;
+    pos: number;
 };
 
 export type TierDescr = {
-    name: string;
+    title: string;
     items: ExerciseDescr[];
 };
 

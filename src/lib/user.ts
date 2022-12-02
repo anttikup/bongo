@@ -7,6 +7,7 @@ import type {
     UserDB,
     UserInfo,
     UserProgress,
+    UserSettings,
     UserStats,
 } from '../types';
 
@@ -73,7 +74,7 @@ const getStats = async (user: UserInfo): Promise<UserStats> => {
 const getSettings = async (user: UserInfo): Promise<UserSettings> => {
     const userData = await findByUserID(user.id);
     if ( !userData ) {
-        throw new Error(`User not found: ${user.username}`);
+        throw new Error(`User not found: ${user.name}`);
     }
 
     return {
@@ -83,10 +84,10 @@ const getSettings = async (user: UserInfo): Promise<UserSettings> => {
     };
 };
 
-const updateSettings = async (user: UserInfo, settings: Partial<UserSettings>): Promise<UserDB> => {
+const updateSettings = async (user: UserInfo, settings: Partial<UserSettings>): Promise<UserSettings> => {
     await dbConnect();
 
-    const dataToUpdate = { };
+    const dataToUpdate: Partial<UserDB> = {};
 
     if ( settings.username ) {
         dataToUpdate.username = settings.username;
@@ -161,7 +162,7 @@ const updateXP = async (user: UserInfo, xp: number): Promise<Partial<UserDB>> =>
     return updatedUser;
 };
 
-const findByUserID = async (userId: string): Promise<UserDB | undefined> => {
+const findByUserID = async (userId: string): Promise<UserDB | null> => {
     await dbConnect();
     const foundUser = await User.findOne<UserDB>(
         { userId }
@@ -176,7 +177,7 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
     let foundUser = await findByUserID(userInfo.id);
 
     if ( !foundUser ) {
-        foundUser = new User({
+        foundUser = await new User({
             userId: userInfo.id,
             username: userInfo.name,
             progress: {},

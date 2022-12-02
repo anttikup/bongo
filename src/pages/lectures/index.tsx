@@ -67,15 +67,17 @@ type LectureData = {
     topic: string
     level: number
     title: string
+    subtitle: string
     date: string
 };
 
-type Tier = {
+type TopicDescr = {
+    title: string;
     items: Array<LectureData>;
 };
 
 type LecturesProps = {
-    lecturesByTopic: Array<Tier>
+    lecturesByTopic: Array<TopicDescr>
 };
 
 export default function Lectures({ lecturesByTopic }: LecturesProps) {

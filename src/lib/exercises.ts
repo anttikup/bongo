@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import walkSync from 'walk-sync';
 
+import { ExerciseDescr, TierDescr } from '../types';
 
 const EXERCISE_DIR = 'src/pages/api/exercise/';
 const LECTURE_DIR = 'src/pages/lectures/';
@@ -11,7 +12,13 @@ const END_TAG = '// }\n';
 import { Overview } from '../types';
 
 
-const getInfoSection = (text, fileName) => {
+type PartialExerciseDescr = Partial<ExerciseDescr>;
+type LectureTopic = {
+    title: string;
+    items: ExerciseDescr[];
+};
+
+const getInfoSection = (text: string, fileName: string) => {
     const startTagPos = text.indexOf(START_TAG);
     if ( startTagPos === -1 ) {
         return {};
@@ -26,9 +33,10 @@ const getInfoSection = (text, fileName) => {
     return json;
 };
 
-const getExerciseInfo = () => {
-    const dirInfo = new Map();
-    const exInfo = new Map();
+const getExerciseDescr = () => {
+    const dirInfo: Map<string, PartialExerciseDescr> = new Map();
+    const exInfo: Map<string, ExerciseDescr> = new Map();
+
     const paths = walkSync(EXERCISE_DIR);
     for ( let subpath of paths ) {
         if ( subpath.endsWith('/') ) {
@@ -68,7 +76,8 @@ const getExerciseInfo = () => {
     return exInfo;
 };
 
-const getLectureInfo = (exInfo) => {
+
+const getLectureInfo = (exInfo: Map<string, ExerciseDescr>) => {
     const paths = walkSync(LECTURE_DIR);
     for ( let subpath of paths ) {
         if ( subpath.endsWith('/') ) {
@@ -80,7 +89,7 @@ const getLectureInfo = (exInfo) => {
             const exerciseData = exInfo.get(relevant);
 
             if ( relevant !== 'index.tsx' ) {
-                exInfo.set(relevant, { ...exerciseData, hasLecture: true });
+                exInfo.set(relevant, { ...exerciseData, hasLecture: true } as ExerciseDescr);
             }
 
         }
@@ -88,27 +97,20 @@ const getLectureInfo = (exInfo) => {
     return exInfo;
 };
 
-let exerciseInfo = null;
-const collectData = () => {
-    exerciseInfo = getLectureInfo(getExerciseInfo());
-}
-
+const exerciseInfo = getLectureInfo(getExerciseDescr());
 
 function getOverview() {
-    if ( !exerciseInfo ) {
-        collectData();
-    }
 
-    const tiers = [];
-    for ( let [id, val] of exerciseInfo.entries() ) {
+    const tiers: TierDescr[] = [];
+    exerciseInfo.forEach((val, id) => {
         if ( !tiers[val.tier] ) {
             tiers[val.tier] = {
-                name: `tier-${val.tier + 1}`,
+                title: `tier-${val.tier + 1}`,
                 items: []
             };
         }
         tiers[val.tier].items.push(val);
-    }
+    });
 
     for ( let tier of tiers ) {
         tier.items.sort((a, b) => (b.pos || Number.MAX_SAFE_INTEGER) - (a.pos || Number.MAX_SAFE_INTEGER));
@@ -118,28 +120,23 @@ function getOverview() {
 
 
 function getLecturesByTopic() {
-    if ( !exerciseInfo ) {
-        collectData();
-    }
-
-    const topics = new Map();
-    for ( let [id, val] of exerciseInfo.entries() ) {
+    const topics = new Map<string, ExerciseDescr[]>();
+    exerciseInfo.forEach((val, id) => {
         if ( val.hasLecture ) {
             const items = topics.get(val.topic) || [];
             items.push(val);
             items.sort((a, b) => a.level - b.level);
             topics.set(val.topic, items);
         }
-    }
+    });
 
-
-    const listOfTopics = [];
-    for ( let [title, items] of topics.entries() ) {
+    const listOfTopics: LectureTopic[] = [];
+    topics.forEach(items => {
         listOfTopics.push({
             title: items[0].title,
             items,
         });
-    }
+    });
 
 
     return listOfTopics;

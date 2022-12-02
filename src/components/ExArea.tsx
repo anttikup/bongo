@@ -26,7 +26,7 @@ type Props = {
     exit: (finishedSuccessfully: boolean) => void;
     health: number;
     questionSet: QuestionSet;
-    updateStats: (selected: AssignmentAnswer, correct: AssignmentAnswer) => void;
+    updateStats: (selected: AssignmentAnswer, correct: AssignmentAnswer, stats: string[]) => void;
 };
 
 const isArray = (obj: unknown): obj is Array<unknown> => {
@@ -105,7 +105,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
             decrementHealth();
         }
 
-        updateStats(selected, currentAssignment.answer);
+        updateStats(selected, currentAssignment.answer, currentAssignment.updateStats || []);
 
         setPart(Part.Result);
     };

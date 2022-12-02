@@ -78,7 +78,7 @@ const ExercisePage = (props: Props) => {
         const fetchLearningStats = async (setName: string) => {
             setLoadingLS(true);
             try {
-                const { data: learningStatsFromApi } = await userService.getLearningStats(statSet);
+                const { data: learningStatsFromApi } = await userService.getLearningStats(setName);
                 console.info(learningStatsFromApi);
                 if ( !learningStatsRef.current ) {
                     learningStatsRef.current = new LearningSetManager();
@@ -93,18 +93,19 @@ const ExercisePage = (props: Props) => {
             }
         };
 
-        if ( questionSet && questionSet.updateStats ) {
-            void fetchLearningStats(questionSet.updateStat);
+        if ( questionSet ) {
+            // TODO
+            void fetchLearningStats('notenames');
         }
     }, [questionSet]);
 
 
-    const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer) => {
-        if ( !learningStatsRef?.current || !questionSet?.updateStat ) {
+    const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer, statsNames: string[]) => {
+        if ( !learningStatsRef?.current || statsNames.length === 0 ) {
             return;
         }
 
-        const setName = questionSet.updateStat;
+        const setName = statsNames[0];
         if ( userAnswer === trueAnswer ) {
             learningStatsRef.current.update(setName, userAnswer.toString(), 2, 0);
         } else {
@@ -135,11 +136,12 @@ const ExercisePage = (props: Props) => {
 
 
     const saveLearningStats = async () => {
-        if ( !learningStatsRef?.current || !questionSet?.updateStat ) {
+        if ( !learningStatsRef?.current ) {
             return;
         }
 
-        const setName = questionSet.updateStat;
+        // TODO
+        const setName = 'notenames';
         const data = learningStatsRef.current.getSet(setName);
         const learningStatsFromApi = await userService.updateLearningStats(setName, data);
         learningStatsRef.current.setSet(setName, learningStatsFromApi);
