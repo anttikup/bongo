@@ -10,7 +10,7 @@ type HealthProps = {
 
 const Health = ({ max, value }: HealthProps) => {
     return (
-        <Rating className={styles.health} icon="heart" maxRating={max} rating={value} />
+        <Rating className={`${styles.health} ${value === 1 && styles.last}`} icon="heart" maxRating={max} rating={value} />
     );
 };
 
