@@ -3,8 +3,9 @@ import Head from 'next/head';
 import Router, { useRouter } from 'next/router'
 import { Header, Loader } from "semantic-ui-react";
 
+import exerciseLib from '../../../lib/exercises';
 import LearningSetManager from '../../../utils/LearningSetManager';
-import { SITE_TITLE } from '../../../config';
+import { SITE_TITLE, MAX_HEALTH } from '../../../config';
 import ExArea from '../../../components/ExArea';
 import Health from '../../../components/Health';
 import Layout from '../../../components/layout';
@@ -21,18 +22,41 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import type { AssignmentAnswer, QuestionSet, LearningStats } from '../../../types';
 
 
-type Props = {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const title = await exerciseLib.getTopicTitle(params.topic);
+    return {
+        props: {
+            title
+        },
+    };
+};
 
+export async function getStaticPaths() {
+    const paths = await exerciseLib.getExercisePaths();
+    return {
+        paths: paths.map(({ topic, level }: { topic: string; level: number; }) => {
+            return {
+                params: {
+                    topic,
+                    level: String(level)
+                }
+            };
+        }),
+        fallback: false,
+    };
+}
+
+type Props = {
+    title: string;
 };
 
 
-const ExercisePage = (props: Props) => {
+const ExercisePage = ({ title }: Props) => {
     const router = useRouter();
     const topic = router.query.topic as string;
     const level = router.query.level as string;
-    let topicTitle = topic;
 
-    const [health, setHealth] = useState(3);
+    const [health, setHealth] = useState(MAX_HEALTH);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
     //const [learningStats, setLearningStats] = useState<StatsCategory>([]);
     const [loadingQS, setLoadingQS] = useState(false);
@@ -60,7 +84,6 @@ const ExercisePage = (props: Props) => {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level: parseInt(level, 10) });
                 console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
                 setQuestionSet(questionSetFromApi);
-                topicTitle = questionSetFromApi[0].title;
             } catch (e) {
                 console.error(e);
                 setQuestionSet([]);
@@ -158,7 +181,7 @@ const ExercisePage = (props: Props) => {
         <Layout>
             <Head>
                 { topic && level
-                  ? <title>{`${topic} ${level} | ${SITE_TITLE}`}</title>
+                  ? <title>{`${title} ${level} | ${SITE_TITLE}`}</title>
                   : <title>{`Exercise | ${SITE_TITLE}`}</title>
                 }
             </Head>
@@ -166,7 +189,7 @@ const ExercisePage = (props: Props) => {
                 <h1 className={styles.title}>
                     <span className={styles.supertitle}>Exercise</span>
                     <br/>
-                    <span className={styles.exerciseTitle}>{topicTitle} {level}</span>
+                    <span className={styles.exerciseTitle}>{title} {level}</span>
                 </h1>
                 <Health max={3} value={health} />
             </Header>
@@ -182,6 +205,7 @@ const ExercisePage = (props: Props) => {
                     updateStats={updateStats}
               />
             }
+
 
         </Layout>
     );

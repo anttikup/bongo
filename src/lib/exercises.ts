@@ -33,9 +33,9 @@ const getInfoSection = (text: string, fileName: string) => {
     return json;
 };
 
-const getExerciseDescr = () => {
+
+const getTopicDescr = () => {
     const dirInfo: Map<string, PartialExerciseDescr> = new Map();
-    const exInfo: Map<string, ExerciseDescr> = new Map();
 
     const paths = walkSync(EXERCISE_DIR);
     for ( let subpath of paths ) {
@@ -47,9 +47,24 @@ const getExerciseDescr = () => {
                 const json = JSON.parse(data);
                 dirInfo.set(relevant, json);
             }
-        } else if ( subpath.endsWith('/info.json') ) {
-            // Ignore, because handled in dir.
-        } else {
+        }
+    }
+    return dirInfo;
+};
+
+
+const getExerciseDescr = (dirInfo: Map<string, PartialExerciseDescr>) => {
+    const exInfo: Map<string, ExerciseDescr> = new Map();
+
+    const paths = walkSync(EXERCISE_DIR);
+    for ( let subpath of paths ) {
+
+        if ( !subpath.endsWith('/') ) {
+            if ( subpath.endsWith('/info.json') ) {
+                // Ignore, because handled in dir.
+                continue;
+            }
+
             const fullPath = path.join(EXERCISE_DIR, subpath);
             const relevant = subpath.replace(EXERCISE_DIR, "").replace("/index.ts", "");
 
@@ -73,11 +88,12 @@ const getExerciseDescr = () => {
             });
         }
     }
-    return exInfo;
+    return addLectureInfo(exInfo);
 };
 
 
-const getLectureInfo = (exInfo: Map<string, ExerciseDescr>) => {
+
+const addLectureInfo = (exInfo: Map<string, ExerciseDescr>) => {
     const paths = walkSync(LECTURE_DIR);
     for ( let subpath of paths ) {
         if ( subpath.endsWith('/') ) {
@@ -97,9 +113,11 @@ const getLectureInfo = (exInfo: Map<string, ExerciseDescr>) => {
     return exInfo;
 };
 
-const exerciseInfo = getLectureInfo(getExerciseDescr());
+const topicInfo = getTopicDescr();
+const exerciseInfo = getExerciseDescr(topicInfo);
 
-function getOverview() {
+
+const getOverview = () => {
 
     const tiers: TierDescr[] = [];
     exerciseInfo.forEach((val, id) => {
@@ -116,10 +134,10 @@ function getOverview() {
         tier.items.sort((a, b) => (b.pos || Number.MAX_SAFE_INTEGER) - (a.pos || Number.MAX_SAFE_INTEGER));
     }
     return tiers;
-}
+};
 
 
-function getLecturesByTopic() {
+const getLecturesByTopic = () => {
     const topics = new Map<string, ExerciseDescr[]>();
     exerciseInfo.forEach((val, id) => {
         if ( val.hasLecture ) {
@@ -138,12 +156,32 @@ function getLecturesByTopic() {
         });
     });
 
-
     return listOfTopics;
-}
+};
+
+
+const getTopicTitle = (topic: string) => {
+    console.log(topic, topicInfo.get(topic).title);
+    return topicInfo.get(topic).title;
+};
+
+const getExercisePaths = () => {
+    const out = [];
+    exerciseInfo.forEach((val, id) => {
+        console.log("Val:", val);
+        out.push({
+            topic: val.topic,
+            level: val.level
+        });
+    });
+
+    return out;
+};
 
 
 export default {
     getOverview,
     getLecturesByTopic,
+    getTopicTitle,
+    getExercisePaths,
 };
