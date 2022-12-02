@@ -1,0 +1,13 @@
+#!/bin/sh
+wget "https://upload.wikimedia.org/wikipedia/commons/f/f9/Gartoon_devices_mouse.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/0/05/Noto_Emoji_v2.034_1f3ba.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/b/bc/Face-monkey.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/d/dc/Twemoji_1f3b8.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/a/a6/Radio.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/8/81/Torchlight_eva.png"
+wget "https://upload.wikimedia.org/wikipedia/commons/8/83/694-guitar.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/a/a6/Radio.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/a/af/Emoji_u1f3b9.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/0/05/Noto_Emoji_v2.034_1f3ba.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/f/f7/Twemoji12_1f6f8.svg"
+wget "https://upload.wikimedia.org/wikipedia/commons/e/e1/Conical_flask_green.svg"

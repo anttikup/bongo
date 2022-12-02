@@ -6,6 +6,8 @@ import { SITE_TITLE } from '../../config';
 import Layout from '../../components/layout';
 import Date from '../../components/date';
 
+import exerciseLib from '../../lib/exercises';
+
 import utilStyles from '../../styles/utils.module.css';
 import styles from '../../styles/lecture.module.css';
 
@@ -50,10 +52,12 @@ const lecturesDataByTier = [
 ];
 
 export const getStaticProps: GetStaticProps = () => {
-    const lecturesByTier = lecturesDataByTier;
+    const lecturesByTopic = exerciseLib.getLecturesByTopic();
+    console.log("================================= get static props ==============================");
+    console.log(lecturesByTopic);
     return {
         props: {
-            lecturesByTier
+            lecturesByTopic
         },
     };
 };
@@ -61,20 +65,21 @@ export const getStaticProps: GetStaticProps = () => {
 type LectureData = {
     id: string
     topic: string
-    number: number
+    level: number
     title: string
     date: string
 };
 
 type Tier = {
-    lectures: Array<LectureData>;
+    items: Array<LectureData>;
 };
 
 type LecturesProps = {
-    lecturesByTier: Array<Tier>
+    lecturesByTopic: Array<Tier>
 };
 
-export default function Lectures({ lecturesByTier }: LecturesProps) {
+export default function Lectures({ lecturesByTopic }: LecturesProps) {
+    console.log(lecturesByTopic);
     return (
         <Layout>
             <Head>
@@ -83,22 +88,21 @@ export default function Lectures({ lecturesByTier }: LecturesProps) {
             <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
                 <h1 className={utilStyles.headingLg}>Lectures</h1>
                 <ul className={utilStyles.list}>
-                    {lecturesByTier && lecturesByTier.map((tier, index) =>
+                    {lecturesByTopic && lecturesByTopic.map((topic, index) =>
                         (
                             <div className={styles.tier} key={index}>
-                                <div className={styles.tierHeading}>
-                                    {index > 0 && <hr/>}
-
-                                    {index + 1}
-                                </div>
-                                {tier.lectures.map(({ id, date, topic, number, title }) => (
-                                    <li className={utilStyles.listItem} key={id}>
-                                        <Link href={`/lectures/${id}`}>
-                                            {topic} {number}: {title}
-                                        </Link>
-                                        <br />
-                                    </li>
-                                ))}
+                                <h3 className={styles.tierHeading}>
+                                    { topic.title }
+                                </h3>
+                                <ul>
+                                    {topic.items.map(({ id, date, topic, level, title, subtitle }) => (
+                                        <li className={utilStyles.listItem} key={id}>
+                                            <Link href={`/lectures/${id}`}>
+                                                {level} — {subtitle || title}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         )
                     )}

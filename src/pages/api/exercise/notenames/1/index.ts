@@ -1,3 +1,11 @@
+// {
+//     "tier": 0,
+//     "pos": 0,
+//     "subtitle": "Unaccented Names",
+//     "image": "/images/icons/Noto_Emoji_v2.034_1f3ba.svg",
+//     "color": "cfbfcc"
+// }
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 import { unstable_getServerSession } from "next-auth/next";

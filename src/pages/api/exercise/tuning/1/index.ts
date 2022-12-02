@@ -1,3 +1,10 @@
+// {
+//     "tier": 0,
+//     "pos": 1,
+//     "image": "/images/icons/Face-monkey.svg",
+//     "color": "#ffcbc0"
+// }
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 

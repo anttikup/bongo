@@ -17,16 +17,16 @@ const Tier = ({ boxes }: TierProps) => {
         <Segment className={style.tier}>
             { boxes.map((item, index) => (
                 <Box
-                    key={index}
+                    key={item.id}
                     topic={item.topic}
                     level={item.level}
+                    title={item.title}
+                    subtitle={item.subtitle}
                     progress={userProgress[item.id] ? userProgress[item.id].val : 0}
                     refreshed={userProgress[item.id]?.updated}
                     color={item.color}
-                    text={item.text}
                     image={item.image}
-                    material={item.material}
-                    levels={item.levels}
+                    hasLecture={item.hasLecture}
                 />
             )) }
         </Segment>

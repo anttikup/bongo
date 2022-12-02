@@ -120,14 +120,14 @@ export const isTextOnlyOption = (option: Option) =>
 
 
 export type ExerciseDescr = {
+    id: string;
     topic: string;
     level: number;
-    id: string;
+    title: string;
+    subtitle: string;
     color: string;
-    text: string;
     image: string;
-    material?: string;
-    levels: number;
+    hasLecture: boolean;
     refreshed: string;
 };
 

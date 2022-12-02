@@ -1,3 +1,11 @@
+// {
+//     "tier": 0,
+//     "pos": 1,
+//     "subtitle": "G Cleff",
+//     "image": "/images/icons/Torchlight_eva.png",
+//     "color": "#cbc0ff"
+// }
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 

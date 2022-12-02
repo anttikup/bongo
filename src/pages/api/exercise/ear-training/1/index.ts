@@ -1,3 +1,10 @@
+// {
+//     "tier": 1,
+//     "pos": 1,
+//     "image": "/images/icons/Gartoon_devices_mouse.svg",
+//     "color": "#cfbcf0"
+// }
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid';
 

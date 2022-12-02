@@ -8,17 +8,17 @@ import style from '../styles/Box.module.css';
 
 type BoxProps = {
     progress: number;
-    text: string;
-    image: string;
-    color: string;
     topic: string;
     level: number;
-    material?: string;
+    title: string;
+    subtitle?: string;
+    image: string;
+    color: string;
+    hasLecture?: boolean;
     refreshed?: string;
-    levels: number;
 };
 
-const Box = ({ progress, refreshed, text, image, color, topic, level, material, levels }: BoxProps) => {
+const Box = ({ progress, refreshed, title, subtitle, image, color, topic, level, hasLecture }: BoxProps) => {
     const [mainHovered, setMainHovered] = useState(false);
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -42,11 +42,11 @@ const Box = ({ progress, refreshed, text, image, color, topic, level, material, 
 
     return (
         <div className={style.overviewBox} style={{backgroundColor: color}}>
-            { material
+            { hasLecture
               && <div className={style.materialButtonContainer}>
-                  <Link href={material} title="Material" onMouseEnter={handleMaterialHover}>
+                  <Link href={`/lectures/${topic}/${level}`} title="Material" onMouseEnter={handleMaterialHover}>
                       <img
-                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Deus_Books.png/240px-Deus_Books.png"
+                          src="/images/240px-Deus_Books.png"
                           alt="Theory"
                           width="32"
                           height="32"
@@ -59,12 +59,12 @@ const Box = ({ progress, refreshed, text, image, color, topic, level, material, 
                 onMouseEnter={handleMainHover}
                 onMouseLeave={handleMainUnHover}
                 onClick={handleClick}
-                title={`${progress}/${levels}, \nlast refreshed: ${refreshed || 'never'}`}
+                title={`${progress}/3, \nlast refreshed: ${refreshed || 'never'}`}
             >
                 <img src={image}/>
-                {<Progress value={progress} size="small" total={levels} autoSuccess />}
+                {<Progress value={progress} size="small" total={3} autoSuccess />}
                 <div className={style.boxTitle}>
-                    <Link href={`/exercise/${topic}/${level}`}>{text}</Link>
+                    <Link href={`/exercise/${topic}/${level}`}>{title} {level}{subtitle && <><br/>{subtitle}</> }</Link>
                 </div>
             </div>
         </div>
