@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 export * from './basic';
 export * from './exercises';
+export * from './learningstats';
 export * from './media';
 export * from './user';
 
