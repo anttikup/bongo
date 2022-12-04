@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema<UserDB>({
             type: String,
             enum: ['b', 'h', 'si'],
         },
-        reminderEnabled: Boolean,
+        sendReminders: Boolean,
         noAudioExercises: Boolean,
         noImageExercises: Boolean,
         noMicrophoneExercises: Boolean,
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema<UserDB>({
      *         ref: 'LearningStats',
      *     },
      * ], */
-});
+}, { timestamps: true });
 
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
