@@ -1,0 +1,20 @@
+.footer {
+    margin-top: 2rem;
+    background-color: #001130;
+    color: lightgray;
+    font-size: smaller;
+    display: flex;
+    position: relative;
+}
+
+
+.footer p {
+    padding: 0.5rem;
+    min-height: 150px;
+    flex: 1;
+    border-left: 1px solid gray;
+}
+
+.footer p:first-child {
+    border-left: none;
+}

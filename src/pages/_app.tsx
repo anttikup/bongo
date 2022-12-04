@@ -3,6 +3,7 @@ import { Container } from "semantic-ui-react";
 
 import MessageDisplay from '../components/MessageDisplay';
 import SiteHeader from '../components/SiteHeader';
+import SiteFooter from '../components/SiteFooter';
 import { reducer, StateProvider } from "../state";
 
 import 'semantic-ui-css/semantic.min.css';
@@ -18,10 +19,11 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
     return (
         <SessionProvider session={session}>
             <StateProvider reducer={reducer}>
-                <Container>
+                <Container className="main">
                     <SiteHeader />
                     <MessageDisplay />
                     <Component {...pageProps} />
+                    <SiteFooter />
                 </Container>
             </StateProvider>
         </SessionProvider>
