@@ -3,7 +3,10 @@ import { Message } from 'semantic-ui-react';
 
 import { useMessage } from '../hooks/message';
 
+import styles from '../styles/MessageDisplay.module.css';
+
 import { UIMessage } from '../types';
+
 
 
 type Props = {
@@ -11,12 +14,19 @@ type Props = {
 
 const MessageDisplay = (props: Props) => {
     const [message, setMessage] = useMessage();
-    const myRef = useRef(null);
+    const elementRef = useRef(null);
 
     useEffect(() => {
-        setTimeout(() => {
+        elementRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const handle = setTimeout(() => {
             setMessage(null);
         }, 8000);
+
+        return () => {
+            if ( handle ) {
+                clearTimeout(handle);
+            }
+        };
     }, [message]);
 
     if ( message === null ) {
@@ -25,7 +35,7 @@ const MessageDisplay = (props: Props) => {
 
 
     return (
-        <div ref={myRef}>
+        <div ref={elementRef} className={styles.message}>
             <Message negative={message.type === "error"} positive={message.type === "success"}>
                 <Message.Header>{message.title}</Message.Header>
                 <p>{message.text}</p>
