@@ -14,7 +14,7 @@ const Tier = ({ boxes }: TierProps) => {
     const [{ userProgress }, ] = useStateValue();
 
     return (
-        <Segment className={style.tier}>
+        <div className={style.tier}>
             { boxes.map((item, index) => (
                 <Box
                     key={item.id}
@@ -29,7 +29,7 @@ const Tier = ({ boxes }: TierProps) => {
                     hasLecture={item.hasLecture}
                 />
             )) }
-        </Segment>
+        </div>
     );
 };
 

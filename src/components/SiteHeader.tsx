@@ -6,6 +6,7 @@ import { Header, Menu } from "semantic-ui-react";
 import Username from '../components/Username';
 import MessageDisplay from '../components/MessageDisplay';
 import ExpPoints from '../components/ExpPoints';
+import { SITE_TITLE } from '../config';
 import { useErrorMessage } from '../hooks/errorMessage';
 import { getErrorMessage } from '../lib/error';
 import userService from '../services/user';
@@ -63,10 +64,10 @@ const SiteHeader = (props: SiteHeaderProps) => {
                 <div className="site-title">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Musical_notes.svg" height="50"/>
                     {' '}
-                    <span>Duo Bongo</span>
+                    <span>{ SITE_TITLE }</span>
                 </div>
             </Header>
-            <Menu>
+            <Menu as="nav">
                 <Menu.Item>
                     <Link href="/">
                         Home

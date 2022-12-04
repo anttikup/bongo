@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
-import { Image } from 'semantic-ui-react';
+import { Header, Image } from 'semantic-ui-react';
 
 import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
@@ -30,9 +30,9 @@ function Home ({  }: HomeProps) {
             <Head>
                 <title>{`Home | ${SITE_TITLE}`}</title>
             </Head>
-            <h2>
-                Duo Bongo <i className="bang">!</i>
-            </h2>
+            <Header as="header">
+                <h1>Duo Bongo <i className="bang">!</i></h1>
+            </Header>
             <section>
                 <Image src="/images/icons/687-musical-score.svg" size="medium" centered />
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus ornare suspendisse sed nisi. Orci nulla pellentesque dignissim enim sit amet venenatis urna. Sit amet consectetur adipiscing elit duis. Sed risus ultricies tristique nulla aliquet.</p>

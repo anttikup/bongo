@@ -65,7 +65,7 @@ export default function Stats(props: StatsProps) {
             </Head>
             <main className="stats-page">
                 <Header as="header">
-                    <h2>Stats</h2>
+                    <h1>Stats</h1>
                 </Header>
                 { loading
                   ? <Loader active/>

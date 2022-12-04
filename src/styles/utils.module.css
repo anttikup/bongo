@@ -53,7 +53,12 @@
 }
 
 .listItem {
-  margin: 0 0 1.25rem;
+    margin: 0 0 0.75rem;
+    list-style-type: none;
+}
+
+.listItem:last-child {
+    margin-bottom: 1.5em;
 }
 
 .lightText {

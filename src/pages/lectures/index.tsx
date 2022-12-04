@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { Header } from "semantic-ui-react";
 
 import { SITE_TITLE } from '../../config';
 import Layout from '../../components/layout';
@@ -87,29 +88,29 @@ export default function Lectures({ lecturesByTopic }: LecturesProps) {
             <Head>
                 <title>{`Lectures | ${SITE_TITLE}`}</title>
             </Head>
-            <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-                <h1 className={utilStyles.headingLg}>Lectures</h1>
-                <ul className={utilStyles.list}>
-                    {lecturesByTopic && lecturesByTopic.map((topic, index) =>
-                        (
-                            <div className={styles.tier} key={index}>
-                                <h3 className={styles.tierHeading}>
-                                    { topic.title }
-                                </h3>
-                                <ul>
-                                    {topic.items.map(({ id, date, topic, level, title, subtitle }) => (
-                                        <li className={utilStyles.listItem} key={id}>
-                                            <Link href={`/lectures/${id}`}>
-                                                {level} — {subtitle || title}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )
-                    )}
-                </ul>
-            </section>
+            <Header as="header">
+                <h1>Lectures</h1>
+            </Header>
+            <ul className={utilStyles.list}>
+                {lecturesByTopic && lecturesByTopic.map((topic, index) =>
+                    (
+                        <div className={styles.tier} key={index}>
+                            <h3 className={styles.tierHeading}>
+                                { topic.title }
+                            </h3>
+                            <ul>
+                                {topic.items.map(({ id, date, topic, level, title, subtitle }) => (
+                                    <li className={utilStyles.listItem} key={id}>
+                                        <Link href={`/lectures/${id}`}>
+                                            {level} — {subtitle || title}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )
+                )}
+            </ul>
         </Layout>
     );
 };

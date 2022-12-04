@@ -1,0 +1,12 @@
+.sameLine {
+    display: flex;
+}
+
+.label {
+    flex: 1;
+}
+
+.infoText {
+    font-size: smaller;
+    color: #555;
+}
