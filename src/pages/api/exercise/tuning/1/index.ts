@@ -87,7 +87,7 @@ const generateTuneAudio = async () : Promise<TuningAssignment> => {
     return {
         type: 'tuning',
         question: {
-            text: 'Tune the audio to match the reference audio. ' + picked.humanDescription,
+            text: 'Tune the audio to match the reference audio. ',
             audio: picked.file,
         },
         answer: positive
