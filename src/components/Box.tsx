@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Progress } from 'semantic-ui-react';
+import { formatDistance } from 'date-fns';
 
 import style from '../styles/Box.module.css';
 
@@ -40,6 +41,13 @@ const Box = ({ progress, refreshed, title, subtitle, image, color, topic, level,
         setMainHovered(false);
     };
 
+    console.log(new Date(refreshed), new Date());
+    const refreshedAgo = refreshed ? formatDistance(
+        new Date(refreshed),
+        new Date(),
+        { addSuffix: true }
+    ) : 'never';
+
     return (
         <div className={style.overviewBox} style={{backgroundColor: color}}>
             { hasLecture
@@ -59,7 +67,7 @@ const Box = ({ progress, refreshed, title, subtitle, image, color, topic, level,
                 onMouseEnter={handleMainHover}
                 onMouseLeave={handleMainUnHover}
                 onClick={handleClick}
-                title={`${progress}/3, \nlast refreshed: ${refreshed || 'never'}`}
+                title={`${progress}/3, \nlast refreshed: ${refreshedAgo}`}
             >
                 <img src={image}/>
                 {<Progress value={progress} size="small" total={3} autoSuccess />}
