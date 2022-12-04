@@ -46,6 +46,18 @@ export async function getStaticPaths() {
     };
 }
 
+
+const collectLearningSets = (questionSet: QuestionSet) => {
+    const seen = new Set();
+    for ( let exercise of questionSet ) {
+        console.log("qs:", exercise);
+        if ( exercise.itemType ) {
+            seen.add(exercise.itemType);
+        }
+    }
+    return Array.from(seen.values());
+};
+
 type Props = {
     title: string;
 };
@@ -58,6 +70,7 @@ const ExercisePage = ({ title }: Props) => {
 
     const [health, setHealth] = useState(MAX_HEALTH);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
+    const [learningSetNames, setLearningSetNames] = useState<string>([]);
     //const [learningStats, setLearningStats] = useState<StatsCategory>([]);
     const [loadingQS, setLoadingQS] = useState(false);
     const [loadingLS, setLoadingLS] = useState(false);
@@ -83,6 +96,7 @@ const ExercisePage = ({ title }: Props) => {
             try {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level: parseInt(level, 10) });
                 console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
+                setLearningSetNames(collectLearningSets(questionSetFromApi));
                 setQuestionSet(questionSetFromApi);
             } catch (e) {
                 console.error(e);
@@ -118,24 +132,31 @@ const ExercisePage = ({ title }: Props) => {
             }
         };
 
-        if ( questionSet ) {
-            // TODO
-            void fetchLearningStats('notenames');
+        for ( let learningSetName of learningSetNames ) {
+            if ( !learningStatsRef.current?.has(learningSetName) ) {
+                void fetchLearningStats(learningSetName);
+            }
         }
-    }, [questionSet]);
+
+    }, [learningSetNames]);
 
 
-    const updateStats = (userAnswer: AssignmentAnswer, trueAnswer: AssignmentAnswer, statsNames: string[]) => {
-        if ( !learningStatsRef?.current || statsNames.length === 0 ) {
+    const updateStats = (
+        userAnswer: AssignmentAnswer,
+        trueAnswer: AssignmentAnswer,
+        itemType: ItemType,
+        refValue: AssignmentAnswer
+    ) => {
+        if ( !learningStatsRef?.current || itemType === undefined ) {
             return;
         }
 
-        const setName = statsNames[0];
-        if ( userAnswer === trueAnswer ) {
-            learningStatsRef.current.update(setName, userAnswer.toString(), 2, 0);
-        } else {
-            learningStatsRef.current.update(setName, userAnswer.toString(), 0, 1);
-            learningStatsRef.current.update(setName, trueAnswer.toString(), 0, 1);
+        const [correctPoints, wrongPoints] = userAnswer === trueAnswer ? [1, 0] : [0, 1];
+
+        learningStatsRef.current.update(itemType, userAnswer.toString(), correctPoints, wrongPoints);
+        learningStatsRef.current.update(itemType, trueAnswer.toString(), correctPoints, wrongPoints);
+        if ( refValue ) {
+            learningStatsRef.current.update(itemType, refValue.toString(), correctPoints, wrongPoints);
         }
     };
 
@@ -150,26 +171,26 @@ const ExercisePage = ({ title }: Props) => {
                 dispatch(setExerciseProgress(id, newProgress[id]));
                 const newXP = await userService.updateXP((experience || 0) + health);
                 dispatch(setExperience(newXP));
-                saveLearningStats();
             } catch ( err ) {
                 console.error(err);
                 setError('Error updating progress', getErrorMessage(err));
             }
         }
+        saveLearningStats();
         Router.push('/overview');
     };
 
 
     const saveLearningStats = async () => {
-        if ( !learningStatsRef?.current ) {
+        if ( !learningStatsRef?.current || learningSetNames.length === 0 ) {
             return;
         }
 
-        // TODO
-        const setName = 'notenames';
-        const data = learningStatsRef.current.getSet(setName);
-        const learningStatsFromApi = await userService.updateLearningStats(setName, data);
-        learningStatsRef.current.setSet(setName, learningStatsFromApi);
+        for ( let learningSetName of learningSetNames ) {
+            const data = learningStatsRef.current.getSet(learningSetName);
+            const learningStatsFromApi = await userService.updateLearningStats(learningSetName, data);
+            learningStatsRef.current.setSet(learningSetName, learningStatsFromApi);
+        }
     };
 
     const healthHit = () => {
@@ -206,6 +227,12 @@ const ExercisePage = ({ title }: Props) => {
               />
             }
 
+            <p>
+                All sets: { learningStatsRef?.current?.listSets() }
+            </p>
+            <p>
+                Current sets: { learningSetNames }
+            </p>
 
         </Layout>
     );

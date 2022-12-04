@@ -2,7 +2,7 @@ import dbConnect from '../dbconnect'
 import userLib from '../../lib/user';
 import LearningStats from '../../models/learningstats';
 
-import notenames from './notenames';
+import notenameType from './notename';
 import WeightedRandomTable from '../../utils/weightedRandomTable';
 
 import type {
@@ -17,16 +17,16 @@ import type {
 
 function getDefaults(categoryName: string) {
     switch ( categoryName.toString() ) {
-        case 'notenames':
-            return notenames.getDefault();
+        case 'notename':
+            return notenameType.getDefault();
     }
 
-    if ( categoryName === 'notenames' ) {
-        return notenames.getDefault();
+    if ( categoryName === 'notename' ) {
+        return notenameType.getDefault();
     }
 
     console.dir(categoryName);
-    throw new Error(`No such category '${categoryName}', hä? ${typeof categoryName}, ${'notenames'.split('')}`);
+    throw new Error(`No such category '${categoryName}', hä? ${typeof categoryName}, ${'notename'.split('')}`);
 }
 
 

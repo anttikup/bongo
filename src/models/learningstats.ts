@@ -10,6 +10,7 @@ const statsCategorySchema = new mongoose.Schema<LearningStatsCategory_t>({
     name: {
         type: String,
         required: true,
+        enum: [ "notename", "abspic" ],
     },
     data: {
         type: Map,
@@ -27,7 +28,7 @@ const statsCategorySchema = new mongoose.Schema<LearningStatsCategory_t>({
             },
         }
     },
-});
+}, { timestamps: true });
 
 statsCategorySchema.set('toJSON', {
     transform: (document, returnedObject) => {

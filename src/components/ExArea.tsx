@@ -105,7 +105,7 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
             decrementHealth();
         }
 
-        updateStats(selected, currentAssignment.answer, currentAssignment.updateStats || []);
+        updateStats(selected, currentAssignment.answer, currentAssignment.itemType, currentAssignment.refValue);
 
         setPart(Part.Result);
     };

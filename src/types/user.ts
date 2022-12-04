@@ -7,6 +7,8 @@ import {
     isString,
 } from './basic';
 
+import { LearningStatsCategory } from './learningstats';
+
 
 export interface User {
     id: string;
@@ -54,25 +56,6 @@ type DateType = string;
 
 
 export type NotenamePreference = 'b' | 'h' | 'si';
-
-export type LearningStatsItem = {
-    wrong: number;
-    right: number;
-};
-
-export type LearningStats = Map<string, LearningStatsItem>;
-
-
-export type StatsCategoryFront = {
-    name: string;
-    data: LearningStats;
-};
-
-export type LearningStatsCategory = {
-    userRef: ObjectId;
-    name: string;
-    data: LearningStats;
-};
 
 
 export type DatedValue = {

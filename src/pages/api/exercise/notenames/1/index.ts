@@ -17,7 +17,17 @@ import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
 import learningStatsLib from '../../../../../lib/learningstats';
 
-import type { AudioMeta, PitchMeta, ImageMeta, NoteImage } from '../../../../../types';
+import type {
+    AudioMeta,
+    PitchMeta,
+    ImageMeta,
+    NoteImage,
+    StatType,
+} from '../../../../../types';
+
+import type {
+    StatType,
+} from '../../../../../types/learningstats';
 
 import {
     ImageOption,
@@ -51,7 +61,7 @@ const generateExercise = async (user: UserInfo) => {
 const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<MultipleChoiceAssignment> => {
     const notesByHalfSteps = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
     const notenamePoolAll = await learningStatsLib
-        .getWeightsForCategory(user, 'notenames');
+        .getWeightsForCategory(user, 'notename');
 
     console.log("GOT POOL ********************************************************\n", notenamePoolAll);
     const notenamePool = notenamePoolAll
@@ -78,13 +88,14 @@ const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<Multi
             text: `Pick the note name that is <strong>${distInDirection} halfsteps ${direction} ${compared}</strong>`,
         },
         answer: correct,
+        refValue: compared,
         options: options.map<TextOption>(
             option => ({
                 value: option,
                 text: option
             })
         ),
-        updateStats: ['notenames'],
+        itemType: "notename",
         id: uuidv4(),
     };
 };

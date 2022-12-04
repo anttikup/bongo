@@ -3,6 +3,8 @@ import {
     isString
 } from './basic';
 
+import { StatType } from './learningstats';
+
 
 type Url = string;
 
@@ -27,7 +29,8 @@ export interface Assignment {
     question: Question;
     answer: AssignmentAnswer;
     answerPrecision?: number;
-    updateStats?: string[];
+    refValue?: string | number;
+    itemType?: StatType;
 }
 
 export const isAssignment = (obj: unknown): obj is Assignment =>

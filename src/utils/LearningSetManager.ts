@@ -33,4 +33,19 @@ export default class LearningSetManager {
         return this.sets.set(setName, data);
     }
 
+    has(setName: string) {
+        return this.sets.has(setName);
+    }
+
+    listSets() {
+        const out = [];
+        this.sets.forEach((_, key) => {
+            out.push(key);
+        });
+
+        if ( out.length === 0 ) {
+            return "No sets";
+        }
+        return "Sets: " + out.join(', ');
+    }
 }
