@@ -1,17 +1,72 @@
-html,
-body {
-    padding: 0;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-                 Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    line-height: 1.6;
-    font-size: 18px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Lato&family=Atma&family=Swarabari+Mincho&display=swap');
 
 * {
     box-sizing: border-box;
 }
 
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Swarabari Mincho, serif;
+    line-height: 1.6;
+    font-size: 18px;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #445588;
+}
+
+
+
+
+h1, h2, h3, label, input, select, .dropdown {
+    font-family: Lato, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1.5em;
+    /*color: #777;*/
+    color: #001130;
+}
+
+#__next {
+    flex-grow: 1;
+    min-height: 100vh;
+}
+
+nav.ui.menu {
+    margin: 0 1rem;
+}
+
+.main > .ui.header {
+    margin: 0 1rem;
+}
+
+main > header {
+    margin-top: 1.5em !important;
+    margin-bottom: 2em !important;
+}
+
+.main  {
+    display: flex !important;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: white;
+    padding: 0;
+}
+
+.main > main {
+    flex: 1;
+    margin: 0 3rem;
+}
 a {
     color: #0070f3;
     text-decoration: none;
@@ -29,6 +84,7 @@ img {
 
 .site-title {
     font-size: 1.5em;
+    font-family: Atma, sans-serif;
 }
 
 header .site-title img {
@@ -59,7 +115,17 @@ strong {
     color: #008080;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 1.5em;
+
+form {
+    margin-bottom: 2em;
+}
+
+
+.ui.container.main {
+  background-color: #eef0ff;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+input[type="text"], input[type="email"] {
+    background-color: #fbfbfe !important;
 }
