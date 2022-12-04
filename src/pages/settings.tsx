@@ -10,7 +10,7 @@ import userService from '../services/user';
 import { setUser, useStateValue, setUserSettings } from '../state';
 
 import utilStyles from '../styles/utils.module.css';
-import styles from '../styles/overview.module.css';
+import styles from '../styles/settings.module.css';
 
 import type { MouseEvent, FormEvent } from 'react';
 import type { NotenamePreference, User } from '../types';
@@ -46,7 +46,7 @@ const SettingsPage = (props: Props) => {
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [reminderEnabled, setReminderEnabled] = useState(false);
+    const [sendReminders, setSendReminders] = useState(false);
     const [audioExercisesEnabled, setAudioExercisesEnabled] = useState(false);
     const [imageExercisesEnabled, setImageExercisesEnabled] = useState(false);
     const [microphoneExercisesEnabled, setMicrophoneExercisesEnabled] = useState(false);
@@ -62,7 +62,7 @@ const SettingsPage = (props: Props) => {
                 setUsername(userSettingsFromApi.username || "");
                 setEmail(userSettingsFromApi.email || "");
                 setNotenamePreference(userSettingsFromApi.notenamePreference || 'b');
-                setReminderEnabled(!!userSettingsFromApi.reminderEnabled);
+                setSendReminders(!!userSettingsFromApi.sendReminders);
                 setAudioExercisesEnabled(!userSettingsFromApi.noAudioExercises);
                 setImageExercisesEnabled(!userSettingsFromApi.noImageExercises);
                 setMicrophoneExercisesEnabled(!userSettingsFromApi.noMicrophoneExercises);
@@ -88,7 +88,7 @@ const SettingsPage = (props: Props) => {
         const data = {
             username,
             email,
-            reminderEnabled: reminderEnabled,
+            sendReminders: sendReminders,
             notenamePreference: notenamePreference === 'b' ? undefined : notenamePreference as NotenamePreference,
             noAudioExercises: !audioExercisesEnabled,
             noImageExercises: !imageExercisesEnabled,
@@ -127,100 +127,96 @@ const SettingsPage = (props: Props) => {
                 <title>{`Settings | ${SITE_TITLE}`}</title>
             </Head>
 
-            <Header as="h1">Settings</Header>
+            <Header as="header">
+                <h1>Settings</h1>
+            </Header>
             <Form onSubmit={handleSaveClicked}>
                 <Segment>
                     <Form.Field>
                         <label>User name </label>
-                        <Input style={{ float: 'right' }} value={username} onChange={(e) => setUsername(e.target.value)} />
+                        <Input value={username} onChange={(e) => setUsername(e.target.value)} />
                     </Form.Field>
-                    <p>This user name is visible to other users.</p>
+                    <p className={styles.infoText}>This user name is visible to other users.</p>
                 </Segment>
 
                 <Segment>
-                    <Form.Field>
-                        <label>Send notifications</label>
+                    <Form.Field className={styles.sameLine}>
+                        <label className={styles.label}>Send reminders</label>
                         <Checkbox
                             toggle
-                            style={{ float: 'right' }}
-                            value="send notifications"
-                            checked={reminderEnabled}
-                            onChange={(e, data) => setReminderEnabled(data.checked || false)}
+                            value="send reminders"
+                            checked={sendReminders}
+                            onChange={(e, data) => setSendReminders(data.checked || false)}
                         />
                     </Form.Field>
                     <Transition.Group animation="slide down" duration={200}>
-                        {reminderEnabled && (
-                            <Form.Field>
+                        {sendReminders && (
+                            <Form.Field className={styles.sameLine}>
                                 <label>Email address </label>
                                 <Input
                                     type="email"
-                                    style={{ float: 'right' }}
                                     value={email}
                                     onChange={(e, data) => setEmail(data.value)}
                                 />
                             </Form.Field>
                         )}
                     </Transition.Group>
-                    <p>Enable and enter an email address to get reminders to your email.</p>
+                    <p className={styles.infoText}>Enable and enter an email address to get reminders to your email.</p>
                 </Segment>
 
 
                 <Header as="h2">Exercises</Header>
 
                 <Segment>
-                    <Form.Field>
-                        <label>Note names </label>
+                    <Form.Field className={styles.sameLine}>
+                        <label className={styles.label}>Note names </label>
                         <Dropdown
                             inline
                             options={notenameOptions}
-                            style={{ float: 'right' }}
                             value={notenamePreference}
                             onChange={(e, data) => setNotenamePreference(data.value as NotenamePreference)}
                         />
                     </Form.Field>
-                    <p>Select the standard to use for note names.</p>
+                    <p className={styles.infoText}>Select the convention to use for note names.</p>
                 </Segment>
 
                 <Segment>
-                    <Form.Field>
-                        <label>Audio</label>
+                    <Form.Field className={styles.sameLine}>
+                        <label className={styles.label}>Audio</label>
                         <Checkbox
                             toggle
                             id="enable-audio"
-                            style={{ float: 'right' }}
                             checked={audioExercisesEnabled}
                             onChange={(e, data) => setAudioExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
-                    <p>Disable this, if you don't want to do any exercises with audio.</p>
+                    <p className={styles.infoText}>Disable this, if you don't want to do any exercises with audio.</p>
                 </Segment>
 
                 <Segment>
-                    <Form.Field>
-                        <label>Images</label>
+                    <Form.Field className={styles.sameLine}>
+                        <label className={styles.label}>Images</label>
                         <Checkbox
                             toggle
                             id="enable-images"
-                            style={{ float: 'right' }}
                             checked={imageExercisesEnabled}
                             onChange={(e, data) => setImageExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
-                    <p>Disable this, if you don't want to do any exercises with images.</p>
+                    <p className={styles.infoText}>Disable this, if you don't want to do any exercises with images.</p>
                 </Segment>
 
                 <Segment>
-                    <Form.Field>
-                        <label>Microphone</label>
+                    <Form.Field className={styles.sameLine}>
+                        <label className={styles.label}>Microphone</label>
                         <Checkbox
                             toggle
                             id="enable-mic"
-                            style={{ float: 'right' }}
                             checked={microphoneExercisesEnabled}
                             onChange={(e, data) => setMicrophoneExercisesEnabled(data.checked || false)}
                         />
                     </Form.Field>
-                    <p>Disable this, if you don't want to do any exercises that uses microphone.</p>
+                    <p className={styles.infoText}>Disable this, if you don't want to do any exercises that uses microphone.</p>
                 </Segment>
                 <Button type="submit">Save</Button>
             </Form>

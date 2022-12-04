@@ -102,6 +102,9 @@ export const parseUserSettingsFields = (fields: Record<string, unknown>): UserSe
         email: fields.email
              ? parseStringField(fields.email, 'email')
              : undefined,
+        sendReminders: fields.sendReminders
+                        ? parseBooleanField(fields.sendReminders, 'sendReminders')
+                        : undefined,
         notenamePreference: fields.notenamePreference
                           ? parseNotenamePreferenceField(fields.notenamePreference, 'notenamePreference')
                           : undefined,
@@ -134,7 +137,7 @@ export const parseUserFields = (fields: Record<string, unknown>): UserFields => 
 
 
     if ( fields.xp ) {
-          userFields.xp = parseIntegerField(fields.xp, "xp");
+        userFields.xp = parseIntegerField(fields.xp, "xp");
     }
 
     if ( fields.username ) {
