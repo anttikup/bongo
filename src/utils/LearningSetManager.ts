@@ -38,7 +38,7 @@ export default class LearningSetManager {
     }
 
     listSets() {
-        const out = [];
+        const out: string[] = [];
         this.sets.forEach((_, key) => {
             out.push(key);
         });

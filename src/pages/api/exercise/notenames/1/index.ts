@@ -17,24 +17,21 @@ import random from '../../../../../lib/random';
 import { MAX_HEALTH } from '../../../../../config';
 import learningStatsLib from '../../../../../lib/learningstats';
 
+import {
+    StatType,
+} from '../../../../../types';
+
 import type {
     AudioMeta,
     PitchMeta,
     ImageMeta,
     NoteImage,
-    StatType,
-} from '../../../../../types';
-
-import type {
-    StatType,
-} from '../../../../../types/learningstats';
-
-import {
     ImageOption,
     MultipleChoiceAssignment,
     TextOption,
     UserInfo,
 } from '../../../../../types';
+
 
 
 const generateExercise = async (user: UserInfo) => {
@@ -95,7 +92,7 @@ const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<Multi
                 text: option
             })
         ),
-        itemType: "notename",
+        itemType: StatType.Notename,
         id: uuidv4(),
     };
 };

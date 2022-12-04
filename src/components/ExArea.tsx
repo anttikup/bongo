@@ -9,7 +9,11 @@ import { AssignmentAnswer, QuestionSet, isNumber, isObject } from '../types';
 import ErrorComponent from './Error';
 import QuestionCard from './QuestionCard';
 import StatusCard, { StatusValue } from './StatusCard';
+
 import style from './styles/ExArea.module.css';
+
+import type { StatType } from '../types';
+
 
 export enum Part {
     Question,
@@ -26,7 +30,8 @@ type Props = {
     exit: (finishedSuccessfully: boolean) => void;
     health: number;
     questionSet: QuestionSet;
-    updateStats: (selected: AssignmentAnswer, correct: AssignmentAnswer, stats: string[]) => void;
+    updateStats: (selected: AssignmentAnswer, correct: AssignmentAnswer,
+                  itemType: StatType, refValue?: AssignmentAnswer) => void;
 };
 
 const isArray = (obj: unknown): obj is Array<unknown> => {
@@ -105,7 +110,9 @@ const ExArea = ({ decrementHealth, exit, health, questionSet, updateStats }: Pro
             decrementHealth();
         }
 
-        updateStats(selected, currentAssignment.answer, currentAssignment.itemType, currentAssignment.refValue);
+        if ( currentAssignment.itemType ) {
+            updateStats(selected, currentAssignment.answer, currentAssignment.itemType, currentAssignment.refValue);
+        }
 
         setPart(Part.Result);
     };

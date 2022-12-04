@@ -41,7 +41,8 @@ const Box = ({ progress, refreshed, title, subtitle, image, color, topic, level,
         setMainHovered(false);
     };
 
-    console.log(new Date(refreshed), new Date());
+
+    console.log(refreshed ? new Date(refreshed): 'never', new Date());
     const refreshedAgo = refreshed ? formatDistance(
         new Date(refreshed),
         new Date(),

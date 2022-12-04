@@ -19,11 +19,20 @@ import { setExerciseProgress, setExperience, useStateValue } from '../../../stat
 import styles from  '../../../styles/exercise.module.css';
 
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import type { AssignmentAnswer, QuestionSet, LearningStats } from '../../../types';
+import type {
+    AssignmentAnswer,
+    QuestionSet,
+    LearningStats,
+    StatType
+} from '../../../types';
 
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const title = await exerciseLib.getTopicTitle(params.topic);
+    if ( !params ) {
+        throw new Error('params not defined');
+    }
+
+    const title = await exerciseLib.getTopicTitle(params.topic as string);
     return {
         props: {
             title
@@ -47,8 +56,8 @@ export async function getStaticPaths() {
 }
 
 
-const collectLearningSets = (questionSet: QuestionSet) => {
-    const seen = new Set();
+const collectLearningSets = (questionSet: QuestionSet): string[] => {
+    const seen = new Set<StatType>();
     for ( let exercise of questionSet ) {
         console.log("qs:", exercise);
         if ( exercise.itemType ) {
@@ -70,12 +79,12 @@ const ExercisePage = ({ title }: Props) => {
 
     const [health, setHealth] = useState(MAX_HEALTH);
     const [questionSet, setQuestionSet] = useState<QuestionSet>([]);
-    const [learningSetNames, setLearningSetNames] = useState<string>([]);
-    //const [learningStats, setLearningStats] = useState<StatsCategory>([]);
+    const [learningSetNames, setLearningSetNames] = useState<string[]>([]);
     const [loadingQS, setLoadingQS] = useState(false);
     const [loadingLS, setLoadingLS] = useState(false);
     const [setError] = useErrorMessage();
     const [{ experience, userProgress }, dispatch] = useStateValue();
+
     // Stats data doesn't affect the component, so we store it outside state.
     const learningStatsRef = useRef<LearningSetManager | null>(null);
 
@@ -144,8 +153,8 @@ const ExercisePage = ({ title }: Props) => {
     const updateStats = (
         userAnswer: AssignmentAnswer,
         trueAnswer: AssignmentAnswer,
-        itemType: ItemType,
-        refValue: AssignmentAnswer
+        itemType: StatType,
+        refValue?: AssignmentAnswer
     ) => {
         if ( !learningStatsRef?.current || itemType === undefined ) {
             return;

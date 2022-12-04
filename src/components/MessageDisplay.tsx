@@ -14,7 +14,7 @@ type Props = {
 
 const MessageDisplay = (props: Props) => {
     const [message, setMessage] = useMessage();
-    const elementRef = useRef(null);
+    const elementRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         elementRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -1,3 +1,5 @@
+import type { ObjectId } from 'mongodb';
+
 export enum StatType {
     Notename = 'notename',
     AbsPIC = 'abspic',

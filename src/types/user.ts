@@ -1,5 +1,3 @@
-import type { ObjectId } from 'mongodb';
-
 import {
     isArray,
     isNumber,
@@ -77,7 +75,7 @@ export interface UserDB {
 
 export interface UserPreferences {
     notenamePreference?: NotenamePreference;
-    reminderEnabled?: boolean;
+    sendReminders?: boolean;
     noAudioExercises?: boolean;
     noImageExercises?: boolean;
     noMicrophoneExercises?: boolean;

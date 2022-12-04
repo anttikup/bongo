@@ -161,14 +161,25 @@ const getLecturesByTopic = () => {
 
 
 const getTopicTitle = (topic: string) => {
-    console.log(topic, topicInfo.get(topic).title);
-    return topicInfo.get(topic).title;
+    if ( !topicInfo ) {
+        throw new Error('topicInfo not loaded');
+    }
+
+    const item = topicInfo.get(topic);
+    if ( !item ) {
+        throw new Error(`No title for topic ${topic}`);
+    }
+
+    return item.title;
 };
 
 const getExercisePaths = () => {
-    const out = [];
+    const out: {
+        topic: string;
+        level: number;
+    }[] = [];
+
     exerciseInfo.forEach((val, id) => {
-        console.log("Val:", val);
         out.push({
             topic: val.topic,
             level: val.level
