@@ -2,6 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import { Container } from "semantic-ui-react";
 
 import MessageDisplay from '../components/MessageDisplay';
+import Main from '../components/Main';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { reducer, StateProvider } from "../state";
@@ -19,12 +20,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
     return (
         <SessionProvider session={session}>
             <StateProvider reducer={reducer}>
-                <Container className="main">
-                    <SiteHeader />
-                    <MessageDisplay />
+                <Main>
                     <Component {...pageProps} />
-                    <SiteFooter />
-                </Container>
+                </Main>
             </StateProvider>
         </SessionProvider>
     );

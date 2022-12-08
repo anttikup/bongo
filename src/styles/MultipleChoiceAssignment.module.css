@@ -8,10 +8,21 @@
 
 .multimediaOptions {
     display: flex;
+    flex-direction: row;
     gap: 1em;
     justify-content: center;
+    margin-bottom: 1em;
 }
 
 .textOptions {
+
+}
+
+
+
+@media only screen and (max-width: 991px) {
+    .multimediaOptions {
+        flex-direction: column;
+    }
 
 }

@@ -1,5 +1,5 @@
 .item {
-    userSelect: none;
+    user-select: none;
     padding: 1em;
     margin: 0 0.5em 0 0;
     background: white;
@@ -18,14 +18,26 @@
 
 
 .list {
-    background: lightgrey;
+    background: #eff;
+    border: solid #ddd 1px;
     display: flex;
     padding: 1em;
     overflow: auto;
+    flex-direction: row;
 }
 
 .draggingOver {
     background: lightblue;
     transition: 0.5s;
 
+}
+
+
+@media only screen and (max-width: 991px) {
+    .item {
+        margin: 0 0 0.5em 0;
+    }
+    .list {
+            flex-direction: column;
+    }
 }

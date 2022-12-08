@@ -17,6 +17,7 @@
 .indicator {
     height: 1em;
     margin-top: 2px;
+    background-color: lightgray;
 }
 
 .indicator.selected {

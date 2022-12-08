@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { useMediaQuery } from 'react-responsive';
 
 import { AUDIO_PATH, IMAGE_PATH } from '../../config';
 import {
@@ -11,7 +12,7 @@ import {
 
 import PlayButton from '../PlayButton';
 import Question from '../Question';
-import style from '../../styles/Sorting.module.css';
+import style from '../../styles/SortingAssignment.module.css';
 
 import type {
     AssignmentAnswer,
@@ -57,6 +58,7 @@ const orderItems = (items: ItemList, answerOrder: Array<string> | undefined): It
 
 const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
     const [items, setItems] = useState<ItemList>(orderItems(assignment.items, selectedAnswer));
+    const isMobile = useMediaQuery({ query: '(max-width: 991px)' })
 
     const onDragEnd = (result: DropResult) => {
         // Dropped outside the list
@@ -81,7 +83,7 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
             <Question question={assignment.question} />
             <div className={style.ordering}>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable" direction="horizontal">
+                    <Droppable droppableId="droppable" direction={ isMobile ? 'vertical' : 'horizontal' }>
                         {(provided, snapshot) => (
                             <div
                                 ref={provided.innerRef}
