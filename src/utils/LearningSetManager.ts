@@ -2,6 +2,9 @@ import type { LearningStats } from '../types';
 
 const AVGN = 10;
 
+export const exponentialMovingAverage = (oldVal: number, newVal: number) =>
+    oldVal * (AVGN - 1) / AVGN + newVal / AVGN;
+
 export default class LearningSetManager {
     sets = new Map();
 
@@ -20,8 +23,8 @@ export default class LearningSetManager {
 
         const item = this.sets.get(setName)[valueName];
         if ( item ) {
-            item.right = item.right * (AVGN - 1) / AVGN + right / AVGN;
-            item.wrong = item.wrong * (AVGN - 1) / AVGN + wrong / AVGN;
+            item.right = exponentialMovingAverage(item.right, right);
+            item.wrong = exponentialMovingAverage(item.wrong, wrong);
         }
     }
 
