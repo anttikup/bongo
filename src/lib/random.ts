@@ -1,8 +1,12 @@
+const getFloat = (min: number, max: number) => {
+    return Math.random() * (max - min) + min;
+};
+
 const getInteger = (min: number, maxPlusOne: number) => {
     min = Math.ceil(min)
     maxPlusOne = Math.floor(maxPlusOne)
     return Math.floor(Math.random() * (maxPlusOne - min)) + min
-}
+};
 
 
 const getBoolean = () => {
@@ -19,8 +23,17 @@ const getBoolean = () => {
  **/
 const getKOfN = (k: number, n: number) => {
     if (k > n ) {
-        throw Error(`Virheelliset parametrit: k > n (= ${k} > ${n})`)
+        throw Error(`Invalid arguments: k > n (= ${k} > ${n})`)
     }
+
+    if (k < 0 ) {
+        throw Error(`Invalid arguments: k must be > 0`)
+    }
+
+    if ( k === 0 ) {
+        return [];
+    }
+
     const moved: Record<number, number> = {}
     const getNth = (x: number) => {
         return moved[x] || x
@@ -80,6 +93,7 @@ const shuffle = <T>(array: Array<T>): Array<T> => {
 }
 
 export default {
+    getFloat,
     getBoolean,
     getInteger,
     getKOfN,

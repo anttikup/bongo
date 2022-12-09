@@ -46,7 +46,7 @@ describe('binarySearch of cumulative data', function () {
 });
 
 
-describe('getCumulationAray', function () {
+describe('getCumulationArray', function () {
     it('should have values rising or staying equal', function () {
         const data = [ 2, 4, 2, 1, 0, 5 ];
 
