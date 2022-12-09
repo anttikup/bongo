@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import { Header, Menu } from "semantic-ui-react";
 
 import NavMenu from '../components/NavMenu';
 import { SITE_TITLE } from '../config';
 
 import styles from '../styles/SiteHeader.module.css';
-
-import type { MouseEvent } from 'react';
-
 
 type SiteHeaderProps = {
 

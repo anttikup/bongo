@@ -9,6 +9,7 @@ import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import userService from '../services/user';
 import { useErrorMessage } from '../hooks/errorMessage';
+import { getErrorMessage } from '../lib/error';
 
 import styles from '../styles/Main.module.css';
 

@@ -3,12 +3,20 @@ import Link from 'next/link';
 import { Menu, Dropdown, DropdownMenu } from 'semantic-ui-react';
 //import LogoutModal from './LogoutModal';
 import { useMediaQuery } from 'react-responsive';
+import { signIn, signOut } from 'next-auth/react';
 
 import { useStateValue } from '../state';
 import Username from '../components/Username';
 import ExpPoints from '../components/ExpPoints';
 
-function NavMenu(props) {
+import type { MouseEvent } from 'react';
+
+
+type NavMenuProps = {
+
+};
+
+function NavMenu(props: NavMenuProps) {
     const [activeItem, setActiveItem] = useState('Laptop Item')
     const [showModal, setShowModal] = useState(false)
     const isMobile = useMediaQuery({ query: '(max-width: 991px)' })
