@@ -105,16 +105,31 @@ header .site-title span {
 
 .bang {
     font-variant: italic;
-    color: red;
+    color: #d76713;
     font-size: larger;
     font-weight: bolder;
 }
 
 
 strong {
-    color: #008080;
+    color: #ed5c1f;
 }
 
+.ui.button.primary {
+    background-color: #ed5c1f;
+}
+
+.ui.button.primary:hover {
+    background-color: #f06a32;
+}
+
+.ui.button.primary:focus {
+    background-color: #ed5c1f;
+}
+
+.ui.button:focus-visible {
+    outline: red 1px solid;
+}
 
 form {
     margin-bottom: 2em;
