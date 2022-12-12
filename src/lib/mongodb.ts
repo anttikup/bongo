@@ -6,7 +6,7 @@
 
 import { MongoClient } from 'mongodb'
 
-import { MONGODB_URI } from '../config';
+import { MONGODB_URI } from '../dbconfig';
 
 const options = {}
 
