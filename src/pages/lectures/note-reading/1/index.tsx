@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticProps } from 'next';
+import { Header, Image } from 'semantic-ui-react';
 
 import { EFFECTS_PATH, SITE_TITLE } from '../../../../config';
 import Layout from '../../../../components/layout';
@@ -32,24 +33,35 @@ export default function Lectures(props: Props) {
             <Head>
                 <title>{`Note reading 1 | ${SITE_TITLE}`}</title>
             </Head>
-            <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+            <Header as="header">
+                <h1>Note Reading 1</h1>
+            </Header>
+            <p>
                 Cleff tells us where each note is located on the staff. The most common cleff is the treble cleff, or g cleff.
+            </p>
 
-                ![image](https://commons.wikimedia.org/wiki/Category:G_clef#/media/File:C-major_a-minor.png)
+            <Image style={{backgroundColor: "white", padding: "5px"}} bordered centered size="small"
+                   src="https://upload.wikimedia.org/wikipedia/commons/1/18/C-major_a-minor.png" />
 
+            <p>
                 Mnemonic:
-
+            </p>
+            <p>
                 The whirl of the treble cleff points to the note g¹. It is usually on the second line reading from bottom up.
-
+            </p>
+            <p>
                 Mnemonic:
-
+            </p>
+            <p>
                 Notes between the lines spell out the word FACE from bottom to top.
+            </p>
 
-                ![image](https://upload.wikimedia.org/wikipedia/commons/f/f1/FACE_mnemonic_acronym.svg)
+            <Image style={{backgroundColor: "white", padding: "5px"}} bordered centered size="small"
+                   src="https://upload.wikimedia.org/wikipedia/commons/f/f1/FACE_mnemonic_acronym.svg" />
 
-                Thus, the lines from bottom up are: e, g, b, d, and f.
-
-            </section>
+            <p>
+                This means the lines from bottom up are: e, g, b, d, and f.
+            </p>
         </Layout>
     );
 };

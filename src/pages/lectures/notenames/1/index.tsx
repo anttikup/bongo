@@ -2,11 +2,11 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticProps } from 'next';
+import { Header, Image } from 'semantic-ui-react';
 
 import { EFFECTS_PATH, SITE_TITLE } from '../../../../config';
 import Layout from '../../../../components/layout';
-import Tuner from '../../../../components/Tuner';
-import PlayButton from '../../../../components/PlayButton';
+import PianoKeyboard from '../../../../components/PianoKeyboard';
 
 import utilStyles from '../../../../styles/utils.module.css';
 import styles from '../../../../styles/lecture.module.css';
@@ -27,29 +27,36 @@ type Props = {
 
 
 export default function Lectures(props: Props) {
-    const [sinewaveValue, setSinewaveValue] = useState(0);
-    const [elpnoValue, setElpnoValue] = useState(0);
-
     return (
         <Layout>
             <Head>
-                <title>{`Note reading 1 | ${SITE_TITLE}`}</title>
+                <title>{`Note names | ${SITE_TITLE}`}</title>
             </Head>
-            <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+            <Header as="header">
+                <h1>Note names/h1>
+            </Header>
+
+            <p>
                 Note names in order are:
+            </p>
 
-                - a
-                - b
-                - c
-                - d
-                - e
-                - f
-                - g
-
+            <ul>
+                <li>c</li>
+                <li>d</li>
+                <li>e</li>
+                <li>f</li>
+                <li>g</li>
+                <li>a</li>
+                <li>b</li>
+            </ul>
+            <p>
                 After that they continue from beginning.
+            </p>
 
-                An useful mnemonic to remember notes on the treble clef is the word *face* written from bottom to top between the lines.
-            </section>
+            <Image style={{backgroundColor: "white", padding: "5px"}} bordered centered size="large"
+                   src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Klavier.png" />
+
+            <PianoKeyboard />
         </Layout>
     );
 };
