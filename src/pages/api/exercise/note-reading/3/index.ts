@@ -84,7 +84,7 @@ const generateNameANoteNoOctave = async () : Promise<MultipleChoiceAssignment> =
     return {
         type: 'multiplechoice',
         question: {
-            text: 'Name the following pitch.',
+            text: 'Name the note.',
             image: picked.file,
             audio: associatedAudio.length > 0 ? associatedAudio[0].file : undefined
         },

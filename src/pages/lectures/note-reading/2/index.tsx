@@ -6,6 +6,7 @@ import { Header, Image } from 'semantic-ui-react';
 
 import { EFFECTS_PATH, SITE_TITLE } from '../../../../config';
 import Layout from '../../../../components/layout';
+import CallToAction from '../../../../components/CallToAction';
 import Tuner from '../../../../components/Tuner';
 import PlayButton from '../../../../components/PlayButton';
 
@@ -43,6 +44,8 @@ export default function Lectures(props: Props) {
 
             <Image style={{backgroundColor: "white", padding: "5px"}} bordered centered size="small"
                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Music-ledger.svg" />
+
+            <CallToAction href="/exercise/note-reading/2" />
         </Layout>
     );
 };

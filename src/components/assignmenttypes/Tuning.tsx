@@ -13,7 +13,7 @@ import { AssignmentAnswer, TuningAssignment } from '../../types';
 type Props = {
     assignment: TuningAssignment;
     selectAnswer: (answer: number) => void;
-    selectedAnswer: number | undefined;
+    selectedAnswer?: number;
 };
 
 let context: AudioContext | null = null;

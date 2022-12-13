@@ -6,12 +6,12 @@ export const MONGODB_URI = ((): string => {
             }
             return process.env.DEVELOPMENT_MONGODB_URI;
         case 'production':
-            if ( process.env.MONGODB_URI ) {
+            if ( !process.env.MONGODB_URI ) {
                 throw new Error('DEVELOPMENT_MONGODB_URI must be defined');
             }
             return process.env.MONGODB_URI;
         case 'test':
-            if ( process.env.TESTING_MONGODB_URI ) {
+            if ( !process.env.TESTING_MONGODB_URI ) {
                 throw new Error('TESTING_MONGODB_URI must be defined');
             }
             return process.env.TESTING_MONGODB_URI;

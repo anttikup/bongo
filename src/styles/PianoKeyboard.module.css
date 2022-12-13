@@ -1,0 +1,32 @@
+.container {
+    display: block;
+    margin: auto;
+}
+
+.whiteKey {
+    fill: #fffff7;
+    stroke: black;
+    stroke-width: 10px;
+}
+
+.whiteKey:hover {
+    fill: #ddddd7;
+}
+
+.whiteKey.selected {
+    fill: #d76713;
+}
+
+.blackKey {
+    fill: black;
+    stroke: black;
+
+}
+
+.blackKey:hover {
+    fill: #222;
+}
+
+.blackKey.selected {
+    fill: #d76713;
+}

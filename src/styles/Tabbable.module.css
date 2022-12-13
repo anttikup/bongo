@@ -2,3 +2,7 @@
     color: initial;
     text-decoration: initial;
 }
+
+.tabbable:focus-visible {
+    outline: lightblue 3px solid;
+}

@@ -8,6 +8,7 @@ import { EFFECTS_PATH, SITE_TITLE } from '../../../../config';
 import Layout from '../../../../components/layout';
 import Tuner from '../../../../components/Tuner';
 import PlayButton from '../../../../components/PlayButton';
+import CallToAction from '../../../../components/CallToAction';
 
 import utilStyles from '../../../../styles/utils.module.css';
 import styles from '../../../../styles/lecture.module.css';
@@ -53,7 +54,7 @@ export default function Lectures(props: Props) {
                 Mnemonic:
             </p>
             <p>
-                Notes between the lines spell out the word FACE from bottom to top.
+                Notes between the lines spell out the word <strong>FACE</strong> from bottom to top.
             </p>
 
             <Image style={{backgroundColor: "white", padding: "5px"}} bordered centered size="small"
@@ -62,6 +63,8 @@ export default function Lectures(props: Props) {
             <p>
                 This means the lines from bottom up are: e, g, b, d, and f.
             </p>
+
+            <CallToAction href="/exercise/note-reading/1" />
         </Layout>
     );
 };

@@ -201,12 +201,12 @@ const findOrCreateUserByUserInfo = async (userInfo: UserInfo): Promise<UserDB> =
 
 export default {
     findByUserID,
+    findOrCreateUserByUserInfo,
     getProgress,
     getSettings,
     getStats,
     updateProgress,
-    updateUser,
     updateSettings,
+    updateUser,
     updateXP,
-    findOrCreateUserByUserInfo,
 };

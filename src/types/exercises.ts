@@ -56,6 +56,10 @@ export interface TuningAssignment extends Assignment {
     answerPrecision: number;
 }
 
+export interface PianoKeyboardAssignment extends Assignment {
+    type: "pianokeyboard";
+}
+
 export type AssignmentAnswer = string | number | Array<string> | Array<number>;
 
 

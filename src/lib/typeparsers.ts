@@ -29,7 +29,8 @@ const isRecordWithStringKey = (val: unknown): val is Record<string, unknown> => 
 
 export const parseLearningStats = (val: unknown): LearningStats => {
     if ( !isRecordWithStringKey(val) ) {
-        throw new Error('Incorrect or missing value');
+        console.error("Incorrect or missing value (not a record):", val);
+        throw new Error(`Not a record: ${val}`);
     }
 
     const map = new Map();
@@ -57,7 +58,7 @@ const parseLearningStatsItem = (val: unknown): LearningStatsItem => {
             wrong: parseNumberField(val.wrong, 'wrong'),
         };
     } else {
-        throw new Error("Incorrect or missing value");
+        throw new Error(`Incorrect or missing item value: ${val}`);
     }
 };
 

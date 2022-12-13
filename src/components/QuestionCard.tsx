@@ -1,6 +1,7 @@
 import React from 'react';
 
 import MultipleChoiceQuestionCard from './assignmenttypes/MultipleChoice';
+import PianoKeyboardQuestionCard from './assignmenttypes/PianoKeyboard';
 import SortingQuestionCard from './assignmenttypes/Sorting';
 import TuningQuestionCard from './assignmenttypes/Tuning';
 import YesNoQuestionCard from './assignmenttypes/YesNo';
@@ -11,6 +12,7 @@ import type {
     Assignment,
     AssignmentAnswer,
     MultipleChoiceAssignment,
+    PianoKeyboardAssignment,
     SortingAssignment,
     TuningAssignment,
     YesNoAssignment
@@ -34,6 +36,14 @@ const QuestionCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
                           return (
                               <MultipleChoiceQuestionCard
                                   assignment={assignment as MultipleChoiceAssignment}
+                                  selectAnswer={selectAnswer}
+                                  selectedAnswer={selectedAnswer as string}
+                              />
+                          );
+                      case "pianokeyboard":
+                          return (
+                              <PianoKeyboardQuestionCard
+                                  assignment={assignment as PianoKeyboardAssignment}
                                   selectAnswer={selectAnswer}
                                   selectedAnswer={selectedAnswer as string}
                               />

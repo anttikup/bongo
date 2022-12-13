@@ -19,8 +19,6 @@ type Props = {
 
 
 const MultipleChoiceAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Props) => {
-
-    console.log("assignment:", assignment);
     const isTextOnly = assignment.options.every(isTextOnlyOption);
 
     return (

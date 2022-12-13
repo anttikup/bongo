@@ -1,4 +1,5 @@
-.button-bar {
+.buttonBar {
     display: flex;
     justify-content: right;
+    margin-top: 1em;
 }

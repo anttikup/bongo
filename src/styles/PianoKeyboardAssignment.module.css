@@ -1,0 +1,15 @@
+
+.keyboardContainer {
+    /* display: flex; */
+}
+
+.keyboardClip {
+    /* position: relative; */
+    /* overflow: hidden; */
+    /* display: inline-block; */
+}
+
+.keyboardContainer > svg {
+    /* position: relative; */
+    /* left: -50px; */
+}

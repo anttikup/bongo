@@ -105,7 +105,7 @@ header .site-title span {
 
 .bang {
     font-variant: italic;
-    color: #d76713;
+    color: red;
     font-size: larger;
     font-weight: bolder;
 }
@@ -128,7 +128,7 @@ strong {
 }
 
 .ui.button:focus-visible {
-    outline: red 1px solid;
+    outline: lightblue 3px solid;
 }
 
 form {

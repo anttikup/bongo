@@ -28,6 +28,8 @@ import type {
     NoteImage,
     ImageOption,
     MultipleChoiceAssignment,
+    PianoKeyboardAssignment,
+    Assignment,
     TextOption,
     UserInfo,
 } from '../../../../../types';
@@ -35,8 +37,9 @@ import type {
 
 
 const generateExercise = async (user: UserInfo) => {
-    const questionTypes: ((user: UserInfo) => Promise<MultipleChoiceAssignment>)[] = [
+    const questionTypes: ((user: UserInfo) => Promise<Assignment>)[] = [
         (user: UserInfo) => generateNameARelatedNoteHalfSteps(user),
+        (user: UserInfo) => generateSelectNoteOnPianoKeyboard(user),
     ];
 
     const genFunctions = random.pickKWithDuplicates(questionTypes, 5 + MAX_HEALTH);
@@ -92,6 +95,27 @@ const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<Multi
                 text: option
             })
         ),
+        itemType: StatType.Notename,
+        id: uuidv4(),
+    };
+};
+
+const generateSelectNoteOnPianoKeyboard = async (user: UserInfo) : Promise<PianoKeyboardAssignment> => {
+    const notenamePoolAll = await learningStatsLib
+        .getWeightsForCategory(user, 'notename');
+
+    const notenamePool = notenamePoolAll
+        .getSubset(['c', 'd', 'e', 'f', 'g', 'a', 'b']);
+
+
+    const correct = notenamePool.chooseOne();
+
+    return {
+        type: 'pianokeyboard',
+        question: {
+            text: `Pick an <strong>${correct}</strong> key`,
+        },
+        answer: correct,
         itemType: StatType.Notename,
         id: uuidv4(),
     };
