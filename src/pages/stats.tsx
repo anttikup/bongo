@@ -47,7 +47,6 @@ export default function Stats(props: StatsProps) {
                 console.error(e);
                 setUserStats({});
                 setError('Error fetching overview', getErrorMessage(e));
-                console.log(getErrorMessage(e));
             } finally {
                 setLoading(false);
             }

@@ -30,8 +30,6 @@ const GuitarFretboardAssignmentCard = ({ assignment, selectAnswer, selectedAnswe
     const firstFret = assignment.main.fret - 1;
     const lastFret = assignment.main.fret + 4;
 
-    console.log(assignment);
-
     return (
         <div>
             <Question question={assignment.question} />

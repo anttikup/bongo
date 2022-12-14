@@ -85,7 +85,7 @@ const SVGFretboard = ({ selected, select, strings, knobs, maxFirstFret = Number.
     // Zeroth and first are always included together.
     const firstDrawnFret = firstFret === 0 ? 1 : firstFret;
     const lastFret = knobs.reduce((acc, knob) => Math.max(knob.fret, acc), minLastFret);
-    console.log(firstFret, firstDrawnFret, lastFret);
+
     const fretArray = makeFretTable(firstDrawnFret, lastFret);
     const nFrets = fretArray.length;
 
@@ -94,7 +94,6 @@ const SVGFretboard = ({ selected, select, strings, knobs, maxFirstFret = Number.
             return;
         }
 
-        console.log("selected:", knob);
         if ( select ) {
             select(knob.id);
         }

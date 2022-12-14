@@ -103,7 +103,6 @@ const SettingsPage = (props: Props) => {
 
         try {
             const newUserSettings = await userService.updateSettings(data);
-            console.log("updated user:", newUserSettings);
             setMessage({ type: 'success', title: 'Saved', text: 'Saved settings successfully' });
             setUserSettings(newUserSettings);
         } catch ( err ) {
