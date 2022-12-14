@@ -73,8 +73,6 @@ const PianoKeyboard = ({ size, selected, select }: Props) => {
         }
     };
 
-    console.log("selected:", selected);
-
     const WIDTH = 1932;
     const octaves = [0, 1, 2, 3];
 

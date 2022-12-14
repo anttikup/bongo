@@ -152,3 +152,44 @@ input[type="text"], input[type="email"] {
         margin: 0 !important;
     }
 }
+
+
+
+/////////////
+
+#no-account-box {
+    text-align: center;
+    width: 12em;
+    text-align: center;
+    background: no-repeat url(https://upload.wikimedia.org/wikipedia/commons/f/f2/Emojione_1F5EF.svg);
+    background-color: rgba(0, 0, 0, 0);
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/f/f2/Emojione_1F5EF.svg");
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    padding: 3.8em 3em 3.0em;
+    height: 12em;
+    position: absolute;
+    left: 35em;
+    transform: rotate(15deg);
+    top: -8em;
+    float: right;
+    font-weight: bold;
+}
+
+#no-account-box span {
+    display: inline-block;
+    /*border: solid;*/
+}
+
+#no-account-box a {
+    color: white;
+}
+
+#no-account-box a:hover {
+    text-decoration: underline;
+}

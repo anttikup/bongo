@@ -31,15 +31,11 @@ const MultipleChoiceOption = ({ option, selectAnswer, selectedAnswer }: Props) =
         if ( isKeypress(event) ) {
             if ( ['Enter', ' '].includes(event.key) ) {
                 selectAnswer(option.value);
-            } else if ( event.key === 'p' ) {
-                console.log("Play");
             }
         } else if ( event.type === "click" ) {
             selectAnswer(option.value);
         }
     };
-
-    console.log("OPTION:", option);
 
     return (
         <>

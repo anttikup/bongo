@@ -54,8 +54,6 @@ const lecturesDataByTier = [
 
 export const getStaticProps: GetStaticProps = () => {
     const lecturesByTopic = exerciseLib.getLecturesByTopic();
-    console.log("================================= get static props ==============================");
-    console.log(lecturesByTopic);
     return {
         props: {
             lecturesByTopic
@@ -82,7 +80,6 @@ type LecturesProps = {
 };
 
 export default function Lectures({ lecturesByTopic }: LecturesProps) {
-    console.log(lecturesByTopic);
     return (
         <Layout>
             <Head>

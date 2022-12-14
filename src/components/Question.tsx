@@ -17,8 +17,6 @@ type Props = {
 
 const QuestionComponent = ({ question }: Props) => {
 
-    console.log("question:", question);
-
     return (
         <div className={style.question}>
             <p>

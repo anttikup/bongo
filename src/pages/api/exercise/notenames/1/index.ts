@@ -63,7 +63,6 @@ const generateNameARelatedNoteHalfSteps = async (user: UserInfo) : Promise<Multi
     const notenamePoolAll = await learningStatsLib
         .getWeightsForCategory(user, 'notename');
 
-    console.log("GOT POOL ********************************************************\n", notenamePoolAll);
     const notenamePool = notenamePoolAll
         .getSubset(['c', 'd', 'e', 'f', 'g', 'a', 'b']);
 

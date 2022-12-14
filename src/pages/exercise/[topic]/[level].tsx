@@ -59,7 +59,6 @@ export async function getStaticPaths() {
 const collectLearningSets = (questionSet: QuestionSet): string[] => {
     const seen = new Set<StatType>();
     for ( let exercise of questionSet ) {
-        console.log("qs:", exercise);
         if ( exercise.itemType ) {
             seen.add(exercise.itemType);
         }
@@ -104,7 +103,6 @@ const ExercisePage = ({ title }: Props) => {
             setLoadingQS(true);
             try {
                 const questionSetFromApi = await exerciseService.getQuestionSet({ topic, level: parseInt(level, 10) });
-                console.assert(questionSetFromApi.length >= health, `Must have at least ${health} questions`);
                 setLearningSetNames(collectLearningSets(questionSetFromApi));
                 setQuestionSet(questionSetFromApi);
             } catch (e) {
@@ -127,7 +125,7 @@ const ExercisePage = ({ title }: Props) => {
             setLoadingLS(true);
             try {
                 const { data: learningStatsFromApi } = await userService.getLearningStats(setName);
-                console.info(learningStatsFromApi);
+                //console.info(learningStatsFromApi);
                 if ( !learningStatsRef.current ) {
                     learningStatsRef.current = new LearningSetManager();
                 }
@@ -135,7 +133,7 @@ const ExercisePage = ({ title }: Props) => {
                 learningStatsRef.current.add(setName, learningStatsFromApi);
             } catch (e) {
                 console.error(e);
-                setError('Error fetching learningstats', (e as Error).message);
+                setError('Error fetching learningstats', getErrorMessage(e));
             } finally {
                 setLoadingLS(false);
             }

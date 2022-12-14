@@ -19,11 +19,10 @@ const PlayButton = ({ src, detune, className }: Props) => {
     const [source, setSource] = useState<AudioBufferSourceNode | null>(null);
     //const [startTime, setStartTime] = useState(0);
     //const [startOffset, setStartOffset] = useState(0);
-    const [playing, setPlaying] = useState(() => { console.log("faling"); return false });
+    const [playing, setPlaying] = useState(() => { return false; });
     const [playerId, setPlayerId] = useState(0);
     const [endedId, setEndedId] = useState(0);
 
-    console.log("render: playing=", playing);
     useEffect(() => {
         const loadAudio = async (ctx: AudioContext) => {
             const response = await fetch(src);
@@ -38,7 +37,6 @@ const PlayButton = ({ src, detune, className }: Props) => {
     }, [src]);
 
     if ( playing && endedId === playerId ) {
-        console.log("stopped: playing=", playing, playerId);
         setPlaying(false);
     }
 
@@ -71,7 +69,6 @@ const PlayButton = ({ src, detune, className }: Props) => {
             setSource(newSource);
             setPlayerId(nextPlayerId);
             setPlaying(true);
-            console.log("set playing");
         }
     };
 

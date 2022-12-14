@@ -22,7 +22,7 @@ type Credentials = {
  *  */
 const login = async (credentials: Credentials) : Promise<User> => {
     const response = await axios.post<User>('/api/login', credentials);
-    console.log("TYPE:", typeof response, typeof response.data);
+
     return response.data;
 };
 

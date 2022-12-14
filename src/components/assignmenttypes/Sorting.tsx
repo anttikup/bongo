@@ -41,7 +41,6 @@ type Props = {
 
 const orderItems = (items: ItemList, answerOrder: Array<string> | undefined): ItemList => {
     if ( !answerOrder ) {
-        console.log("no answer order");
         return [ ...items];
     }
 
@@ -74,7 +73,6 @@ const SortingAssignmentCard = ({ assignment, selectAnswer, selectedAnswer }: Pro
 
         setItems(new_items);
         selectAnswer(new_items.map(item => item.value));
-        console.log("selected answer:", new_items.map(item => item.value));
     };
 
 

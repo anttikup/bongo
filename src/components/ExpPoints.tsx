@@ -12,11 +12,9 @@ type ExpPointsProps = {
 const ExpPoints = ({ points }: ExpPointsProps) => {
     const [effectStarted, setEffectStarted] = useState(false);
     useEffect(() => {
-        console.log("points before", points);
         if ( !points ) {
             return;
         }
-        console.log("  effect");
         setEffectStarted(true);
         window.setTimeout(() => {
             setEffectStarted(false);

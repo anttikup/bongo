@@ -71,7 +71,7 @@ export const reducer = (state: State, action: Action): State => {
             const progress = obj.progress.val;
             const updated = obj.progress.updated;
             const newUserProgress = { ...state.userProgress, [id]: { val: progress, updated } };
-            console.log("Reducer: user progress before:", state.userProgress, ", after:", newUserProgress);
+
             return {
                 ...state,
                 userProgress: newUserProgress

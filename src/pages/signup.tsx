@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { Button, Form, Header, Icon, Input, Loader } from "semantic-ui-react";
-//import { Link } from "react-router-dom";
-
-//import { User } from '../types';
+import { signIn } from "next-auth/react";
 
 import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
@@ -11,15 +10,13 @@ import { useMessage } from '../hooks/message';
 import { getErrorMessage } from '../lib/error';
 import signupService from '../services/signup';
 
-import Error from "../components/Error";
-
+import { UIMessage } from '../types';
+//import '../styles/signup.module.css';
 
 type Props = {
-    setError: (title: string, text: string) => void;
-    setSuccess: (title: string, text: string) => void;
 };
 
-const SignupPage = ({ setError, setSuccess }: Props) => {
+const SignupPage = (props: Props) => {
     const [loading, setLoading] = useState(false);
 
     const [username, setUsername] = useState('');
@@ -32,15 +29,34 @@ const SignupPage = ({ setError, setSuccess }: Props) => {
         event.preventDefault();
         setLoading(true);
         try {
-            await signupService.signup({
-                username, password,
+            const response = await signIn('login', {
+                username,
+                password,
+                signup: true,
+                callbackUrl: 'http://localhost:3000/overview',
             });
+
+            if ( !response ) {
+                throw new Error("response is undefined");
+            }
 
             setUsername('');
             setPassword('');
             setConfirmPassword('');
-            setSuccess('User registration successful', 'You can now login.');
-            //history.push('/login');
+            if ( response.ok ) {
+                setMessage({
+                    type: 'success',
+                    title: 'User registration successful',
+                    text: 'You can now login.'
+                });
+            } else {
+                console.error(response.error);
+                setMessage({
+                    type: 'error',
+                    title: 'Error signin up',
+                    text: response.error
+                } as UIMessage);
+            }
         } catch (e) {
             setMessage({
                 type: 'error',
@@ -64,6 +80,12 @@ const SignupPage = ({ setError, setSuccess }: Props) => {
 
     const passwordsMatch = (password === confirmPassword);
 
+    const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        signIn(undefined, {
+            callbackUrl: 'http://localhost:3000/overview',
+        });
+    };
 
     return (
         <Layout>
@@ -75,6 +97,12 @@ const SignupPage = ({ setError, setSuccess }: Props) => {
                 <h1>Sign up</h1>
             </Header>
             <section>
+                <p id="no-account-box">
+                    <span>
+                        Already have an account? <Link href="/login" onClick={handleSignin}>Log in</Link> <i className="bang">!</i>
+                    </span>
+                </p>
+
                 { loading && <Loader active /> }
 
                 <Form id="signup-form" onSubmit={handleSignup}>
@@ -120,7 +148,7 @@ const SignupPage = ({ setError, setSuccess }: Props) => {
                         />
                     </Form.Field>
 
-                    <Button type='submit'>Submit</Button>
+                    <Button primary type='submit'>Submit</Button>
 
                 </Form>
             </section>

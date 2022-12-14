@@ -10,7 +10,6 @@ type ExerciseRef = {
 };
 
 const getQuestionSet = async ({ topic, level } : ExerciseRef) => {
-    console.log(topic, level);
     const { data: questionSetFromApi } = await axios.get<QuestionSet>(
         `/api/exercise/${topic}/${level}`
     );

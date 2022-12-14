@@ -8,6 +8,7 @@ import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
 import Date from '../components/date';
 import userService from '../services/user';
+import { getErrorMessage } from '../lib/error';
 import { useErrorMessage } from '../hooks/errorMessage';
 
 import utilStyles from '../styles/utils.module.css';
@@ -45,8 +46,8 @@ export default function Stats(props: StatsProps) {
             } catch (e) {
                 console.error(e);
                 setUserStats({});
-                setError('Error fetching overview', (e as Error).message);
-                console.log((e as Error).message);
+                setError('Error fetching overview', getErrorMessage(e));
+                console.log(getErrorMessage(e));
             } finally {
                 setLoading(false);
             }

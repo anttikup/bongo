@@ -58,8 +58,7 @@ const equals = (obj1: AssignmentAnswer, obj2: AssignmentAnswer, precision?: numb
     }
 
     if ( precision && isNumber(obj1) && isNumber(obj2) ) {
-        console.log("within precision", precision, obj1, obj2);
-        return (obj1 - 10) < obj2 && (obj1 + 10) > obj2;
+        return (obj1 - precision) < obj2 && (obj1 + precision) > obj2;
     }
 
     return (obj1 === obj2);

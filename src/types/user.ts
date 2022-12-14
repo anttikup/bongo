@@ -65,6 +65,7 @@ export interface UserDB {
     id: string;
     userId: string;
     username: string | null;
+    passwordHash?: string;
     email: string | null;
     progress: Record<string, DatedValue>;
     xp: number;

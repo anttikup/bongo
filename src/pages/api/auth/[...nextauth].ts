@@ -7,6 +7,10 @@ import GithubProvider from "next-auth/providers/github"
 // import AppleProvider from "next-auth/providers/apple"
 //import EmailProvider from "next-auth/providers/email"
 
+import CredentialsProvider from "next-auth/providers/credentials";
+
+import * as auth from '../../../lib/auth';
+import { getErrorMessage } from '../../../lib/error';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -53,31 +57,43 @@ export const authOptions: NextAuthOptions = {
          *     clientSecret: process.env.AUTH0_SECRET,
          *     issuer: process.env.AUTH0_ISSUER,
          * }), */
+        CredentialsProvider({
+            id: "login",
+            credentials: {
+                username: { label: "Username", type: "text", placeholder: "example" },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials) {
+                if ( !credentials ) {
+                    throw new Error("credentials empty");
+                }
+
+                try {
+                    return await auth.loginOrSignup(credentials);
+                } catch (error) {
+                    console.error(error);
+                    throw new Error(getErrorMessage(error));
+                }
+            },
+        }),
     ],
     theme: {
         colorScheme: "light",
         brandColor: "#dd5522",
-        logo: "/images/687-musical-score.svg",
+        logo: "/images/icons/687-musical-score.svg",
         buttonText: "#2255dd",
     },
     callbacks: {
         async jwt({ token, user, account, profile, isNewUser }) {
-            // Can be called many times. If first call
-            if ( !token.idToken ) {
-                //console.log("JWT CALLBACK:\n  token:", token, "\n  user:", user, "\n  account:", account,
-                //            "\n  profile:", profile, "\n  isNewUser:", isNewUser);
-                // TODO onko ok? Id:tä ei ole aina googlella. Sub näyttää olevan sama arvo.
-                token.idToken = (profile?.id || profile?.sub || token.sub || 0).toString();
-            }
 
             return token
         },
         async session({ session, token, user }) {
-            console.assert(token.idToken, "No token id");
+            console.assert(token.sub, "No token id");
             // first call
             if ( !session.user.id ) {
-                //console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
-                session.user.id = token.idToken || "x";
+                console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
+                session.user.id = token.sub || "";
             }
 
             return session

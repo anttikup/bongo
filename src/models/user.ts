@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema<UserDB>({
     },
     username: String,
     email: String,
+    passwordHash: String,
     progress: {
         type: Map,
         of: {

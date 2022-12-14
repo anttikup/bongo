@@ -113,9 +113,6 @@ const updateSettings = async (user: UserInfo, settings: Partial<UserSettings>): 
             }
         );
 
-    console.log("udpating:", dataToUpdate);
-    console.log("udpated settings:", updatedUser);
-
     return {
         username: updatedUser.username,
         email: updatedUser.email,

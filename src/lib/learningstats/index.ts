@@ -62,8 +62,6 @@ async function updateLearningStatsOfCategory(userInfo: UserInfo, categoryName: s
         throw new Error(`User missing: ${userInfo.name}`);
     }
 
-    console.log("updateLearningStatsOfCategory:", user, userInfo, categoryName);
-    console.log("update or insert:", user.id, categoryName);
     return await LearningStats.findOneAndUpdate(
         {
             userRef: user.id,
