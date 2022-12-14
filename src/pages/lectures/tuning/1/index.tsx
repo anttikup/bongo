@@ -8,6 +8,7 @@ import { EFFECTS_PATH, SITE_TITLE } from '../../../../config';
 import Layout from '../../../../components/layout';
 import Tuner from '../../../../components/Tuner';
 import PlayButton from '../../../../components/PlayButton';
+import CallToAction from '../../../../components/CallToAction';
 
 import utilStyles from '../../../../styles/utils.module.css';
 import styles from '../../../../styles/lecture.module.css';
