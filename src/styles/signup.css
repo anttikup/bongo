@@ -15,8 +15,8 @@
     padding: 3.8em 3em 3.0em;
     height: 12em;
     position: absolute;
-    left: 35em;
-    transform: rotate(15deg);
+    right: 0;
+    transform: rotate(15deg) scale(75%);
     top: -8em;
     float: right;
     font-weight: bold;

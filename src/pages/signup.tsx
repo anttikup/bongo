@@ -96,8 +96,8 @@ const SignupPage = (props: Props) => {
             <Header as="header">
                 <h1>Sign up</h1>
             </Header>
-            <section>
-                <p id="no-account-box">
+            <section style={{ position: 'relative' }}>
+                <p>
                     <span>
                         Already have an account? <Link href="/login" onClick={handleSignin}>Log in</Link> <i className="bang">!</i>
                     </span>
