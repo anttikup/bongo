@@ -66,7 +66,7 @@ export default function Lectures(props: Props) {
 
             <PianoKeyboard size="medium" selected="d" />
 
-            <CallToAction href="/exercise/note-reading/1" />
+            <CallToAction href="/exercise/notenames/1" />
 
         </Layout>
     );

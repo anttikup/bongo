@@ -69,6 +69,7 @@ export default function Lectures(props: Props) {
             <label>Slightly off</label>
             <Tuner src={EFFECTS_PATH("tune-elpno.mp3")} deviation={-34} value={elpnoValue} onChange={setElpnoValue} />
 
+            <CallToAction href="/exercise/tuning/1" />
         </Layout>
     );
 };
