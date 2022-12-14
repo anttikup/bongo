@@ -1,0 +1,46 @@
+
+.point {
+    stroke-width: 2px;
+}
+
+.text {
+    font-weight: bold;
+    font-size: 18px;
+    font-family: sans-serif;
+    fill: white;
+    dominant-baseline: middle;
+    text-anchor: middle;
+}
+
+.text:hover {
+        cursor: pointer;
+}
+
+.pointBorder {
+    fill: transparent;
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 2px;
+}
+
+.selectablePointBorder {
+    fill: transparent;
+    stroke: rgba(0, 0, 0, 0.3);
+    stroke-width: 2px;
+}
+
+
+.selectablePointBorder:hover {
+    fill: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+
+.pointHidden, .selectablePointHidden {
+    fill: transparent;
+    stroke: none;
+}
+
+.selectablePointHidden:hover {
+    fill: rgba(255, 125, 0, 0.2);
+    cursor: pointer;
+}

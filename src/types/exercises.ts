@@ -60,6 +60,11 @@ export interface PianoKeyboardAssignment extends Assignment {
     type: "pianokeyboard";
 }
 
+export interface GuitarFretboardAssignment extends Assignment {
+    type: "guitarfretboard";
+    main: { string: number, fret: number };
+}
+
 export type AssignmentAnswer = string | number | Array<string> | Array<number>;
 
 

@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
+.stringTitle {
+    font-size: 15px;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    fill: slategray;
+    font-weight: bold;
+}
+
+.fretTitle {
+    font-size: 15px;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    fill: slategray;
+    font-weight: bold;
+    font-family: 'Roboto Slab', serif;
+}
