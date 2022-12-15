@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { GetStaticProps } from 'next';
 import { Header, Loader, Table } from "semantic-ui-react";
+import LineGraph from 'react-line-graph';
+import { parseISO } from 'date-fns'
 
 import { SITE_TITLE } from '../config';
 import Layout from '../components/layout';
@@ -56,7 +58,16 @@ export default function Stats(props: StatsProps) {
     }, []);
 
 
-    const dates = userStats && userStats.xpHistory ? Object.keys(userStats.xpHistory).sort() : [];
+    const dates = userStats && userStats.xpHistory ? Object.keys(userStats.xpHistory).sort((a, b) => a.localeCompare(b)) : [];
+    const data = [];
+    let firstDate = dates[0];
+    if ( userStats?.xpHistory ) {
+        for ( let date of dates ) {
+            const xp = userStats.xpHistory[date];
+            const daydiff = (parseISO(date).getTime() - parseISO(firstDate).getTime())  / (1000 * 3600 * 24);
+            data.push({ x: daydiff, y: xp });
+        }
+    }
 
     return (
         <Layout home>
@@ -67,6 +78,17 @@ export default function Stats(props: StatsProps) {
                 <Header as="header">
                     <h1>Stats</h1>
                 </Header>
+
+                { dates.length > 1
+                  && <div className={styles.xpGraph}>
+		      <h2 className={styles.graphTitle}>XP</h2>
+		      <LineGraph
+		          data={data}
+                          accent="orange"
+		      />
+		  </div>
+                }
+
                 { loading
                   ? <Loader active/>
                   : <div className="stats">

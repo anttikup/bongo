@@ -1,0 +1,13 @@
+
+
+.graphTitle {
+    font-size: smaller;
+    text-align: center;
+}
+
+.xpGraph {
+    background-color: white;
+    margin-bottom: 1em;
+    border: solid rgba(34,36,38,.15) 1px;
+    border-radius: .28571429rem;
+}
