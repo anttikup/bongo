@@ -37,7 +37,7 @@ const SignupPage = (props: Props) => {
             });
 
             if ( !response ) {
-                throw new Error("response is undefined");
+                return;
             }
 
             setUsername('');
@@ -99,7 +99,7 @@ const SignupPage = (props: Props) => {
             <section style={{ position: 'relative' }}>
                 <p>
                     <span>
-                        Already have an account? <Link href="/login" onClick={handleSignin}>Log in</Link> <i className="bang">!</i>
+                        You can also sign in with Google or GitHub account. <Link href="/login" onClick={handleSignin}>Log in</Link> <i className="bang">!</i>
                     </span>
                 </p>
 
