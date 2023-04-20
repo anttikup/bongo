@@ -33,6 +33,7 @@ const SignupPage = (props: Props) => {
                 username,
                 password,
                 signup: true,
+                redirect: false,
                 callbackUrl: 'http://localhost:3000/overview',
             });
 
