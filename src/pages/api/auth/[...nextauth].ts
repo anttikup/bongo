@@ -92,7 +92,6 @@ export const authOptions: NextAuthOptions = {
             console.assert(token.sub, "No token id");
             // first call
             if ( !session.user.id ) {
-                console.log("SESSION CALLBACK:\n  session:", session, "\n  token:", token, "\n  user:", user);
                 session.user.id = token.sub || "";
             }
 

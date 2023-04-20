@@ -25,7 +25,7 @@ function NavMenu(props: NavMenuProps) {
     const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         signIn(undefined, {
-            callbackUrl: 'http://localhost:3000/overview',
+            callbackUrl: '/overview',
         });
     };
 
