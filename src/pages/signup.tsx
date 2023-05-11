@@ -34,7 +34,7 @@ const SignupPage = (props: Props) => {
                 password,
                 signup: true,
                 redirect: false,
-                callbackUrl: 'http://localhost:3000/overview',
+                callbackUrl: '/overview',
             });
 
             if ( !response ) {
@@ -84,7 +84,7 @@ const SignupPage = (props: Props) => {
     const handleSignin = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         signIn(undefined, {
-            callbackUrl: 'http://localhost:3000/overview',
+            callbackUrl: '/overview',
         });
     };
 
@@ -100,7 +100,9 @@ const SignupPage = (props: Props) => {
             <section style={{ position: 'relative' }}>
                 <p>
                     <span>
-                        You can also sign in with Google or GitHub account. <Link href="/login" onClick={handleSignin}>Log in</Link> <i className="bang">!</i>
+                        You can also sign in with Google or GitHub account.{' '}
+                        <Link href="/login" onClick={handleSignin}>Log in</Link>{' '}
+                        <i className="bang">!</i>
                     </span>
                 </p>
 
