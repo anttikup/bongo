@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             console.assert(token.sub, "No token id");
-            // first call
+            // if first call
             if ( !session.user.id ) {
                 session.user.id = token.sub || "";
             }
