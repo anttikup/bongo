@@ -36,7 +36,7 @@ function Home ({  }: HomeProps) {
             <section>
                 <p>
                     Use the test account (user: ”test”, password: ”test”)
-                    if you don’t want to create a new account<i className="bang">!</i></h1>
+                    if you don’t want to create a new account <i className="bang">!</i>
                 </p>
             </section>
             <section>
